@@ -2843,6 +2843,7 @@ function _getEssayPromptText() {
 function portalWc(ta) {
   document.getElementById('portal-wc').textContent =
     ta.value.trim().split(/\s+/).filter(Boolean).length;
+  saveStore({essayDraft: ta.value});
 }
 
 function _pEscHtml(s) {
@@ -4099,7 +4100,13 @@ async function doLogin(){
     applySession();
     hideLogin();
     updateStreakTracker();
-    const dest=session.role==='teacher'?'tdash':'home';
+    const stored=loadStore();
+    const defaultDest=session.role==='teacher'?'tdash':'home';
+    const dest=stored.lastScreen||defaultDest;
+    if(stored.essayDraft){
+      const ta=document.getElementById('portal-essay-ta');
+      if(ta){ta.value=stored.essayDraft;portalWc(ta);}
+    }
     show(dest,document.querySelector(`[data-id="${dest}"]`));
   }
 
@@ -5068,6 +5075,7 @@ function switchTdashTab(tab){
 }
 
 function show(id,el){
+  saveStore({lastScreen:id});
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   const scr=document.getElementById('screen-'+id);
