@@ -2710,10 +2710,10 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <button type="button" class="download-report-btn" onclick="downloadEssayReport()">
         <i class="ti ti-file-export"></i> Download Detailed Academic Report
       </button>
-      <button type="button" id="portal-save-btn" class="hw-btn" style="padding:9px 16px;gap:6px;font-size:13px;background:var(--bg3);color:var(--txt1);border:0.5px solid var(--line2)" onclick="saveEssayToHistory()">
+      <button type="button" id="portal-save-btn" class="hw-btn" style="padding:9px 16px;gap:6px;font-size:13px;background:var(--bg3);color:var(--txt1);border:0.5px solid var(--line2);margin-top:0" onclick="saveEssayToHistory()">
         <i class="ti ti-device-floppy"></i> Save to History
       </button>
-      <button type="button" id="portal-submit-btn" class="hw-btn" style="padding:9px 16px;gap:6px;font-size:13px" onclick="submitEssayToTeacher()">
+      <button type="button" id="portal-submit-btn" class="hw-btn" style="padding:9px 16px;gap:6px;font-size:13px;margin-top:0" onclick="submitEssayToTeacher()">
         <i class="ti ti-send"></i> Submit to Teacher
       </button>
     </div>
@@ -4141,7 +4141,10 @@ async function doLogin(){
 
     // Supabase auth failed — fall back to local demo users before showing error.
     if(localUser){
-      _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar});
+      const _st=loadStore();
+      let _lid=_st.localUid;
+      if(!_lid){_lid='local-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);saveStore({localUid:_lid});}
+      _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:_lid});
       return;
     }
 
@@ -4156,7 +4159,10 @@ async function doLogin(){
 
   // No Supabase configured — local users only.
   if(!localUser){showLoginError('Wrong username or password');return;}
-  _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar});
+  const _st2=loadStore();
+  let _lid2=_st2.localUid;
+  if(!_lid2){_lid2='local-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);saveStore({localUid:_lid2});}
+  _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:_lid2});
 }
 function showLoginError(msg){
   const el=document.getElementById('login-error');
