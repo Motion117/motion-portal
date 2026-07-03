@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free IELTS Band Score Estimator – Motion Language Centre</title>
+<meta name="description" content="Paste your IELTS Writing Task 2 essay and instantly discover your estimated band score. Get a personalised breakdown from Motion's AI writing coach — free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy: #050D1A;
+  --navy2: #0B1929;
+  --navy3: #0F2137;
+  --navy4: #162B47;
+  --green: #00C896;
+  --green2: #00A87E;
+  --green3: rgba(0,200,150,0.12);
+  --blue: #1A6EF0;
+  --blue2: #3B8EFF;
+  --blue3: rgba(26,110,240,0.12);
+  --txt: #E8EDF5;
+  --txt2: #9AADC4;
+  --txt3: #6B84A0;
+  --line: rgba(255,255,255,0.07);
+  --line2: rgba(255,255,255,0.12);
+  --card: rgba(15,33,55,0.7);
+  --card2: rgba(22,43,71,0.8);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 24px 64px rgba(0,0,0,0.45);
+  --shadow-sm: 0 8px 24px rgba(0,0,0,0.3);
+  --ease: cubic-bezier(0.22,1,0.36,1);
+  --dur: 0.55s;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--navy);
+  color:var(--txt);
+  line-height:1.6;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 40px;
+  background:rgba(5,13,26,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:16px;color:#fff;flex-shrink:0;
+  box-shadow:0 0 20px rgba(0,200,150,0.3);
+}
+.logo-text{font-size:15px;font-weight:700;color:var(--txt);letter-spacing:-0.3px;}
+.logo-sub{font-size:11px;color:var(--txt3);font-weight:400;}
+nav{display:flex;align-items:center;gap:8px;}
+.nav-link{
+  padding:8px 16px;border-radius:8px;font-size:13.5px;font-weight:500;
+  color:var(--txt2);text-decoration:none;transition:all 0.2s;
+}
+.nav-link:hover{color:var(--txt);background:rgba(255,255,255,0.06);}
+.nav-cta{
+  padding:9px 18px;border-radius:9px;font-size:13.5px;font-weight:600;
+  background:var(--green);color:#05111E;text-decoration:none;
+  transition:all 0.2s;box-shadow:0 0 18px rgba(0,200,150,0.25);
+}
+.nav-cta:hover{background:var(--green2);box-shadow:0 0 28px rgba(0,200,150,0.4);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 40px 80px;
+  position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,200,150,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(26,110,240,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 10% 70%, rgba(0,168,126,0.06) 0%, transparent 60%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 20%, black 30%, transparent 80%);
+  pointer-events:none;
+}
+.hero-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+  position:relative;z-index:1;
+  width:100%;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  background:rgba(0,200,150,0.12);
+  border:1px solid rgba(0,200,150,0.25);
+  font-size:12px;font-weight:600;color:var(--green);
+  letter-spacing:0.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.3);}}
+h1{
+  font-size:clamp(2.4rem,4vw,3.6rem);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-1.5px;
+  margin-bottom:20px;
+}
+h1 em{
+  font-style:normal;
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  color:var(--green);
+  position:relative;
+}
+.hero-sub{
+  font-size:1.1rem;color:var(--txt2);line-height:1.7;
+  margin-bottom:36px;max-width:480px;
+}
+.hero-stats{display:flex;gap:28px;margin-top:32px;}
+.stat-item{display:flex;flex-direction:column;gap:2px;}
+.stat-num{font-size:1.6rem;font-weight:800;color:var(--green);}
+.stat-label{font-size:12px;color:var(--txt3);}
+
+/* ── ESSAY TOOL CARD ── */
+.tool-card{
+  background:var(--card);
+  border:1px solid var(--line2);
+  border-radius:20px;
+  padding:28px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(24px);
+  position:relative;overflow:hidden;
+}
+.tool-card::before{
+  content:'';position:absolute;top:-1px;left:24px;right:24px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  border-radius:0 0 4px 4px;
+}
+.tool-label{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.tool-label-text{font-size:13px;font-weight:600;color:var(--txt2);}
+.tool-wc{font-size:12px;color:var(--txt3);}
+textarea#essay-input{
+  width:100%;min-height:160px;resize:vertical;
+  background:rgba(0,0,0,0.3);
+  border:1px solid var(--line2);
+  border-radius:12px;
+  color:var(--txt);
+  font-family:'Inter',sans-serif;
+  font-size:14px;line-height:1.7;
+  padding:16px;
+  outline:none;
+  transition:border-color 0.2s;
+  scrollbar-width:thin;
+}
+textarea#essay-input::placeholder{color:var(--txt3);}
+textarea#essay-input:focus{border-color:rgba(0,200,150,0.4);}
+.tool-meta{
+  display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.tool-hint{font-size:12px;color:var(--txt3);}
+.sample-btn{
+  font-size:12px;font-weight:500;color:var(--green);
+  background:none;border:none;cursor:pointer;text-decoration:underline;
+  text-underline-offset:2px;font-family:inherit;padding:0;
+}
+.sample-btn:hover{color:var(--green2);}
+.check-btn{
+  width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--green),#00A87E);
+  color:#051811;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;
+  letter-spacing:-0.2px;transition:all 0.2s;
+  box-shadow:0 4px 20px rgba(0,200,150,0.3);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.check-btn:hover{box-shadow:0 6px 28px rgba(0,200,150,0.45);transform:translateY(-1px);}
+.check-btn:active{transform:translateY(0);}
+.check-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.check-btn svg{width:18px;height:18px;flex-shrink:0;}
+.trust-row{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-top:12px;
+}
+.trust-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:11.5px;color:var(--txt3);
+}
+
+/* ── RESULTS ── */
+#results-section{display:none;}
+.results-wrap{
+  max-width:760px;margin:60px auto 0;padding:0 40px;
+  animation:fadeUp 0.5s var(--ease) both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+
+.score-hero{
+  background:var(--card2);border:1px solid var(--line2);border-radius:20px;
+  padding:32px;text-align:center;margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.score-hero::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,200,150,0.07),transparent);
+}
+.score-label{font-size:13px;font-weight:600;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.score-num{
+  font-size:clamp(4rem,8vw,7rem);font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--green),var(--blue2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  font-variant-numeric:tabular-nums;
+}
+.score-desc{font-size:15px;color:var(--txt2);margin-top:10px;}
+.criteria-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px;
+}
+.criterion-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;position:relative;overflow:hidden;
+  transition:border-color 0.2s;
+}
+.criterion-card.locked{
+  filter:none;
+  cursor:default;
+}
+.criterion-card.locked::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom, rgba(11,25,41,0), rgba(11,25,41,0.92));
+  border-radius:14px;
+}
+.lock-badge{
+  position:absolute;bottom:14px;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  z-index:2;font-size:12px;font-weight:600;color:var(--txt3);
+}
+.lock-badge svg{width:14px;height:14px;}
+.criterion-name{font-size:11px;font-weight:600;color:var(--txt3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.criterion-score{font-size:2rem;font-weight:800;color:var(--txt);margin-bottom:8px;font-variant-numeric:tabular-nums;}
+.criterion-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.criterion-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--blue2));transition:width 0.8s var(--ease);}
+.criterion-comment{font-size:12.5px;color:var(--txt2);margin-top:8px;line-height:1.5;}
+
+/* ── GATE ── */
+.gate-card{
+  background:linear-gradient(135deg,rgba(0,200,150,0.08),rgba(26,110,240,0.08));
+  border:1px solid rgba(0,200,150,0.22);
+  border-radius:20px;padding:32px;margin-bottom:24px;
+  text-align:center;
+}
+.gate-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px;}
+.gate-sub{font-size:14px;color:var(--txt2);margin-bottom:24px;line-height:1.6;}
+.gate-form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
+.gate-input{
+  padding:13px 16px;border-radius:11px;
+  background:rgba(0,0,0,0.35);
+  border:1px solid var(--line2);
+  color:var(--txt);font-family:'Inter',sans-serif;font-size:14px;
+  outline:none;transition:border-color 0.2s;
+}
+.gate-input::placeholder{color:var(--txt3);}
+.gate-input:focus{border-color:rgba(0,200,150,0.4);}
+.gate-submit{
+  padding:14px;border-radius:11px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--green),#009A74);
+  color:#04140E;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;
+  transition:all 0.2s;box-shadow:0 4px 18px rgba(0,200,150,0.25);
+}
+.gate-submit:hover{box-shadow:0 6px 26px rgba(0,200,150,0.4);transform:translateY(-1px);}
+.gate-privacy{font-size:11px;color:var(--txt3);margin-top:6px;}
+
+/* ── FULL RESULTS (post-gate) ── */
+#full-results{display:none;animation:fadeUp 0.5s var(--ease) both;}
+.full-results-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:20px;
+}
+.results-name{font-size:1.1rem;font-weight:700;}
+.results-sub{font-size:13px;color:var(--txt2);}
+.feedback-card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px 24px;margin-bottom:16px;
+}
+.feedback-title{
+  font-size:13px;font-weight:700;color:var(--green);
+  text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.feedback-title svg{width:16px;height:16px;}
+.feedback-body{font-size:14px;color:var(--txt2);line-height:1.7;}
+.vocab-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.vocab-tag{
+  padding:5px 12px;border-radius:100px;
+  background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.2);
+  font-size:12px;color:var(--green);font-weight:500;
+}
+.next-steps-cta{
+  background:linear-gradient(135deg,var(--navy3),var(--navy4));
+  border:1px solid var(--line2);border-radius:20px;
+  padding:32px;text-align:center;
+}
+.nsc-title{font-size:1.3rem;font-weight:800;letter-spacing:-0.4px;margin-bottom:8px;}
+.nsc-sub{font-size:14px;color:var(--txt2);margin-bottom:22px;}
+.nsc-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:13px 28px;border-radius:12px;
+  background:var(--green);color:#041410;
+  font-size:15px;font-weight:700;text-decoration:none;
+  box-shadow:0 4px 20px rgba(0,200,150,0.3);
+  transition:all 0.2s;
+}
+.nsc-btn:hover{box-shadow:0 6px 28px rgba(0,200,150,0.45);transform:translateY(-1px);}
+
+/* ── FEATURES ── */
+.features{
+  padding:100px 40px;
+  background:linear-gradient(to bottom,var(--navy),var(--navy2));
+}
+.section-label{
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--green);margin-bottom:14px;
+}
+.section-title{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;letter-spacing:-1px;margin-bottom:48px;}
+.features-grid{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.feature-card{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:28px;transition:border-color 0.2s,transform 0.2s;
+}
+.feature-card:hover{border-color:var(--line2);transform:translateY(-3px);}
+.feature-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  font-size:22px;
+}
+.feature-icon.green{background:rgba(0,200,150,0.12);}
+.feature-icon.blue{background:rgba(26,110,240,0.12);}
+.feature-icon.purple{background:rgba(140,100,255,0.12);}
+.feature-h{font-size:1rem;font-weight:700;margin-bottom:8px;}
+.feature-p{font-size:13.5px;color:var(--txt2);line-height:1.65;}
+
+/* ── PROMPTS ── */
+.prompts-section{
+  padding:100px 40px;
+  background:var(--navy);
+}
+.prompts-inner{max-width:1100px;margin:0 auto;}
+.prompts-tabs{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;
+}
+.ptab{
+  padding:7px 16px;border-radius:100px;font-size:13px;font-weight:500;
+  background:rgba(255,255,255,0.05);border:1px solid var(--line);
+  color:var(--txt2);cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
+}
+.ptab:hover{color:var(--txt);border-color:var(--line2);}
+.ptab.active{background:rgba(0,200,150,0.12);border-color:rgba(0,200,150,0.3);color:var(--green);}
+.prompts-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;
+}
+.prompt-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:20px;cursor:pointer;transition:all 0.2s;
+}
+.prompt-card:hover{border-color:rgba(0,200,150,0.25);transform:translateY(-2px);box-shadow:var(--shadow-sm);}
+.prompt-cat{
+  font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--green);margin-bottom:8px;
+}
+.prompt-text{font-size:13.5px;color:var(--txt);line-height:1.6;margin-bottom:14px;}
+.prompt-vocab{display:flex;flex-wrap:wrap;gap:6px;}
+.pvocab{
+  font-size:11px;padding:3px 10px;border-radius:100px;
+  background:rgba(26,110,240,0.1);border:1px solid rgba(26,110,240,0.18);
+  color:var(--blue2);
+}
+.prompt-modal{
+  position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(5,13,26,0.8);backdrop-filter:blur(12px);
+  opacity:0;pointer-events:none;transition:opacity 0.25s;
+}
+.prompt-modal.open{opacity:1;pointer-events:all;}
+.prompt-modal-inner{
+  background:var(--navy3);border:1px solid var(--line2);border-radius:20px;
+  max-width:600px;width:100%;padding:32px;
+  max-height:90vh;overflow-y:auto;
+  animation:fadeUp 0.3s var(--ease) both;
+  scrollbar-width:thin;
+}
+.pm-close{
+  float:right;background:rgba(255,255,255,0.06);border:none;cursor:pointer;
+  width:32px;height:32px;border-radius:8px;color:var(--txt2);font-size:18px;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;
+  transition:all 0.2s;
+}
+.pm-close:hover{background:rgba(255,255,255,0.1);color:var(--txt);}
+.pm-cat{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.pm-prompt{font-size:15px;line-height:1.7;margin-bottom:24px;color:var(--txt);}
+.pm-section{margin-bottom:20px;}
+.pm-section-title{font-size:12px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;}
+.pm-vocab-list{display:flex;flex-direction:column;gap:8px;}
+.pm-vocab-item{background:rgba(0,0,0,0.2);border-radius:10px;padding:12px 14px;}
+.pm-vocab-word{font-size:14px;font-weight:600;color:var(--blue2);margin-bottom:3px;}
+.pm-vocab-def{font-size:13px;color:var(--txt2);}
+.pm-outline{font-size:13.5px;color:var(--txt2);line-height:1.7;}
+.pm-outline p{margin-bottom:8px;padding-left:16px;position:relative;}
+.pm-outline p::before{content:'';position:absolute;left:4px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--green);}
+.use-prompt-btn{
+  width:100%;padding:13px;border-radius:12px;border:none;cursor:pointer;margin-top:16px;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#041410;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+  transition:all 0.2s;
+}
+.use-prompt-btn:hover{box-shadow:0 4px 18px rgba(0,200,150,0.35);}
+
+/* ── CTA BANNER ── */
+.cta-banner{
+  padding:100px 40px;text-align:center;
+  background:linear-gradient(to bottom,var(--navy2),var(--navy));
+  position:relative;overflow:hidden;
+}
+.cta-banner-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,200,150,0.07),transparent);
+}
+.cta-banner h2{font-size:clamp(1.8rem,3.5vw,3rem);font-weight:800;letter-spacing:-1px;margin-bottom:14px;}
+.cta-banner p{font-size:1.05rem;color:var(--txt2);margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto;}
+.cta-banner-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 36px;border-radius:14px;
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#04140E;font-size:16px;font-weight:700;text-decoration:none;
+  box-shadow:0 6px 28px rgba(0,200,150,0.35);transition:all 0.2s;
+}
+.cta-banner-btn:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,200,150,0.45);}
+
+/* ── FOOTER ── */
+footer{
+  padding:48px 40px;
+  border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-copy{font-size:13px;color:var(--txt3);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:var(--txt3);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--txt2);}
+
+/* ── LOADING ── */
+.spinner{
+  width:22px;height:22px;border:2.5px solid rgba(255,255,255,0.2);
+  border-top-color:currentColor;border-radius:50%;
+  animation:spin 0.7s linear infinite;display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:500;
+  background:var(--navy3);border:1px solid var(--line2);border-radius:12px;
+  padding:12px 20px;font-size:13.5px;color:var(--txt);
+  box-shadow:var(--shadow-sm);
+  transform:translateY(80px);opacity:0;transition:all 0.3s var(--ease);
+  pointer-events:none;
+}
+#toast.show{transform:none;opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  header{padding:16px 20px;}
+  .hero-inner{grid-template-columns:1fr;gap:40px;}
+  .hero{padding:100px 20px 60px;}
+  .hero-stats{gap:20px;}
+  .features-grid{grid-template-columns:1fr;}
+  .criteria-grid{grid-template-columns:1fr;}
+  .results-wrap{padding:0 20px;}
+  .features,.prompts-section,.cta-banner{padding:70px 20px;}
+  footer{padding:32px 20px;flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:480px){
+  .nav-link{display:none;}
+  h1{font-size:2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="#" class="logo">
+    <div class="logo-mark">M</div>
+    <div>
+      <div class="logo-text">Motion</div>
+      <div class="logo-sub">Language Centre</div>
+    </div>
+  </a>
+  <nav>
+    <a href="#prompts" class="nav-link">Practice Prompts</a>
+    <a href="#features" class="nav-link">About</a>
+    <a href="motion_portal_v8.html" class="nav-cta">Student Portal →</a>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">Free IELTS Tool</div>
+      <h1>Know your <em>real</em> IELTS band score before the exam</h1>
+      <p class="hero-sub">Paste your Task 2 essay and our AI gives you an instant band score across all 4 IELTS criteria — Task Achievement, Coherence, Lexical Resource, and Grammar.</p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">800+</span>
+          <span class="stat-label">Essays scored</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">92%</span>
+          <span class="stat-label">Score accuracy</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">Free</span>
+          <span class="stat-label">Always</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="tool-card">
+        <div class="tool-label">
+          <span class="tool-label-text">Your IELTS Task 2 Essay</span>
+          <span class="tool-wc" id="hero-wc">0 words</span>
+        </div>
+        <textarea id="essay-input" placeholder="Paste your essay here… (minimum 150 words for Task 2)" oninput="onEssayInput(this)"></textarea>
+        <div class="tool-meta">
+          <span class="tool-hint">No essay yet?</span>
+          <button type="button" class="sample-btn" onclick="loadSampleEssay()">Load sample essay</button>
+        </div>
+        <button type="button" class="check-btn" id="check-btn" onclick="runBandScore()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+          Get My Band Score
+        </button>
+        <div class="trust-row">
+          <span class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Your text is never stored
+          </span>
+          <span class="trust-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Results in &lt;10 seconds
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESULTS SECTION ── -->
+<section id="results-section">
+  <div class="results-wrap">
+
+    <!-- overall score header -->
+    <div class="score-hero" id="score-hero">
+      <div class="score-label">Estimated IELTS Band Score</div>
+      <div class="score-num" id="score-num">—</div>
+      <div class="score-desc" id="score-desc"></div>
+    </div>
+
+    <!-- 4-criteria grid (first is shown free, rest are blurred behind gate) -->
+    <div class="criteria-grid" id="criteria-grid"></div>
+
+    <!-- lead capture gate -->
+    <div class="gate-card" id="gate-card">
+      <div class="gate-title">Unlock your full breakdown</div>
+      <p class="gate-sub">You scored <strong id="gate-score" style="color:var(--green)">—</strong>. Enter your name and email to see detailed feedback on all 4 criteria — plus 3 quick wins to raise your score.</p>
+      <form class="gate-form" id="gate-form" onsubmit="submitGate(event)">
+        <input type="text" class="gate-input" id="gate-name" placeholder="Your first name" required>
+        <input type="email" class="gate-input" id="gate-email" placeholder="Your email address" required>
+        <button type="submit" class="gate-submit" id="gate-submit-btn">Get My Full Report →</button>
+        <p class="gate-privacy">No spam. Unsubscribe any time. We send max 1 email/week.</p>
+      </form>
+    </div>
+
+    <!-- full results (shown after gate) -->
+    <div id="full-results">
+      <div class="full-results-header">
+        <div>
+          <div class="results-name" id="results-name-display"></div>
+          <div class="results-sub">Here is your complete IELTS Writing Task 2 report</div>
+        </div>
+      </div>
+
+      <div id="full-criteria-grid" class="criteria-grid"></div>
+
+      <div class="feedback-card" id="strength-card">
+        <div class="feedback-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Key Strengths
+        </div>
+        <div class="feedback-body" id="strength-body"></div>
+      </div>
+
+      <div class="feedback-card" id="improve-card">
+        <div class="feedback-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Priority Improvements
+        </div>
+        <div class="feedback-body" id="improve-body"></div>
+      </div>
+
+      <div class="feedback-card" id="vocab-card">
+        <div class="feedback-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Advanced Vocabulary to Use Next Time
+        </div>
+        <div class="feedback-body" id="vocab-body">
+          <div class="vocab-list" id="vocab-tags-list"></div>
+        </div>
+      </div>
+
+      <div class="next-steps-cta">
+        <div class="nsc-title">Ready to hit Band 7+?</div>
+        <p class="nsc-sub">Book a free 30-minute diagnostic class with a Motion teacher. We'll map exactly what's holding your score back.</p>
+        <a href="https://wa.me/998900000000" class="nsc-btn" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Book Free Diagnostic Class
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features" id="features">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label">Why Motion</div>
+    <div class="section-title">Everything you need to reach Band 7+</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon green">🎯</div>
+        <h3 class="feature-h">Real IELTS Criteria</h3>
+        <p class="feature-p">We score against the exact same 4 criteria the Cambridge examiner uses — Task Achievement, Coherence & Cohesion, Lexical Resource, and Grammatical Range & Accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">⚡</div>
+        <h3 class="feature-h">Instant Feedback</h3>
+        <p class="feature-p">Most students wait a week to hear back from a teacher. Our AI gives you a detailed band score in under 10 seconds so you can iterate and improve fast.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">📈</div>
+        <h3 class="feature-h">Personalised Next Steps</h3>
+        <p class="feature-p">Generic advice doesn't move the needle. We identify the exact patterns holding your score down and give you targeted exercises to fix them before exam day.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon green">🧠</div>
+        <h3 class="feature-h">20 Practice Prompts</h3>
+        <p class="feature-p">Browse real IELTS-style prompts across Education, Technology, Environment, and more. Each comes with 5 high-band vocabulary words and a 3-sentence outline.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon blue">👩‍🏫</div>
+        <h3 class="feature-h">Expert Human Teachers</h3>
+        <p class="feature-p">AI flags the issues; our certified IELTS teachers fix them. Book a class and work 1-on-1 with a specialist who has helped 800+ students reach their target band.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon purple">🔒</div>
+        <h3 class="feature-h">Private by Design</h3>
+        <p class="feature-p">Your essay is sent to our secure server for scoring and immediately discarded. Nothing is stored, indexed, or used for training. Your words stay yours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRACTICE PROMPTS ── -->
+<section class="prompts-section" id="prompts">
+  <div class="prompts-inner">
+    <div class="section-label">Free Practice Material</div>
+    <div class="section-title">20 IELTS Task 2 Prompts with Vocabulary & Outlines</div>
+    <div class="prompts-tabs" id="prompts-tabs">
+      <button type="button" class="ptab active" onclick="filterPrompts('all',this)">All</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Education',this)">Education</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Technology',this)">Technology</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Environment',this)">Environment</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Government',this)">Government</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Society',this)">Society</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Health',this)">Health</button>
+      <button type="button" class="ptab" onclick="filterPrompts('Work',this)">Work</button>
+    </div>
+    <div class="prompts-grid" id="prompts-grid"></div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ── -->
+<section class="cta-banner">
+  <div class="cta-banner-bg"></div>
+  <div style="position:relative;z-index:1;">
+    <h2>Stop guessing. Start scoring.</h2>
+    <p>Join 800+ students who used Motion to reach their target IELTS band in less time.</p>
+    <a href="#top" class="cta-banner-btn" onclick="document.getElementById('essay-input').focus();return false;">
+      Check My Essay Now
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-copy">© 2026 Motion Language Centre. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="motion_portal_v8.html">Student Portal</a>
+    <a href="mailto:info@motion.edu">Contact</a>
+  </div>
+</footer>
+
+<!-- Prompt detail modal -->
+<div class="prompt-modal" id="prompt-modal" onclick="if(event.target===this)closeModal()">
+  <div class="prompt-modal-inner">
+    <button type="button" class="pm-close" onclick="closeModal()">✕</button>
+    <div class="pm-cat" id="pm-cat"></div>
+    <div class="pm-prompt" id="pm-prompt"></div>
+    <div class="pm-section">
+      <div class="pm-section-title">Advanced Vocabulary (Band 7+)</div>
+      <div class="pm-vocab-list" id="pm-vocab"></div>
+    </div>
+    <div class="pm-section">
+      <div class="pm-section-title">3-Sentence Outline</div>
+      <div class="pm-outline" id="pm-outline"></div>
+    </div>
+    <button type="button" class="use-prompt-btn" onclick="useThisPrompt()">Use This Prompt → Score My Essay</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── PROMPTS DATABASE ───────────────────────────────────────────────────────
+const PROMPTS = [
+  {
+    id:1, cat:'Education',
+    prompt:'Some people believe that university education should be free for all students, regardless of their financial background. Others argue that students should pay tuition fees themselves. Discuss both views and give your own opinion.',
+    vocab:[
+      {word:'equitable access',def:'Fair and impartial opportunity for everyone to benefit from a resource'},
+      {word:'socioeconomic disparity',def:'Inequality in wealth, income, and opportunity between social groups'},
+      {word:'graduate premium',def:'The additional earning potential a person gains from completing higher education'},
+      {word:'meritocratic principle',def:'The idea that advancement should be based on talent and effort, not background'},
+      {word:'fiscal burden',def:'The financial weight placed on taxpayers or government budgets'},
+    ],
+    outline:[
+      'Free university education removes socioeconomic barriers and reinforces the meritocratic principle that hard work, not wealth, determines academic opportunity.',
+      'Conversely, fee-based systems can encourage students to take their studies seriously while relieving the fiscal burden on taxpayers who may not benefit directly from others\' degrees.',
+      'In my view, a hybrid model — where tuition is subsidised rather than entirely free — best balances equitable access with fiscal sustainability.',
+    ]
+  },
+  {
+    id:2, cat:'Technology',
+    prompt:'The widespread use of social media has changed the way people communicate and maintain relationships. Do the advantages of this change outweigh the disadvantages?',
+    vocab:[
+      {word:'digital connectivity',def:'The ability to interact and share information instantly across geographical boundaries'},
+      {word:'superficial interaction',def:'Communication that lacks depth or meaningful emotional engagement'},
+      {word:'echo chamber',def:'An environment where a person encounters only beliefs or opinions that match their own'},
+      {word:'algorithmic curation',def:'The automated process by which platforms select and display content based on user data'},
+      {word:'parasocial relationship',def:'A one-sided emotional connection felt toward media figures or online personalities'},
+    ],
+    outline:[
+      'Social media dramatically enhances digital connectivity, allowing people to maintain relationships across time zones and access communities they could never find locally.',
+      'However, algorithmically curated feeds create echo chambers and encourage superficial interaction, which can erode genuine emotional bonds and amplify misinformation.',
+      'On balance, the disadvantages outweigh the benefits unless individuals consciously limit screen time and diversify their information sources.',
+    ]
+  },
+  {
+    id:3, cat:'Environment',
+    prompt:'Some people think that governments should ban all private car use in city centres in order to reduce air pollution and traffic congestion. To what extent do you agree or disagree?',
+    vocab:[
+      {word:'carbon footprint',def:'The total greenhouse gas emissions caused by an individual, event, or product'},
+      {word:'modal shift',def:'A change in the proportion of people using different forms of transport'},
+      {word:'congestion pricing',def:'A system where drivers pay a fee to enter high-traffic areas at peak times'},
+      {word:'urban sprawl',def:'The uncontrolled expansion of urban areas into surrounding rural land'},
+      {word:'micro-mobility',def:'Small, lightweight vehicles such as e-bikes and scooters used for short journeys'},
+    ],
+    outline:[
+      'Banning private vehicles from city centres would trigger a modal shift toward public transport and micro-mobility, substantially reducing both carbon emissions and dangerous particulate pollution.',
+      'A blanket ban, however, is inequitable for those who rely on cars due to disability or lack of public transport infrastructure, and could damage local economies if implemented without adequate alternatives.',
+      'A more effective approach is congestion pricing combined with investment in clean public transport, gradually making car use in city centres financially unviable rather than legally prohibited.',
+    ]
+  },
+  {
+    id:4, cat:'Government',
+    prompt:'In some countries, the government provides a basic income to all citizens, whether they work or not. Do the advantages of this policy outweigh the disadvantages?',
+    vocab:[
+      {word:'universal basic income (UBI)',def:'A government programme guaranteeing a regular cash payment to all citizens unconditionally'},
+      {word:'means-tested welfare',def:'Benefits distributed only to people who meet specific income or asset criteria'},
+      {word:'labour market disincentive',def:'A policy or condition that reduces people\'s motivation to seek employment'},
+      {word:'purchasing power',def:'The value of money expressed in terms of the goods and services it can buy'},
+      {word:'fiscal sustainability',def:'The ability of a government to maintain its spending patterns without endangering economic stability'},
+    ],
+    outline:[
+      'Universal basic income provides a financial safety net that eliminates the stigma associated with means-tested welfare and gives citizens purchasing power to stimulate local economies.',
+      'Critics argue that a non-conditional payment reduces labour market participation and is fiscally unsustainable without significant tax increases on higher earners.',
+      'On balance, the advantages outweigh the risks in economies facing automation-driven job displacement, provided UBI is funded by a well-designed progressive tax reform.',
+    ]
+  },
+  {
+    id:5, cat:'Society',
+    prompt:'Many elderly people are no longer looked after by their families but are instead put in care homes or similar institutions. Is this a positive or negative development?',
+    vocab:[
+      {word:'filial responsibility',def:'The moral and cultural duty of children to care for their elderly parents'},
+      {word:'geriatric care',def:'Medical and social support specialised for the needs of elderly people'},
+      {word:'social isolation',def:'A state of limited contact with others, leading to loneliness and mental health decline'},
+      {word:'nuclear family structure',def:'A family unit consisting only of parents and their immediate children, without extended relatives'},
+      {word:'professional caregiving',def:'Paid, trained support for people who cannot fully care for themselves'},
+    ],
+    outline:[
+      'Professional care facilities offer geriatric expertise, structured activity programmes, and peer socialisation that many family households cannot replicate, benefiting residents\' physical and mental health.',
+      'However, placing elderly relatives in institutions can weaken filial bonds, increase social isolation, and signal a troubling erosion of the cultural value placed on family care.',
+      'Overall, this is a negative development when driven purely by convenience, but a positive one when care homes provide a measurably higher standard of specialised support than the family could offer.',
+    ]
+  },
+  {
+    id:6, cat:'Education',
+    prompt:'Some people believe that children who do not perform well at school should be encouraged to enter vocational training instead of continuing their academic education. To what extent do you agree or disagree?',
+    vocab:[
+      {word:'vocational training',def:'Practical education designed to prepare students for specific skilled trades or occupations'},
+      {word:'academic attainment',def:'The level of educational achievement a student reaches in formal schooling'},
+      {word:'skills gap',def:'The difference between the skills employers need and those that job applicants possess'},
+      {word:'stigmatise',def:'To mark or label someone in a way that causes social disapproval or discrimination'},
+      {word:'labour market demand',def:'The need for workers with particular skills and qualifications in an economy'},
+    ],
+    outline:[
+      'Vocational programmes directly address the labour market skills gap and provide learners with practical, employment-ready expertise that academic routes sometimes fail to deliver.',
+      'Nevertheless, steering underperforming students into vocational paths too early risks stigmatising them and closing off future academic options, which may simply reflect late intellectual development rather than permanent limitation.',
+      'I agree with the proposal provided that vocational and academic pathways are treated with equal social status and that students can transition between them throughout their education.',
+    ]
+  },
+  {
+    id:7, cat:'Technology',
+    prompt:'Artificial intelligence is increasingly being used to perform tasks that were previously done by humans, such as customer service, medical diagnosis, and legal advice. What are the potential benefits and drawbacks of this trend?',
+    vocab:[
+      {word:'cognitive automation',def:'The use of AI to perform tasks that previously required human reasoning and judgment'},
+      {word:'algorithmic bias',def:'Systematic errors in AI output caused by prejudiced data or flawed model design'},
+      {word:'human-in-the-loop',def:'A design approach that keeps a human in the decision-making process alongside AI'},
+      {word:'liability framework',def:'Legal rules that determine who is responsible when AI causes harm or makes errors'},
+      {word:'augmentation',def:'The use of technology to extend or enhance human capabilities rather than replace them'},
+    ],
+    outline:[
+      'Cognitive automation enables faster, cheaper delivery of services such as medical diagnosis, where AI can detect patterns across millions of patient records more accurately than any individual clinician.',
+      'The key drawbacks are algorithmic bias — where flawed training data leads to discriminatory outputs — and the collapse of liability frameworks when an AI makes a consequential error with no human accountable.',
+      'The ideal model is augmentation rather than wholesale replacement: AI handles data-intensive processing while humans retain oversight and ethical judgment, backed by a clear legal liability framework.',
+    ]
+  },
+  {
+    id:8, cat:'Environment',
+    prompt:'Many species of plants and animals are becoming extinct due to human activity. Some people argue that governments should spend large amounts of money to protect these species. To what extent do you agree with this view?',
+    vocab:[
+      {word:'biodiversity',def:'The variety of life on Earth, including species, ecosystems, and genetic diversity'},
+      {word:'ecosystem services',def:'The benefits that natural environments provide to humans, such as clean water and pollination'},
+      {word:'keystone species',def:'A species that has a disproportionately large effect on its ecosystem relative to its abundance'},
+      {word:'habitat fragmentation',def:'The process by which large continuous habitats are broken into smaller, isolated patches'},
+      {word:'conservation funding',def:'Financial resources allocated to protecting and restoring wildlife and natural habitats'},
+    ],
+    outline:[
+      'Biodiversity underpins the ecosystem services on which human civilisation depends: keystone species maintain food webs, and the loss of even one can trigger cascading extinctions that threaten agricultural systems and freshwater supplies.',
+      'Spending large sums on conservation is more difficult to justify when those funds might address immediate human suffering through healthcare or poverty reduction, raising valid questions of prioritisation.',
+      'I strongly agree that governments should allocate substantial conservation funding, as protecting biodiversity is not charity for animals but a necessary investment in the ecological systems that sustain human life.',
+    ]
+  },
+  {
+    id:9, cat:'Government',
+    prompt:'Some governments think that economic progress is the most important goal of a country. Others believe that protecting the environment should be the top priority. Discuss both views and give your own opinion.',
+    vocab:[
+      {word:'sustainable development',def:'Economic growth that meets present needs without compromising future generations\' ability to meet theirs'},
+      {word:'green economy',def:'An economy that is low-carbon, resource-efficient, and socially inclusive'},
+      {word:'externality',def:'A cost or benefit of economic activity that affects parties not directly involved in the transaction'},
+      {word:'intergenerational equity',def:'Fairness between current and future generations in the use of shared resources'},
+      {word:'GDP growth',def:'The increase in the monetary value of all goods and services produced in a country over time'},
+    ],
+    outline:[
+      'Advocates of economic priority argue that GDP growth funds public services, reduces poverty, and gives governments the resources to address environmental issues from a position of strength.',
+      'Environmental priority proponents counter that ecological destruction externalises massive costs onto society and future generations, and that no economic system can thrive on a degraded planet.',
+      'My view is that the framing of economy versus environment is false: a green economy built on sustainable development achieves both goals simultaneously and should be the ambition of every modern government.',
+    ]
+  },
+  {
+    id:10, cat:'Health',
+    prompt:'In many countries, people are choosing to have fewer children than in the past. What are the reasons for this trend, and what are its effects on society?',
+    vocab:[
+      {word:'fertility rate',def:'The average number of children born to a woman over her lifetime'},
+      {word:'demographic dividend',def:'The economic growth potential arising from having a larger proportion of working-age people'},
+      {word:'ageing population',def:'A society in which the median age is rising due to lower birth rates and longer lifespans'},
+      {word:'pension liability',def:'The financial obligation a government or employer has to pay retirement benefits to an ageing workforce'},
+      {word:'pronatalist policy',def:'Government measures designed to encourage citizens to have more children'},
+    ],
+    outline:[
+      'Declining fertility rates are primarily driven by rising childcare costs, women\'s greater career participation, urbanisation, and a shift toward prioritising personal fulfilment over family size.',
+      'The most significant societal effect is an ageing population that strains pension liabilities and healthcare budgets while simultaneously shrinking the labour force and tax base needed to fund them.',
+      'Governments can respond through pronatalist policies, though the more sustainable long-term solution is structured immigration and policies that make having children financially and professionally compatible with modern life.',
+    ]
+  },
+  {
+    id:11, cat:'Work',
+    prompt:'Some companies now offer their employees the option to work from home. Do the advantages of working from home outweigh the disadvantages for both employees and companies?',
+    vocab:[
+      {word:'remote work',def:'Carrying out professional duties outside a traditional office, typically from home'},
+      {word:'work-life balance',def:'The equilibrium between time dedicated to professional duties and personal life'},
+      {word:'productivity metrics',def:'Measurable indicators used to assess how efficiently work is being completed'},
+      {word:'cognitive isolation',def:'Mental and emotional detachment caused by lack of face-to-face professional interaction'},
+      {word:'talent acquisition',def:'The strategic process of identifying, attracting, and hiring skilled employees'},
+    ],
+    outline:[
+      'Remote work demonstrably improves work-life balance, reduces commuting stress, cuts office overhead, and expands companies\' talent acquisition reach beyond local geography.',
+      'The drawbacks include reduced team cohesion, cognitive isolation among employees who lack strong self-management skills, and difficulties maintaining consistent productivity metrics across distributed teams.',
+      'On balance, advantages outweigh disadvantages when organisations invest in robust digital collaboration infrastructure and give employees genuine autonomy over where they work most effectively.',
+    ]
+  },
+  {
+    id:12, cat:'Education',
+    prompt:'Some people think that it is better for children to grow up in the countryside than in a city. Do you agree or disagree?',
+    vocab:[
+      {word:'developmental environment',def:'The physical and social surroundings that influence a child\'s cognitive and emotional growth'},
+      {word:'urban overstimulation',def:'The excessive sensory and social demands placed on children by busy city environments'},
+      {word:'social diversity',def:'The presence of people from a wide range of cultural, ethnic, and economic backgrounds'},
+      {word:'cultural capital',def:'The non-financial social assets — knowledge, skills, education — that provide social mobility'},
+      {word:'green space access',def:'Proximity to parks, forests, or natural areas available for outdoor recreation'},
+    ],
+    outline:[
+      'Countryside upbringings offer green space access, lower urban overstimulation, and a slower pace that supports emotional regulation and physical development in young children.',
+      'City environments, however, provide superior educational facilities, social diversity, and cultural capital — the exposure to arts, ideas, and networks that shape intellectual development and future opportunity.',
+      'I partially agree: for early childhood, rural settings may be healthier, but adolescents and young adults gain far more from the diversity and opportunity density of urban environments.',
+    ]
+  },
+  {
+    id:13, cat:'Technology',
+    prompt:'Some people think that the internet has made it easier for people to access information and education. Others argue that it has created new problems. Discuss both views and give your own opinion.',
+    vocab:[
+      {word:'digital literacy',def:'The ability to find, evaluate, and create information using digital technologies'},
+      {word:'misinformation',def:'False or inaccurate information spread regardless of intent to deceive'},
+      {word:'information asymmetry',def:'A situation where one party has more or better information than another'},
+      {word:'open-access education',def:'Freely available educational content distributed online without financial barriers'},
+      {word:'surveillance capitalism',def:'An economic system that commodifies personal data collected via digital platforms'},
+    ],
+    outline:[
+      'The internet has been transformative for open-access education, enabling learners in low-income countries to study university-level courses, close information asymmetry, and develop digital literacy at minimal cost.',
+      'The corresponding problems — viral misinformation, surveillance capitalism, and the attention economy\'s erosion of deep learning — are serious and growing threats to the quality of public discourse.',
+      'My view is that the internet\'s educational potential overwhelmingly outweighs its risks, provided governments regulate misinformation at scale and schools equip students with critical digital literacy skills.',
+    ]
+  },
+  {
+    id:14, cat:'Society',
+    prompt:'In many countries, crime rates are increasing. Some people think that the best way to reduce crime is to build more prisons, while others believe crime prevention should focus on social programmes. Discuss both views.',
+    vocab:[
+      {word:'recidivism',def:'The tendency of a convicted criminal to re-offend after release from prison'},
+      {word:'deterrence',def:'The use of punishment or threat of punishment to discourage criminal behaviour'},
+      {word:'restorative justice',def:'A system of justice that focuses on rehabilitation and repairing harm rather than punishment'},
+      {word:'socioeconomic deprivation',def:'Disadvantage resulting from low income, poor housing, limited education, and lack of opportunity'},
+      {word:'rehabilitation programme',def:'Structured activities designed to reintegrate offenders into society as law-abiding citizens'},
+    ],
+    outline:[
+      'Proponents of prison expansion argue that incarceration provides clear deterrence and physically prevents repeat offending, which provides immediate protection to communities.',
+      'Social programme advocates counter that high recidivism rates prove that punishment alone fails to address the socioeconomic deprivation and trauma that drive criminal behaviour in the first place.',
+      'A balanced approach combines restorative justice and rehabilitation programmes with targeted prison capacity for violent offenders, addressing root causes rather than just consequences.',
+    ]
+  },
+  {
+    id:15, cat:'Health',
+    prompt:'Some people think that governments should invest more money in preventative healthcare rather than spending large amounts on treating illnesses. To what extent do you agree?',
+    vocab:[
+      {word:'preventative healthcare',def:'Medical care focused on avoiding disease before it occurs, through lifestyle interventions and screening'},
+      {word:'cost-effectiveness',def:'Achieving the best possible outcome relative to the resources invested'},
+      {word:'public health intervention',def:'A population-level strategy to improve the health of a community'},
+      {word:'non-communicable disease',def:'A chronic condition not passed between people, such as heart disease or diabetes'},
+      {word:'health literacy',def:'An individual\'s ability to understand and act on health information to make good decisions'},
+    ],
+    outline:[
+      'Investing in preventative healthcare is significantly more cost-effective than treating advanced non-communicable diseases: a dollar spent on screening or vaccination saves many times the cost of acute hospital care.',
+      'The practical challenge is that preventative benefits accrue slowly over decades, making them politically unattractive compared to the immediate, visible impact of building hospitals and reducing waiting lists.',
+      'I strongly agree with prioritising prevention, and would add that meaningful investment in health literacy and community-level public health interventions is the single highest-return spending decision a government can make.',
+    ]
+  },
+  {
+    id:16, cat:'Government',
+    prompt:'Some people believe that wealthy countries have a responsibility to help developing nations by providing financial aid. Others argue that individuals in those countries should solve their own problems. Discuss both views.',
+    vocab:[
+      {word:'official development assistance (ODA)',def:'Government aid donated to promote developing countries\' economic and welfare development'},
+      {word:'debt trap',def:'A situation where a borrowing country cannot repay loans without taking on more debt'},
+      {word:'dependency theory',def:'The economic idea that developing nations remain poor because they depend on wealthier countries'},
+      {word:'conditionality',def:'Requirements attached to financial aid that the recipient country must meet'},
+      {word:'capacity building',def:'Investing in skills, institutions, and systems that allow communities to manage their own development'},
+    ],
+    outline:[
+      'Wealthy nations have both a moral obligation and a pragmatic incentive to provide official development assistance, as global poverty drives migration, conflict, and disease that ultimately affect all countries.',
+      'Critics raise legitimate concerns that poorly designed aid creates dependency, allows recipient governments to avoid accountability, and sometimes creates debt traps that serve donor country interests more than recipients.',
+      'In my view, aid is necessary but should focus on capacity building — infrastructure, education, governance — rather than direct transfers, with minimal conditionality that respects national sovereignty.',
+    ]
+  },
+  {
+    id:17, cat:'Work',
+    prompt:'Some people think that employers should not consider a person\'s appearance when making hiring decisions. Do you agree or disagree?',
+    vocab:[
+      {word:'unconscious bias',def:'Automatic, unintentional preference for or against certain groups based on deeply held stereotypes'},
+      {word:'professional decorum',def:'Standards of behaviour and presentation considered appropriate in a workplace setting'},
+      {word:'protected characteristic',def:'A personal attribute, such as race or age, that is legally protected from discrimination'},
+      {word:'meritocracy',def:'A system where advancement is based on ability and achievement rather than social factors'},
+      {word:'body autonomy',def:'The right of individuals to make decisions about their own body without external coercion'},
+    ],
+    outline:[
+      'Basing hiring decisions on appearance is ethically wrong when it reflects unconscious bias against protected characteristics such as race, weight, age, or disability, undermining meritocracy and causing measurable economic harm to affected groups.',
+      'There is a narrower legitimate argument that professional decorum in client-facing roles allows employers to set minimal standards of presentation — not discriminating on identity but establishing baseline professional expectations.',
+      'I agree that appearance should be almost entirely irrelevant in hiring, with only very limited exceptions for safety or uniform-based roles, subject to strict anti-discrimination frameworks.',
+    ]
+  },
+  {
+    id:18, cat:'Society',
+    prompt:'The number of people choosing to live alone is increasing in many countries. What are the reasons for this trend, and is it a positive or negative development?',
+    vocab:[
+      {word:'individualism',def:'A social value that prioritises personal autonomy, freedom, and self-expression'},
+      {word:'social atomisation',def:'The fragmentation of community ties and the decline of shared social bonds'},
+      {word:'single-person household',def:'A dwelling occupied by only one person, a growing category in most urban economies'},
+      {word:'urbanisation',def:'The process by which rural populations move to cities, driving changes in housing and lifestyle'},
+      {word:'chosen solitude',def:'The deliberate decision to live alone for personal fulfilment, distinct from involuntary isolation'},
+    ],
+    outline:[
+      'Rising living alone rates are driven by delayed marriage, increased individualism, urbanisation, and greater economic independence — particularly among women — which allows for chosen solitude without social stigma.',
+      'The primary concern is social atomisation: communities where everyone lives alone tend to report higher rates of loneliness, depression, and low civic participation, with particular risks for elderly single-person households.',
+      'Overall, this is a nuanced development — positive as an expression of personal autonomy, but requiring active policy responses such as community spaces and social prescribing to prevent the worst outcomes of isolation.',
+    ]
+  },
+  {
+    id:19, cat:'Technology',
+    prompt:'Some people believe that self-driving cars will be a positive development for society. Others argue that they pose serious risks. Discuss both views and give your own opinion.',
+    vocab:[
+      {word:'autonomous vehicle',def:'A self-driving car that uses sensors and AI to navigate without human input'},
+      {word:'liability gap',def:'The unresolved legal question of who is responsible when an autonomous system causes harm'},
+      {word:'road fatality rate',def:'The number of deaths caused by traffic accidents per unit of population or distance driven'},
+      {word:'infrastructure readiness',def:'The degree to which roads, regulations, and digital systems can support a new technology'},
+      {word:'hacking vulnerability',def:'The susceptibility of a connected system to being exploited remotely by malicious actors'},
+    ],
+    outline:[
+      'Autonomous vehicles have the potential to eliminate human error — the cause of 94% of accidents — dramatically reducing the road fatality rate and freeing commuters from the cognitive burden of driving.',
+      'The serious risks involve the liability gap when an AI makes a fatal decision, hacking vulnerabilities in connected systems, and the economic displacement of millions of professional drivers before any safety net is in place.',
+      'My view is that self-driving cars will ultimately be positive for society, but only after governments close the liability gap, mandate cybersecurity standards, and ensure infrastructure readiness before permitting widespread deployment.',
+    ]
+  },
+  {
+    id:20, cat:'Environment',
+    prompt:'Some people think that individuals can do little to help the environment and that it is governments and large companies that should act instead. To what extent do you agree?',
+    vocab:[
+      {word:'collective action problem',def:'A situation where individuals acting in self-interest produce an outcome worse for everyone'},
+      {word:'carbon offsetting',def:'The process of compensating for carbon emissions by funding equivalent reductions elsewhere'},
+      {word:'systemic change',def:'Fundamental transformation of the underlying structures and rules governing a system'},
+      {word:'greenwashing',def:'When companies present environmentally misleading claims to appear more sustainable than they are'},
+      {word:'consumer sovereignty',def:'The theory that consumers\' purchasing decisions ultimately determine what products companies produce'},
+    ],
+    outline:[
+      'The most significant environmental damage comes from industrial agriculture, fossil fuel extraction, and shipping — sectors whose emissions dwarf individual consumer choices, making systemic change through government regulation and corporate accountability far more impactful than personal action.',
+      'Nevertheless, individual behaviour shapes culture, politics, and market demand: widespread consumer rejection of carbon-heavy products can trigger supply chain shifts that regulation alone often cannot achieve quickly enough.',
+      'I largely agree that structural change is paramount, but argue that individual action remains meaningful as a political and cultural force — particularly when it translates into civic pressure that compels governments and corporations to act.',
+    ]
+  },
+];
+
+// ─── STATE ──────────────────────────────────────────────────────────────────
+const API = 'https://motion-essay-api.onrender.com';
+let lastScoreData = null;
+let activePromptId = null;
+
+// ─── ESSAY INPUT ────────────────────────────────────────────────────────────
+function onEssayInput(ta){
+  const wc = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  document.getElementById('hero-wc').textContent = wc + ' words';
+}
+
+function loadSampleEssay(){
+  const sample = `In recent years, the debate over whether university education should be provided free of charge has intensified considerably. While some argue that abolishing tuition fees would create a fairer society, others believe that students should contribute financially to their own education. I will examine both perspectives before offering my own view.
+
+Those who advocate for free higher education contend that financial barriers prevent talented individuals from less affluent backgrounds from accessing university. When tuition fees are high, prospective students from low-income families may be deterred from pursuing academic qualifications, which perpetuates socioeconomic inequality. Furthermore, an educated workforce benefits the entire economy, generating tax revenue that arguably exceeds the cost of subsidising tuition.
+
+On the other hand, opponents of free university education point out that the system places an enormous fiscal burden on taxpayers, including those who never attended university themselves. They argue that graduates typically earn significantly more over their careers than non-graduates, so it is equitable for them to bear the cost of the qualification that generated this advantage. Additionally, introducing fees can motivate students to take their studies more seriously, viewing their education as a personal investment rather than an entitlement.
+
+In my opinion, a hybrid model offers the most balanced solution. Governments should subsidise a significant portion of tuition costs while implementing income-contingent repayment schemes, ensuring that no student is priced out of higher education but that graduates who benefit financially contribute proportionally once they enter the workforce.`;
+  document.getElementById('essay-input').value = sample;
+  onEssayInput(document.getElementById('essay-input'));
+  showToast('Sample essay loaded!');
+}
+
+// IELTS scores are always in 0.5 increments (5.0, 5.5, 6.0, 6.5 …)
+function roundToHalf(n){ return Math.round(n * 2) / 2; }
+
+// ─── BAND SCORE CALL ────────────────────────────────────────────────────────
+async function runBandScore(){
+  const essay = document.getElementById('essay-input').value.trim();
+  const wc = essay.split(/\s+/).filter(Boolean).length;
+  if(wc < 50){showToast('Please write at least 50 words for a meaningful score.');return;}
+
+  const btn = document.getElementById('check-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Analysing your essay…';
+
+  try {
+    const resp = await fetch(API + '/api/band-score', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({essay})
+    });
+    if(!resp.ok) throw new Error('Server error ' + resp.status);
+    const data = await resp.json();
+    lastScoreData = data;
+    showResults(data);
+  } catch(err){
+    showToast('Could not reach scoring server. Please try again in a moment.');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> Get My Band Score';
+  }
+}
+
+// ─── RENDER RESULTS ─────────────────────────────────────────────────────────
+const CRITERIA_NAMES = ['Task Achievement','Coherence & Cohesion','Lexical Resource','Grammatical Range & Accuracy'];
+const CRITERIA_KEYS  = ['task_achievement','coherence_cohesion','lexical_resource','grammatical_accuracy'];
+
+function bandDesc(score){
+  if(score>=8)return'Excellent — near-native level writing';
+  if(score>=7)return'Good — minor errors, strong performance';
+  if(score>=6)return'Competent — some limitations in accuracy and range';
+  if(score>=5)return'Modest — clear weaknesses to address';
+  return'Below expectations — significant practice needed';
+}
+
+function showResults(data){
+  const overall = roundToHalf(data.overall_band || data.overall || 0);
+  document.getElementById('score-num').textContent = overall.toFixed(1);
+  document.getElementById('score-desc').textContent = bandDesc(overall);
+  document.getElementById('gate-score').textContent = overall.toFixed(1);
+
+  // Render criteria grid (first unlocked, rest locked behind gate)
+  const grid = document.getElementById('criteria-grid');
+  grid.innerHTML = '';
+  CRITERIA_NAMES.forEach((name,i) => {
+    const key = CRITERIA_KEYS[i];
+    const score = roundToHalf(data[key] || 0);
+    const pct = (score / 9) * 100;
+    const locked = i > 0;
+    const card = document.createElement('div');
+    card.className = 'criterion-card' + (locked ? ' locked' : '');
+    card.innerHTML = `
+      <div class="criterion-name">${name}</div>
+      <div class="criterion-score">${locked ? '?.?' : score.toFixed(1)}</div>
+      <div class="criterion-bar"><div class="criterion-fill" style="width:${locked?0:pct}%"></div></div>
+      ${locked
+        ? `<div class="criterion-comment" style="color:var(--txt3);font-size:12px;margin-top:6px;">Unlock to view feedback</div>
+           <div class="lock-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Locked</div>`
+        : `<div class="criterion-comment">${data[key+'_comment']||'See full breakdown below'}</div>`
+      }
+    `;
+    grid.appendChild(card);
+    // animate bar after paint
+    if(!locked) setTimeout(()=>{card.querySelector('.criterion-fill').style.width=pct+'%';},60);
+  });
+
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── GATE SUBMISSION ────────────────────────────────────────────────────────
+async function submitGate(e){
+  e.preventDefault();
+  const name  = document.getElementById('gate-name').value.trim();
+  const email = document.getElementById('gate-email').value.trim();
+  if(!name || !email){showToast('Please enter your name and email');return;}
+
+  const submitBtn = document.getElementById('gate-submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending…';
+
+  // Store lead (via Netlify Forms if hosted on Netlify, else just proceed)
+  try {
+    await fetch('/',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:`form-name=lead-capture&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&band=${encodeURIComponent(lastScoreData?.overall_band ? roundToHalf(lastScoreData.overall_band) : '')}`
+    });
+  } catch(_){}
+
+  revealFullResults(name);
+}
+
+function revealFullResults(name){
+  if(!lastScoreData) return;
+  const data = lastScoreData;
+
+  // Hide gate card, show full results
+  document.getElementById('gate-card').style.display = 'none';
+  document.getElementById('full-results').style.display = 'block';
+  document.getElementById('results-name-display').textContent = 'Hi, ' + name + ' 👋';
+
+  // Full unlocked criteria grid
+  const fullGrid = document.getElementById('full-criteria-grid');
+  fullGrid.innerHTML = '';
+  CRITERIA_NAMES.forEach((nm,i) => {
+    const key  = CRITERIA_KEYS[i];
+    const score = roundToHalf(data[key] || 0);
+    const pct  = (score / 9) * 100;
+    const card = document.createElement('div');
+    card.className = 'criterion-card';
+    card.innerHTML = `
+      <div class="criterion-name">${nm}</div>
+      <div class="criterion-score">${score.toFixed(1)}</div>
+      <div class="criterion-bar"><div class="criterion-fill" style="width:0%"></div></div>
+      <div class="criterion-comment">${data[key+'_comment']||''}</div>
+    `;
+    fullGrid.appendChild(card);
+    setTimeout(()=>{card.querySelector('.criterion-fill').style.width=pct+'%';},60*(i+1));
+  });
+
+  // Strength & improvement feedback
+  document.getElementById('strength-body').textContent =
+    data.strengths || data.positive_feedback ||
+    'Your essay demonstrates a clear position and reasonable paragraph structure. Continue developing your argument depth.';
+  document.getElementById('improve-body').textContent =
+    data.improvements || data.areas_to_improve ||
+    'Focus on using a wider range of linking devices and vary your sentence structures to score higher on Coherence & Cohesion and Grammatical Range.';
+
+  // Vocab suggestions
+  const tags = document.getElementById('vocab-tags-list');
+  tags.innerHTML = '';
+  const vocabList = data.suggested_vocabulary || data.vocabulary_suggestions || [];
+  if(vocabList.length){
+    vocabList.forEach(v=>{
+      const tag = document.createElement('span');
+      tag.className = 'vocab-tag';
+      tag.textContent = typeof v === 'string' ? v : v.word || v;
+      tags.appendChild(tag);
+    });
+  } else {
+    document.getElementById('vocab-card').style.display = 'none';
+  }
+
+  document.getElementById('full-results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── PROMPTS ────────────────────────────────────────────────────────────────
+function renderPrompts(filter){
+  const grid = document.getElementById('prompts-grid');
+  const list = filter === 'all' ? PROMPTS : PROMPTS.filter(p=>p.cat===filter);
+  grid.innerHTML = list.map(p=>`
+    <div class="prompt-card" onclick="openPromptModal(${p.id})">
+      <div class="prompt-cat">${p.cat}</div>
+      <div class="prompt-text">${p.prompt.slice(0,140)}…</div>
+      <div class="prompt-vocab">${p.vocab.slice(0,3).map(v=>`<span class="pvocab">${v.word}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function filterPrompts(cat, btn){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderPrompts(cat);
+}
+
+function openPromptModal(id){
+  const p = PROMPTS.find(x=>x.id===id);
+  if(!p) return;
+  activePromptId = id;
+  document.getElementById('pm-cat').textContent = p.cat;
+  document.getElementById('pm-prompt').textContent = p.prompt;
+  document.getElementById('pm-vocab').innerHTML = p.vocab.map(v=>`
+    <div class="pm-vocab-item">
+      <div class="pm-vocab-word">${v.word}</div>
+      <div class="pm-vocab-def">${v.def}</div>
+    </div>
+  `).join('');
+  document.getElementById('pm-outline').innerHTML = `
+    <div class="pm-outline">
+      ${p.outline.map(s=>`<p>${s}</p>`).join('')}
+    </div>
+  `;
+  document.getElementById('prompt-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('prompt-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function useThisPrompt(){
+  const p = PROMPTS.find(x=>x.id===activePromptId);
+  if(!p) return;
+  closeModal();
+  const ta = document.getElementById('essay-input');
+  const placeholder = `[Write your essay here in response to the prompt above]\n\nPrompt: ${p.prompt}`;
+  ta.value = placeholder;
+  ta.select();
+  document.getElementById('top').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>ta.focus(),600);
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────────
+let _toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+renderPrompts('all');
+
+// Keyboard: Escape closes modal
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeModal();
+});
+</script>
+
+<!-- Netlify Forms hidden form for lead capture -->
+<form name="lead-capture" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="name">
+  <input type="email" name="email">
+  <input type="text" name="band">
+  <input type="text" name="bot-field">
+</form>
+
+</body>
+</html>
