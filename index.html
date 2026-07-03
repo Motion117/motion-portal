@@ -447,6 +447,40 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--
 .vocab-score-val{font-size:24px;font-weight:600;}
 .vocab-score-lbl{font-size:10px;color:var(--txt3);margin-top:2px;}
 
+/* ── DICTATION (LISTEN & TYPE) ── */
+.dit-play-row{display:flex;align-items:center;justify-content:center;gap:12px;}
+.dit-play-btn{
+  width:64px;height:64px;border-radius:50%;flex-shrink:0;
+  background:var(--accent);color:#fff;border:none;cursor:pointer;
+  font-size:24px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px rgba(124,110,255,0.35);transition:all 0.2s;
+}
+.dit-play-btn:hover{transform:scale(1.06);box-shadow:0 0 28px rgba(124,110,255,0.5);}
+.dit-play-btn:active{transform:scale(0.96);}
+.dit-play-btn.playing{animation:dit-pulse 1s ease-in-out infinite;}
+@keyframes dit-pulse{0%,100%{box-shadow:0 0 20px rgba(124,110,255,0.35);}50%{box-shadow:0 0 32px rgba(124,110,255,0.65);}}
+.dit-word{display:inline-block;margin:0 3px 4px 0;}
+.dit-word.correct{color:var(--green);}
+.dit-word.missing{color:var(--red);text-decoration:line-through;opacity:0.75;}
+.dit-word.extra{color:var(--gold);}
+
+/* ── SPEAKING PRACTICE ── */
+.sp-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:16px;}
+.sp-tab{
+  font-family:inherit;font-size:12px;font-weight:600;padding:8px 18px;cursor:pointer;
+  background:rgba(124,110,255,0.08);color:var(--accent2);border:0.5px solid rgba(124,110,255,0.2);
+  border-radius:9px;transition:all 0.2s;
+}
+.sp-tab:hover{background:rgba(124,110,255,0.16);}
+.sp-tab.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 0 14px rgba(124,110,255,0.35);}
+.sp-cue-list{list-style:none;padding:0;margin:0;text-align:left;}
+.sp-cue-list li{
+  font-size:13px;color:var(--txt2);padding:8px 0 8px 22px;position:relative;
+  border-bottom:0.5px solid var(--line2);
+}
+.sp-cue-list li:last-child{border-bottom:none;}
+.sp-cue-list li::before{content:'•';position:absolute;left:6px;color:var(--accent);font-weight:700;}
+
 /* ── LEVEL SELECTOR ── */
 .levels-list{display:flex;flex-direction:column;gap:10px;padding:0 0 24px;}
 .level-card{
@@ -497,6 +531,12 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--
 .chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:14px;padding:4px 0;}
 .chat-msg{display:flex;gap:10px;animation:msgIn 0.3s cubic-bezier(0.16,1,0.3,1);}
 .chat-msg.mine{flex-direction:row-reverse;}
+/* min-width:0 breaks the classic flexbox trap: without it, this auto-sized flex item
+   can't shrink below its content's intrinsic width, so .chat-bubble's max-width:75%
+   (which is relative to THIS box, not the row) computes against an unexpectedly wide
+   box and a long message wraps character-by-character into a tall narrow sliver
+   instead of a normal paragraph. */
+.chat-msg-body{min-width:0;}
 .chat-ava{
   width:30px;height:30px;border-radius:9px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
@@ -506,10 +546,15 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--
 .chat-bubble{
   max-width:75%;padding:10px 14px;border-radius:12px;
   font-size:13px;line-height:1.6;
+  overflow-wrap:break-word;word-break:break-word;
 }
 .chat-msg.other .chat-bubble{background:var(--bg3);border:0.5px solid var(--line2);border-radius:4px 12px 12px 12px;}
-.chat-msg.mine .chat-bubble{background:rgba(124,110,255,0.12);border:0.5px solid rgba(124,110,255,0.2);border-radius:12px 4px 12px 12px;}
+.chat-msg.mine .chat-bubble{background:rgba(124,110,255,0.18);border:0.5px solid rgba(124,110,255,0.4);border-radius:12px 4px 12px 12px;}
 .chat-time{font-size:10px;color:var(--txt3);margin-top:5px;}
+.chat-bubble-failed{border-color:var(--red)!important;background:rgba(240,96,96,0.1)!important;}
+.chat-status-pending{font-size:10px;color:var(--txt3);margin-top:3px;}
+.chat-status-failed{font-size:10px;color:var(--red);margin-top:3px;cursor:pointer;display:flex;align-items:center;gap:3px;}
+.chat-msg.mine .chat-status-failed{justify-content:flex-end;}
 .chat-input-area{
   background:var(--bg3);border:0.5px solid var(--line2);
   border-radius:12px;padding:10px 12px;
@@ -866,6 +911,11 @@ body{background:var(--bg);}
 .modal-overlay.open .modal-box{transform:translateY(0) scale(1);}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .modal-title{font-size:16px;font-weight:600;}
+/* Full-screen variant — for content that needs real reading room (a full essay +
+   mistakes panel + band panel at once), not a small centered dialog box. */
+.modal-box.modal-fullscreen{width:min(1000px,96vw);max-width:none;height:92vh;max-height:92vh;padding:0;display:flex;flex-direction:column;}
+.modal-box.modal-fullscreen .modal-head{padding:20px 24px;margin-bottom:0;border-bottom:0.5px solid var(--line2);flex-shrink:0;}
+.modal-box.modal-fullscreen .modal-fs-body{flex:1;overflow-y:auto;padding:20px 24px 28px;}
 .modal-close{width:28px;height:28px;border-radius:8px;background:var(--bg3);border:0.5px solid var(--line2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);transition:all 0.2s;}
 .modal-close:hover{background:var(--bg4);color:var(--txt);}
 .pay-method{
@@ -1196,8 +1246,13 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:49;}
 .sidebar-backdrop.open{display:block;}
 
-.cms-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
-@media (max-width: 900px){.cms-grid{grid-template-columns:1fr;}}
+.cms-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.cms-tab-btn{flex:1;padding:10px 16px;border-radius:10px;border:0.5px solid var(--line2);background:var(--bg3);color:var(--txt2);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s ease;}
+.cms-tab-btn:hover{color:var(--txt);}
+.cms-tab-btn.active{background:rgba(124,110,255,0.14);border-color:var(--accent);color:var(--accent);}
+.cms-vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cms-vocab-grid .cms-vocab-card{margin-bottom:0;}
+@media (max-width: 700px){.cms-vocab-grid{grid-template-columns:1fr;}}
 
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width: 980px){
@@ -1252,14 +1307,34 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
   .hero-stat-val{font-size:18px;}
 }
 /* ─── LESSON GRID (Level → Lessons screen) ─── */
-.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:12px;padding:0 2px;}
-.lesson-card{background:var(--bg3);border-radius:16px;border:0.5px solid var(--line2);padding:16px;cursor:pointer;transition:transform .15s,background .15s,border-color .15s;display:flex;flex-direction:column;gap:8px;position:relative;}
-.lesson-card:hover{transform:translateY(-2px);border-color:var(--accent);}
-.lesson-card.lesson-active{border-color:var(--accent);background:var(--bg4);}
-.lesson-card-icon{font-size:26px;}
-.lesson-card-title{font-size:13.5px;font-weight:600;color:var(--txt1);}
-.lesson-card-desc{font-size:11px;color:var(--txt2);line-height:1.5;}
-.lesson-card-counts{font-size:10px;color:var(--txt3);padding-top:8px;border-top:0.5px solid var(--line2);display:flex;gap:10px;}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:0 2px;}
+.lesson-card{
+  background:var(--bg3);border-radius:16px;border:0.5px solid var(--line2);padding:14px;cursor:pointer;
+  transition:transform .15s,background .15s,border-color .15s,box-shadow .15s;
+  display:flex;align-items:center;gap:12px;position:relative;
+}
+.lesson-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 10px 28px rgba(0,0,0,0.28);}
+.lesson-card:active{transform:translateY(0);}
+.lesson-card.lesson-card-active{border-color:var(--accent);background:var(--bg4);}
+/* Colored badge instead of a bare emoji floating on the card background — gives
+   teacher-created lessons (which fall back to a generic 📖) the same intentional
+   look as the curriculum's own level-tinted icons, rather than an obvious fallback. */
+.lesson-card-icon{
+  width:46px;height:46px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;
+  background:color-mix(in srgb,var(--lesson-tint,var(--accent)) 18%,var(--bg4));
+  border:0.5px solid color-mix(in srgb,var(--lesson-tint,var(--accent)) 35%,transparent);
+}
+.lesson-card-body{flex:1;min-width:0;}
+.lesson-card-title{font-size:13.5px;font-weight:600;color:var(--txt1);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.lesson-card-desc{
+  font-size:11px;color:var(--txt2);line-height:1.5;margin-top:3px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.lesson-card-meta{font-size:10px;color:var(--txt3);margin-top:6px;display:flex;gap:10px;}
+.lesson-card-arrow{color:var(--txt3);font-size:18px;flex-shrink:0;transition:color .15s,transform .15s;}
+.lesson-card:hover .lesson-card-arrow{color:var(--lesson-tint,var(--accent));transform:translateX(2px);}
+.lesson-card-new-badge{font-size:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:20px;padding:2px 8px;font-weight:700;letter-spacing:.3px;flex-shrink:0;}
 /* ─── LESSON HUB (inside lesson screen) ─── */
 .lesson-hub-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
 .lesson-hub-icon{font-size:40px;flex-shrink:0;}
@@ -1470,6 +1545,8 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
   <div class="ni" data-role="student" data-id="levels" onclick="show('levels',this)"><i class="ti ti-layers-difference"></i>Level Track</div>
   <div class="ni" data-role="student" data-id="grammar" onclick="show('grammar',this)"><i class="ti ti-abc"></i>Grammar</div>
   <div class="ni" data-role="student" data-id="vocab" onclick="show('vocab',this)"><i class="ti ti-vocabulary"></i>Vocabulary</div>
+  <div class="ni" data-role="student" data-id="dictation" onclick="show('dictation',this)"><i class="ti ti-headphones"></i>Listen &amp; Type</div>
+  <div class="ni" data-role="student" data-id="speaking" onclick="show('speaking',this)"><i class="ti ti-microphone"></i>Speaking</div>
   <div class="ni" data-role="student" data-id="streak" onclick="show('streak',this)"><i class="ti ti-flame"></i>Streak &amp; goals</div>
   <div class="ni" data-role="student" data-id="leaderboard" onclick="show('leaderboard',this)"><i class="ti ti-trophy"></i>Leaderboard</div>
   <div class="ni" data-role="student" data-id="classroom" onclick="show('classroom',this)"><i class="ti ti-users"></i>Classmates</div>
@@ -1748,11 +1825,11 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <option value="Link">Link / Website</option>
       <option value="Book">Book / Textbook</option>
     </select>
-    <div class="mat-lbl">Upload file (optional — PDF, audio, video, image)</div>
+    <div class="mat-lbl">Upload files (optional — PDF, audio, video, image; pick several at once)</div>
     <label class="mat-file-label" id="mat-file-label" for="mat-file">
-      <i class="ti ti-upload" style="margin-right:6px;vertical-align:-2px"></i><span id="mat-file-name">Choose file or drag here…</span>
+      <i class="ti ti-upload" style="margin-right:6px;vertical-align:-2px"></i><span id="mat-file-name">Choose files or drag here…</span>
     </label>
-    <input type="file" id="mat-file" accept="*/*" style="display:none" onchange="matFileChosen(this)">
+    <input type="file" id="mat-file" accept="*/*" multiple style="display:none" onchange="matFileChosen(this)">
     <div class="mat-lbl" style="margin-top:8px">Link / URL (optional — if no file uploaded)</div>
     <input class="mat-input" id="mat-link" placeholder="https://…">
     <div class="mat-lbl">Target groups</div>
@@ -1765,9 +1842,20 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <label class="mat-group-check"><input type="checkbox" value="IELTS Prep C1"> IELTS Prep C1</label>
     </div>
     <div class="mat-actions">
-      <button type="button" class="hw-btn" style="flex:1" onclick="saveMaterial()"><i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Publish</button>
+      <button type="button" class="hw-btn" id="mat-publish-btn" style="flex:1" onclick="saveMaterial()"><i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Publish</button>
       <button type="button" onclick="closeMatModal()" style="flex:1;background:var(--bg3);border:0.5px solid var(--line2);color:var(--txt2);border-radius:10px;padding:10px;font-size:13px;cursor:pointer;font-weight:600;font-family:inherit">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- MATERIAL DETAIL MODAL — every attached file individually openable, plus the link if any -->
+<div class="mat-modal" id="mat-detail-modal" role="dialog" aria-modal="true" aria-label="Material files">
+  <div class="mat-modal-card">
+    <div class="mat-modal-title">
+      <span id="mat-detail-title"><i class="ti ti-folder" style="margin-right:7px;color:var(--accent);vertical-align:-2px"></i>Material</span>
+      <button type="button" class="mat-modal-close" onclick="closeMatDetail()" aria-label="Close"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="mat-detail-body"></div>
   </div>
 </div>
 
@@ -1823,7 +1911,11 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 
 <!-- GRAMMAR TRAINER -->
 <div class="screen" id="screen-grammar">
-  <div class="ph"><div class="pt">Grammar trainer</div><div class="ps">Unit 5 · Present Perfect · <span id="gr-counter">1 / 8</span></div></div>
+  <div class="ph">
+    <div class="pt">Grammar trainer</div>
+    <div class="ps">Unit 5 · Present Perfect · <span id="gr-counter">1 / 8</span></div>
+    <select class="lesson-select" id="gr-lesson-picker" style="margin-top:10px" onchange="lessonPickerChanged(this)"></select>
+  </div>
   <div class="card glass">
     <div class="bw" style="margin-bottom:16px"><div class="bf accent" id="gr-pfill" style="width:0%"></div></div>
     <div id="gr-question-wrap">
@@ -1846,7 +1938,11 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 
 <!-- VOCAB TRAINER -->
 <div class="screen" id="screen-vocab">
-  <div class="ph"><div class="pt">Vocabulary trainer</div><div class="ps">Unit 5 · 20 words · tap a card to see the translation</div></div>
+  <div class="ph">
+    <div class="pt">Vocabulary trainer</div>
+    <div class="ps">Unit 5 · 20 words · tap a card to see the translation</div>
+    <select class="lesson-select" id="vocab-lesson-picker" style="margin-top:10px" onchange="lessonPickerChanged(this)"></select>
+  </div>
   <div id="vocab-done-screen" style="display:none" class="vocab-done">
     <div class="vocab-done-icon">🎉</div>
     <div class="vocab-done-title">Great! Training complete</div>
@@ -1883,6 +1979,61 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <button type="button" class="vocab-btn ok" onclick="rateWord('ok')">🤔 Almost</button>
       <button type="button" class="vocab-btn good" onclick="rateWord('good')">✅ Knew it!</button>
     </div>
+  </div>
+</div>
+
+<!-- DICTATION (LISTEN & TYPE) -->
+<div class="screen" id="screen-dictation">
+  <div class="ph"><div class="pt">Listen &amp; Type</div><div class="ps">Play the audio, then type exactly what you hear · <span id="dit-counter">1 / 5</span></div></div>
+  <div id="dit-done-wrap" class="card glass" style="display:none;text-align:center;padding:30px 0">
+    <div style="font-size:40px;margin-bottom:10px">🎧</div>
+    <div style="font-size:16px;font-weight:600;margin-bottom:6px">Dictation complete!</div>
+    <div style="font-size:13px;color:var(--txt2);margin-bottom:16px" id="dit-score-text"></div>
+    <button type="button" class="hw-btn" onclick="dictationRestart()">Practice again</button>
+  </div>
+  <div id="dit-empty" class="card glass" style="display:none;text-align:center;padding:32px 16px;color:var(--txt3)"></div>
+  <div id="dit-active">
+    <div class="bw" style="margin-bottom:16px"><div class="bf accent" id="dit-pfill" style="width:0%"></div></div>
+    <div class="card glass" style="padding:22px;text-align:center">
+      <div style="font-size:10px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px" id="dit-topic">Topic</div>
+      <div class="dit-play-row">
+        <button type="button" class="dit-play-btn" id="dit-play-btn" onclick="dictationPlay()" aria-label="Play sentence"><i class="ti ti-volume"></i></button>
+        <button type="button" class="mini-btn" onclick="dictationPlaySlow()"><i class="ti ti-clock-hour-9" style="vertical-align:-2px"></i> Play slowly</button>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:10px" id="dit-play-count">Not played yet</div>
+      <textarea class="hw-textarea" id="dit-input" placeholder="Type what you hear…" style="margin-top:18px;text-align:left" rows="3"></textarea>
+      <button type="button" class="hw-btn" id="dit-submit-btn" onclick="dictationSubmit()">Check</button>
+      <div id="dit-result" style="display:none;margin-top:16px;text-align:left">
+        <div style="font-size:14px;line-height:2;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:14px" id="dit-diff"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <span style="font-size:12px;color:var(--txt2)" id="dit-accuracy"></span>
+          <button type="button" class="hw-btn" id="dit-next-btn" onclick="dictationNext()" style="margin-top:0">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SPEAKING PRACTICE -->
+<div class="screen" id="screen-speaking">
+  <div class="ph"><div class="pt">Speaking Practice</div><div class="ps">IELTS-style questions · think on your feet and practice speaking aloud</div></div>
+  <div class="sp-tabs" id="sp-tabs">
+    <button type="button" class="sp-tab" data-part="1" onclick="speakingSetPart(1)">Part 1</button>
+    <button type="button" class="sp-tab" data-part="2" onclick="speakingSetPart(2)">Part 2</button>
+    <button type="button" class="sp-tab" data-part="3" onclick="speakingSetPart(3)">Part 3</button>
+  </div>
+  <div class="card glass" style="padding:22px;text-align:center">
+    <div style="font-size:10px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px" id="sp-topic">Topic</div>
+    <div style="font-size:17px;font-weight:500;line-height:1.6" id="sp-question">Click "New question" to begin.</div>
+    <div id="sp-cue-wrap" style="display:none;margin-top:16px;text-align:left;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:6px 14px">
+      <ul class="sp-cue-list" id="sp-cue-list"></ul>
+    </div>
+    <div id="sp-timer-wrap" style="display:none;margin-top:20px;text-align:center">
+      <div style="font-size:32px;font-weight:700" id="sp-timer">1:00</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:2px" id="sp-timer-label">Preparation time</div>
+      <button type="button" class="mini-btn" id="sp-timer-btn" onclick="speakingTimerToggle()" style="margin-top:10px">Start prep timer</button>
+    </div>
+    <button type="button" class="hw-btn" onclick="speakingRandom()" style="margin-top:20px">🎲 New question</button>
   </div>
 </div>
 
@@ -2020,13 +2171,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
     <textarea class="hw-textarea" id="ann-input" style="min-height:70px" placeholder="Write a notice for your group..."></textarea>
     <select id="announcement-target-group" class="ai-in" style="width:100%;margin-top:8px;margin-bottom:8px">
       <option value="All Groups">All Groups</option>
-      <option value="Beginner A1">Beginner A1</option>
-      <option value="Elementary A2">Elementary A2</option>
-      <option value="Pre-Intermediate A2+">Pre-Intermediate A2+</option>
-      <option value="Intermediate B1">Intermediate B1</option>
-      <option value="Upper-Intermediate B2">Upper-Intermediate B2</option>
-      <option value="Advanced C1">Advanced C1</option>
-      <option value="IELTS Prep C1">IELTS Prep C1</option>
     </select>
     <button type="button" class="hw-btn" onclick="postAnnouncement()"><i class="ti ti-send" style="margin-right:5px;vertical-align:-1px"></i>Publish</button>
   </div>
@@ -2219,11 +2363,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <div class="sec" style="margin-top:0"><i class="ti ti-speakerphone" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Post Announcement</div>
       <select class="ai-in" id="td-ann-group" style="width:100%;margin-bottom:8px">
         <option value="All Groups">📢 All Groups</option>
-        <option value="Beginner A1">Beginner A1</option>
-        <option value="Elementary A2">Elementary A2</option>
-        <option value="Pre-Intermediate B1">Pre-Intermediate B1</option>
-        <option value="Pre-IELTS B2">Pre-IELTS B2</option>
-        <option value="IELTS Prep C1">IELTS Prep C1</option>
       </select>
       <textarea class="hw-textarea" id="td-ann-input" style="min-height:60px" placeholder="Write a notice for this group…"></textarea>
       <button type="button" class="hw-btn" style="width:100%;margin-top:8px" onclick="postAnnouncementT()"><i class="ti ti-send" style="margin-right:5px;vertical-align:-1px"></i>Publish announcement</button>
@@ -2237,97 +2376,93 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 <div class="screen" id="screen-cms" data-role="teacher">
   <div class="ph"><div class="pt">Content (CMS)</div><div class="ps">Manage lessons, vocabulary and AI grammar drills</div></div>
 
-  <!-- Create New Lesson -->
+  <!-- Create / Select Lesson — the ONE level+lesson choice shared by Vocabulary and Grammar Drills below -->
   <div class="card glass" style="margin-bottom:16px">
-    <div class="sec" style="margin-top:0"><i class="ti ti-books" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Create New Lesson</div>
-    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
-      <select class="ai-in" id="cms-lesson-level">
-        <option value="">— Pick a level —</option>
+    <div class="sec" style="margin-top:0"><i class="ti ti-books" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Create / Select Lesson</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <select class="ai-in" id="cms-lesson-level" onchange="cmsActiveLevelChanged()">
+        <option value="">① Pick a level…</option>
         <option value="beginner">Beginner A1</option>
         <option value="elementary">Elementary A2</option>
         <option value="pre-intermediate">Pre-Intermediate B1</option>
         <option value="pre-ielts">Pre-IELTS B2</option>
         <option value="ielts">IELTS Prep C1</option>
       </select>
-      <input class="ai-in" id="cms-lesson-icon" style="width:56px;text-align:center" placeholder="📖" maxlength="4">
+      <select class="ai-in" id="cms-active-lesson" onchange="cmsActiveLessonChanged()" disabled>
+        <option value="">② Pick a lesson…</option>
+      </select>
     </div>
-    <input class="ai-in" id="cms-lesson-title" style="width:100%;margin-bottom:8px" placeholder="Lesson title (e.g. Business Vocabulary)">
-    <textarea class="hw-textarea" id="cms-lesson-desc" style="min-height:60px;margin-bottom:10px" placeholder="Short description (optional)…"></textarea>
-    <button type="button" id="cms-lesson-btn" class="hw-btn" style="width:100%" onclick="cmsSaveLesson()"><i class="ti ti-device-floppy" style="margin-right:5px;vertical-align:-1px"></i>Save Lesson to Supabase</button>
+    <div id="cms-new-lesson-fields" style="display:none">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px">
+        <input class="ai-in" id="cms-lesson-title" style="width:100%" placeholder="New lesson title (e.g. Business Vocabulary)">
+        <input class="ai-in" id="cms-lesson-icon" style="width:56px;text-align:center" placeholder="📖" maxlength="4">
+      </div>
+      <textarea class="hw-textarea" id="cms-lesson-desc" style="min-height:60px;margin-bottom:10px" placeholder="Short description (optional)…"></textarea>
+      <button type="button" id="cms-lesson-btn" class="hw-btn" style="width:100%" onclick="cmsSaveLesson()"><i class="ti ti-device-floppy" style="margin-right:5px;vertical-align:-1px"></i>Save New Lesson to Supabase</button>
+    </div>
+    <div id="cms-active-lesson-banner" style="display:none;font-size:12px;color:var(--teal);background:rgba(52,196,160,0.1);border-radius:8px;padding:8px 12px">
+      <i class="ti ti-circle-check" style="margin-right:5px;vertical-align:-2px"></i>Active lesson: <b id="cms-active-lesson-name"></b> — add vocabulary or grammar drills to it below
+    </div>
   </div>
 
-  <!-- Two independent columns: Vocabulary | Grammar Drills -->
-  <div class="cms-grid">
+  <!-- Vocabulary / Grammar Drills — tab switch, one panel visible at a time, both use the lesson picked above -->
+  <div class="cms-tabs">
+    <button type="button" id="cms-tab-vocab" class="cms-tab-btn active" onclick="cmsSwitchTab('vocab')">
+      <i class="ti ti-vocabulary" style="margin-right:5px;vertical-align:-1px"></i>Vocabulary
+    </button>
+    <button type="button" id="cms-tab-drills" class="cms-tab-btn" onclick="cmsSwitchTab('drills')">
+      <i class="ti ti-robot" style="margin-right:5px;vertical-align:-1px"></i>Grammar Drills
+    </button>
+  </div>
 
-    <!-- Add Vocabulary Words -->
-    <div class="card glass">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div class="sec" style="margin:0"><i class="ti ti-vocabulary" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Add Vocabulary Words</div>
-        <span id="cms-vocab-badge" style="display:none;font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px"></span>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-        <select class="ai-in" id="cms-vocab-level" onchange="cmsLevelChanged()">
-          <option value="">① Pick a level…</option>
-          <option value="beginner">Beginner A1</option>
-          <option value="elementary">Elementary A2</option>
-          <option value="pre-intermediate">Pre-Intermediate B1</option>
-          <option value="pre-ielts">Pre-IELTS B2</option>
-          <option value="ielts">IELTS Prep C1</option>
-        </select>
-        <select class="ai-in" id="cms-vocab-lesson" disabled>
-          <option value="">② Select lesson…</option>
-        </select>
-      </div>
-      <button type="button" class="hw-btn" style="width:100%;margin-bottom:12px;background:var(--purple);opacity:0.9" onclick="cmsAISuggestWord()">
-        <i class="ti ti-bulb" style="margin-right:5px;vertical-align:-1px"></i>AI Suggest Word for This Topic
-      </button>
-      <div id="cms-vocab-staging"></div>
-      <div style="display:flex;gap:8px;margin-top:6px">
-        <button type="button" class="hw-btn" style="flex:1;background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2)" onclick="cmsAddWordBlock()">
-          <i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add Another Word
-        </button>
-        <button type="button" id="cms-vocab-btn" class="hw-btn" style="flex:2" onclick="cmsSaveVocab()">
-          <i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase
-        </button>
-      </div>
+  <!-- Add Vocabulary Words -->
+  <div class="card glass" id="cms-panel-vocab">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="sec" style="margin:0"><i class="ti ti-vocabulary" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Add Vocabulary Words</div>
+      <span id="cms-vocab-badge" style="display:none;font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px"></span>
     </div>
-
-    <!-- AI Grammar Drills Generator -->
-    <div class="card glass">
-      <div class="sec" style="margin-top:0"><i class="ti ti-robot" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>AI Grammar Drills Generator</div>
-      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px;background:var(--bg3);border-radius:8px;padding:8px 12px;border-left:3px solid var(--accent)">
-        Generate MCQ grammar practice questions with AI. Choose a topic, level and difficulty, then save to Supabase for students. Drills are shared by every lesson at that level (built-in and teacher-created alike).
-      </div>
-      <input class="ai-in" id="drill-topic" style="width:100%;margin-bottom:8px" placeholder="Grammar topic (e.g. Present Perfect, Conditionals, Passive Voice)…">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-        <select class="ai-in" id="drill-level">
-          <option value="A2">Elementary A2</option>
-          <option value="B1" selected>Pre-Int B1</option>
-          <option value="B2">Pre-IELTS B2</option>
-          <option value="C1">IELTS Prep C1</option>
-        </select>
-        <select class="ai-in" id="drill-difficulty">
-          <option value="easy">Easy</option>
-          <option value="medium" selected>Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-        <input class="ai-in" id="drill-count" type="number" min="2" max="15" value="5" placeholder="2–15">
-      </div>
-      <button type="button" id="drill-gen-btn" class="hw-btn" style="width:100%;margin-bottom:14px" onclick="generateGrammarDrills()">
-        <i class="ti ti-wand" style="margin-right:5px;vertical-align:-1px"></i>Generate Grammar Drills with AI
+    <button type="button" class="hw-btn" style="width:100%;margin-bottom:12px;background:var(--purple);opacity:0.9" onclick="cmsAISuggestWord()">
+      <i class="ti ti-bulb" style="margin-right:5px;vertical-align:-1px"></i>AI Suggest Word for This Topic
+    </button>
+    <div id="cms-vocab-staging" class="cms-vocab-grid"></div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button type="button" class="hw-btn" style="flex:1;background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2)" onclick="cmsAddWordBlock()">
+        <i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add Another Word
       </button>
-      <div id="drill-preview" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em">Preview</div>
-          <button type="button" id="drill-save-btn" class="hw-btn" style="padding:7px 14px;font-size:12px" onclick="saveDrillsToSupabase()">
-            <i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase
-          </button>
-        </div>
-        <div id="drill-list"></div>
-      </div>
+      <button type="button" id="cms-vocab-btn" class="hw-btn" style="flex:2" onclick="cmsSaveVocab()">
+        <i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase
+      </button>
     </div>
+  </div>
 
-  </div><!-- /cms-grid -->
+  <!-- AI Grammar Drills Generator -->
+  <div class="card glass" id="cms-panel-drills" style="display:none">
+    <div class="sec" style="margin-top:0"><i class="ti ti-robot" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>AI Grammar Drills Generator</div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:12px;background:var(--bg3);border-radius:8px;padding:8px 12px;border-left:3px solid var(--accent)">
+      Generate MCQ grammar practice questions with AI for the lesson picked above. Choose a topic and difficulty, then save to Supabase — students see them the moment they open that exact lesson.
+    </div>
+    <input class="ai-in" id="drill-topic" style="width:100%;margin-bottom:8px" placeholder="Grammar topic (e.g. Present Perfect, Conditionals, Passive Voice)…">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <select class="ai-in" id="drill-difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <input class="ai-in" id="drill-count" type="number" min="2" max="15" value="5" placeholder="2–15">
+    </div>
+    <button type="button" id="drill-gen-btn" class="hw-btn" style="width:100%;margin-bottom:14px" onclick="generateGrammarDrills()">
+      <i class="ti ti-wand" style="margin-right:5px;vertical-align:-1px"></i>Generate Grammar Drills with AI
+    </button>
+    <div id="drill-preview" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em">Preview</div>
+        <button type="button" id="drill-save-btn" class="hw-btn" style="padding:7px 14px;font-size:12px" onclick="saveDrillsToSupabase()">
+          <i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase
+        </button>
+      </div>
+      <div id="drill-list"></div>
+    </div>
+  </div>
 </div><!-- /screen-cms -->
 
 <!-- ══ PROGRESS HUB SCREEN ════════════════════════════════════════════════ -->
@@ -2537,14 +2672,14 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 
 <!-- ESSAY SUBMISSION DETAIL MODAL (teacher, Epic 5B) -->
 <div class="modal-overlay" id="essay-sub-modal-overlay" onclick="if(event.target===this)closeEssaySubmission()">
-  <div class="modal-box" style="max-width:640px;width:94%">
+  <div class="modal-box modal-fullscreen">
     <div class="modal-head">
       <div class="modal-title" id="essay-sub-modal-title">Essay Submission</div>
       <button type="button" class="modal-close" onclick="closeEssaySubmission()"><i class="ti ti-x"></i></button>
     </div>
-    <div style="padding:0 20px 20px;max-height:70vh;overflow-y:auto">
+    <div class="modal-fs-body">
       <div id="essay-sub-meta" style="font-size:12px;color:var(--txt3);margin-bottom:12px"></div>
-      <div id="essay-sub-text" style="background:var(--surface2);border-radius:10px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;margin-bottom:14px;max-height:220px;overflow-y:auto"></div>
+      <div id="essay-sub-text" style="background:var(--surface2);border-radius:10px;padding:18px;font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;margin-bottom:16px"></div>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
         <button type="button" class="hw-btn" style="padding:8px 14px;font-size:12px" onclick="toggleEssaySubMistakes()"><i class="ti ti-list-check"></i> Show Mistakes</button>
         <button type="button" class="hw-btn" style="padding:8px 14px;font-size:12px;background:var(--bg3);color:var(--txt1);border:0.5px solid var(--line2)" onclick="toggleEssaySubBand()"><i class="ti ti-certificate"></i> IELTS Band</button>
@@ -4216,6 +4351,19 @@ function xpPop(amount,x,y){
 // NOTE: this is a front-end demo. Real authentication, multi-device sessions and
 // per-user data must live on a backend (see server.js / README).
 const GROUPS=['Beginner A1','Elementary A2','Pre-Intermediate B1','Pre-IELTS B2','IELTS Prep C1'];
+// Single source of truth for "what is a real group" — the student and teacher announcement
+// dropdowns each used to hardcode their own option list, and the two had drifted apart (extra
+// entries like "Pre-Intermediate A2+"/"Upper-Intermediate B2"/"Advanced C1" that didn't match
+// any real group). Generate both from GROUPS so they can never diverge again.
+function _groupOptionsHTML(allLabel){
+  return `<option value="All Groups">${allLabel}</option>`+GROUPS.map(g=>`<option value="${g}">${g}</option>`).join('');
+}
+(function _populateAnnouncementGroupSelects(){
+  const sSel=document.getElementById('announcement-target-group');
+  if(sSel)sSel.innerHTML=_groupOptionsHTML('All Groups');
+  const tSel=document.getElementById('td-ann-group');
+  if(tSel)tSel.innerHTML=_groupOptionsHTML('📢 All Groups');
+})();
 
 // ─── USER DATABASE (demo) ───────────────────────
 const USERS=[
@@ -4290,6 +4438,46 @@ function _applyAndGo(s){
   restoreLastScreen();
 }
 
+// Demo accounts (student/teacher) get a real anonymous Supabase identity so RLS-gated
+// reads/writes work. Anonymous sign-in always mints a brand-new auth.users row with no
+// way to "log back into" an old one — so instead of calling signInAnonymously() on every
+// login (which created a fresh duplicate profiles row, and therefore a fresh duplicate
+// roster/chat-thread entry, every single time someone logged into the SAME demo account),
+// we persist that account's session tokens locally and restore the SAME identity next
+// time. logout() now signs out with {scope:'local'} instead of the default 'global' scope
+// specifically so this stored refresh token stays valid server-side across logout/login.
+async function _restoreOrCreateDemoSession(loginVal,localUser){
+  const store=loadStore();
+  const saved=(store.demoSessions||{})[loginVal];
+  if(saved?.refresh_token){
+    try{
+      const{data,error}=await _sb.auth.setSession({access_token:saved.access_token,refresh_token:saved.refresh_token});
+      if(!error&&data?.session?.user){
+        // Defensively re-stamp metadata (e.g. group reassignment) — cheap no-op
+        // most of the time since it's usually already correct from last login.
+        await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
+        await _sb.auth.refreshSession();
+        const fresh=await _sb.auth.getSession();
+        _persistDemoSession(loginVal,fresh.data?.session);
+        return{uid:data.session.user.id};
+      }
+    }catch(e){/* stored token expired/invalid — fall through to minting a new identity */}
+  }
+  const{data:anonData,error:anonError}=await _sb.auth.signInAnonymously();
+  if(anonError||!anonData?.user)return null;
+  await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
+  await _sb.auth.refreshSession();
+  const fresh=await _sb.auth.getSession();
+  _persistDemoSession(loginVal,fresh.data?.session);
+  return{uid:anonData.user.id};
+}
+function _persistDemoSession(loginVal,session){
+  if(!session)return;
+  const store=loadStore();
+  const demoSessions=store.demoSessions||{};
+  demoSessions[loginVal]={access_token:session.access_token,refresh_token:session.refresh_token};
+  saveStore({demoSessions});
+}
 async function doLogin(){
   const loginVal=(document.getElementById('login-user').value||'').trim().toLowerCase();
   const pass=(document.getElementById('login-pass').value||'').trim();
@@ -4335,17 +4523,9 @@ async function doLogin(){
       // sign-ins aren't enabled yet (or any error occurs), fall through to the
       // old fake local-uid behavior — demo login must never break.
       try{
-        const{data:anonData,error:anonError}=await _sb.auth.signInAnonymously();
-        if(!anonError&&anonData?.user){
-          await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
-          // updateUser() only changes the database record + local user object — the
-          // signed JWT itself is unchanged and still carries the OLD (empty) metadata
-          // until a real token refresh happens. Force that refresh now, synchronously,
-          // so any role-based RLS check (e.g. the teacher dashboard reading
-          // public_essay_history) sees the new role immediately instead of up to an
-          // hour later on Supabase's natural auto-refresh cycle.
-          await _sb.auth.refreshSession();
-          _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:anonData.user.id});
+        const demoSession=await _restoreOrCreateDemoSession(loginVal,localUser);
+        if(demoSession){
+          _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:demoSession.uid,isAnonymous:true});
           return;
         }
       }catch(anonErr){/* anonymous sign-in unavailable — fall through below */}
@@ -4437,8 +4617,29 @@ function togglePassVis(){
   if(ic)ic.className=show?'ti ti-eye-off':'ti ti-eye';
 }
 function logout(){
-  if(_sb)_sb.auth.signOut().catch(()=>{});
+  if(_sb){
+    // Demo (anonymous) sessions sign out with scope:'local' so the refresh token we
+    // saved in _persistDemoSession() stays valid server-side — that's what lets the
+    // SAME demo account reuse its identity on the next login instead of minting a
+    // duplicate. Real Supabase-authenticated users still get a full/global sign-out.
+    const scope=session?.isAnonymous?'local':'global';
+    _sb.auth.signOut({scope}).catch(()=>{});
+  }
+  // Reset every module-level variable that holds role-specific state — not just
+  // `session` — so a teacher→logout→student login on the same tab (no page reload
+  // in between) never shows stale role content (e.g. the previous role's chat
+  // group/thread or current lesson) before fresh data loads in.
   session=null;saveStore({session:null});
+  tGroup='';
+  _dbCurrentLesson=null;
+  activeTChatGroup=null;
+  activeTChatStudent=null;
+  _tchatMsgCache={};
+  _rosterCache={};
+  chatLog=[];
+  _chatPollLastTs=null;
+  if(_chatPollTimer){clearInterval(_chatPollTimer);_chatPollTimer=null;}
+  if(_tchatPollTimer){clearInterval(_tchatPollTimer);_tchatPollTimer=null;}
   const u=document.getElementById('login-user');if(u)u.value='';
   const p=document.getElementById('login-pass');if(p)p.value='';
   const er=document.getElementById('login-error');if(er)er.style.display='none';
@@ -4721,23 +4922,44 @@ async function renderEssayOverview(){
 // Both "Show Mistakes" and "IELTS Band" render only cached data
 // (errors_json/band_json) stored at submit time — never a fresh AI call.
 let _essaySubCurrent = null;
-async function openEssaySubmission(id){
+// Shared full-screen detail viewer for BOTH the teacher's essay inbox (essay_submissions)
+// and a student's own Essay History (essay_history) — same modal, same mistakes/band
+// panels, same formatting handling. Each opener below fetches its own table and normalizes
+// just the title/meta line; everything downstream (_essaySubCurrent onward) is identical.
+function _openEssayDetailModal(){
   const ov=document.getElementById('essay-sub-modal-overlay');
-  if(!ov||!_sb)return;
+  if(!ov)return false;
   ov.classList.add('open');
   trapFocus(ov.querySelector('.modal-box'));
   document.getElementById('essay-sub-meta').textContent='Loading…';
   document.getElementById('essay-sub-text').textContent='';
   document.getElementById('essay-sub-mistakes').style.display='none';
   document.getElementById('essay-sub-band').style.display='none';
+  return true;
+}
+function _essayModeLabel(mode){
+  return mode==='task1'?'IELTS Task 1':mode==='task2'?'IELTS Task 2':'General Essay';
+}
+async function openEssaySubmission(id){
+  if(!_sb||!_openEssayDetailModal())return;
   const{data:row,error}=await _sb.from('essay_submissions').select('*').eq('id',id).maybeSingle();
   if(error||!row){document.getElementById('essay-sub-meta').textContent='Unable to load this submission.';return;}
   _essaySubCurrent=row;
   const titleEl=document.getElementById('essay-sub-modal-title');
-  const modeLabel=row.essay_mode==='task1'?'IELTS Task 1':row.essay_mode==='task2'?'IELTS Task 2':'General Essay';
-  if(titleEl)titleEl.textContent=(row.student_name||'Student')+' — '+modeLabel;
+  if(titleEl)titleEl.textContent=(row.student_name||'Student')+' — '+_essayModeLabel(row.essay_mode);
   const dateStr=row.submitted_at?new Date(row.submitted_at).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
   document.getElementById('essay-sub-meta').innerHTML=`${escHtml(row.group_name||'—')} · ${escHtml(dateStr)} · ${row.word_count||0} words${row.topic?' · '+escHtml(row.topic):''}`;
+  document.getElementById('essay-sub-text').textContent=row.essay_text||'';
+}
+async function openOwnEssayHistory(id){
+  if(!_sb||!session?.uid||!_openEssayDetailModal())return;
+  const{data:row,error}=await _sb.from('essay_history').select('*').eq('id',id).eq('user_id',session.uid).maybeSingle();
+  if(error||!row){document.getElementById('essay-sub-meta').textContent='Unable to load this entry.';return;}
+  _essaySubCurrent=row;
+  const titleEl=document.getElementById('essay-sub-modal-title');
+  if(titleEl)titleEl.textContent='Your Essay — '+_essayModeLabel(row.essay_mode);
+  const dateStr=row.created_at?new Date(row.created_at).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+  document.getElementById('essay-sub-meta').innerHTML=`${escHtml(dateStr)} · ${row.word_count||0} words${row.topic?' · '+escHtml(row.topic):''}`;
   document.getElementById('essay-sub-text').textContent=row.essay_text||'';
 }
 function closeEssaySubmission(){
@@ -4751,9 +4973,14 @@ function toggleEssaySubMistakes(){
   if(wrap.style.display!=='none'){wrap.style.display='none';return;}
   const errors=_essaySubCurrent.errors_json;
   if(!errors||!errors.length){
-    wrap.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — the student didn\'t run a grammar/style check before submitting.</div>';
+    // Distinguish "genuinely never checked" from "checked, but this entry predates
+    // detailed mistake storage" (older essay_history rows only kept a summary score).
+    const wasChecked=_essaySubCurrent.error_count!=null||_essaySubCurrent.score!=null;
+    wrap.innerHTML=wasChecked
+      ?'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">This entry predates detailed mistake tracking — only the summary score was saved, not the specific corrections.</div>'
+      :'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — no grammar/style check was run for this essay.</div>';
   }else{
-    wrap.innerHTML=`<div style="margin-bottom:10px">${_pBuildHighlight(_essaySubCurrent.essay_text,errors)}</div>${_pBuildCards(errors)}`;
+    wrap.innerHTML=`<div style="margin-bottom:10px;white-space:pre-wrap;word-break:break-word">${_pBuildHighlight(_essaySubCurrent.essay_text,errors)}</div>${_pBuildCards(errors)}`;
   }
   wrap.style.display='block';
 }
@@ -4762,9 +4989,13 @@ function toggleEssaySubBand(){
   if(!wrap||!_essaySubCurrent)return;
   if(wrap.style.display!=='none'){wrap.style.display='none';return;}
   const band=_essaySubCurrent.band_json;
-  wrap.innerHTML=band
-    ?_pBuildBandPanel(band)
-    :'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — the student didn\'t request an IELTS Band score before submitting.</div>';
+  if(band){
+    wrap.innerHTML=_pBuildBandPanel(band);
+  }else if(_essaySubCurrent.band_score!=null){
+    wrap.innerHTML=`<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">This entry predates detailed band tracking — overall band was ${escHtml(String(_essaySubCurrent.band_score))}, but the full breakdown wasn't saved.${_essaySubCurrent.band_summary?'<br><br>'+escHtml(_essaySubCurrent.band_summary):''}</div>`;
+  }else{
+    wrap.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — no IELTS Band check was run for this essay.</div>';
+  }
   wrap.style.display='block';
 }
 
@@ -5119,6 +5350,12 @@ async function saveEssayHistory(checkType, text, data) {
     band_score:   checkType !== 'grammar' ? (data.overallBand   ?? null) : null,
     band_summary: checkType !== 'grammar' ? (data.summary       ?? null) : null,
     check_type:   checkType,
+    // Same detail fields essay_submissions already stores, so Essay History cards
+    // can reuse the exact same detail-view opener as the teacher's essay inbox.
+    essay_mode:   typeof activeEssayMode!=='undefined'?activeEssayMode:null,
+    topic:        typeof _getEssayTopic==='function'?(_getEssayTopic()||null):null,
+    errors_json:  (typeof _portalErrors!=='undefined'&&_portalErrors&&_portalErrors.length)?_portalErrors:null,
+    band_json:    typeof _portalBandData!=='undefined'?(_portalBandData||null):null,
   });
   if (error) throw new Error(error.message);
 }
@@ -5156,12 +5393,14 @@ async function loadEssayHistory() {
       : row.check_type==='grammar'
         ? `Score ${row.score??'?'}%`
         : `Score ${row.score??'?'}% · Band ${row.band_score??'?'}`;
+    const modeLabel = row.essay_mode==='task1'?'Task 1':row.essay_mode==='task2'?'Task 2':row.essay_mode==='general'?'General':null;
+    const modeTag = modeLabel?`<span style="font-size:0.7rem;font-weight:700;color:var(--txt2);background:var(--bg4);padding:2px 8px;border-radius:20px;margin-right:6px">${modeLabel}</span>`:'';
     const sumEl = (row.check_type!=='grammar' && row.band_summary)
       ? `<p style="font-size:0.78rem;color:var(--muted,#888);margin:6px 0 0;line-height:1.4">${(row.band_summary||'').slice(0,130).replace(/</g,'&lt;')}${row.band_summary.length>130?'…':''}</p>`
       : '';
-    return `<div class="card" style="padding:16px 20px">
+    return `<div class="card" style="padding:16px 20px;cursor:pointer;transition:background .15s" onclick="openOwnEssayHistory('${row.id}')" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:0.75rem;color:var(--muted,#888)">${d} · ${row.word_count} words</span>
+        <span style="font-size:0.75rem;color:var(--muted,#888)">${modeTag}${d} · ${row.word_count} words</span>
         <span style="font-size:0.82rem;font-weight:700;color:var(--accent,#5b9cf6)">${tag}</span>
       </div>
       <p style="font-size:0.85rem;color:var(--fg);margin:0;line-height:1.45;opacity:0.85">${preview}</p>${sumEl}
@@ -5183,28 +5422,67 @@ async function fetchDBVocabForLesson(lessonId){
   if(!error&&data){_dbVocab[lessonId]=data;return data;}
   return[];
 }
+function _mapDrillRow(row){
+  let opts=[];
+  try{opts=typeof row.options==='string'?JSON.parse(row.options):row.options;}catch{}
+  return{q:row.question,opts,correct:row.correct,exp:row.explanation||'',type:row.topic||'Grammar'};
+}
+// Used by built-in static lessons (enterLesson), which have no real lesson_id to match —
+// these can only ever pick up legacy/level-wide drills, never a specific teacher-created
+// lesson's drills. That's intentional: drills created via the CMS are now tied to one
+// real lesson (see fetchGrammarDrillsForLesson), not shared across every lesson at a level.
 async function fetchGrammarDrillsForLevel(level){
   if(!_sb||!level)return[];
-  const {data,error}=await _sb.from('grammar_drills').select('*').eq('level',level).limit(20);
+  const {data,error}=await _sb.from('grammar_drills').select('*').is('lesson_id',null).eq('level',level).limit(20);
   if(error||!data||!data.length)return[];
-  return data.map(row=>{
-    let opts=[];
-    try{opts=typeof row.options==='string'?JSON.parse(row.options):row.options;}catch{}
-    return{q:row.question,opts,correct:row.correct,exp:row.explanation||'',type:row.topic||'Grammar'};
-  });
+  return data.map(_mapDrillRow);
+}
+// Used by real (teacher-created) lessons: primarily matches this exact lesson_id, and
+// also folds in any legacy level-wide rows (pre-dating the lesson_id column) as a bonus
+// so nothing saved before this fix silently disappears.
+async function fetchGrammarDrillsForLesson(lessonId,level){
+  if(!_sb||!lessonId)return[];
+  const [own,legacy]=await Promise.all([
+    _sb.from('grammar_drills').select('*').eq('lesson_id',lessonId).limit(20),
+    level?_sb.from('grammar_drills').select('*').is('lesson_id',null).eq('level',level).limit(20):Promise.resolve({data:[]})
+  ]);
+  const rows=[...(own.data||[]),...(legacy.data||[])];
+  if(!rows.length)return[];
+  return rows.map(_mapDrillRow);
 }
 
 async function enterDBLesson(lessonId){
-  let lessonMeta=null;
-  for(const k in _dbLessons){const f=_dbLessons[k].find(l=>l.id===lessonId);if(f){lessonMeta=f;break;}}
-  const level=lessonMeta?lessonMeta.level:currentLevel;
-  const [words,drills]=await Promise.all([fetchDBVocabForLesson(lessonId),fetchGrammarDrillsForLevel(level)]);
-  _dbCurrentLesson={id:lessonId,title:lessonMeta?lessonMeta.title:'Lesson',icon:lessonMeta?(lessonMeta.icon||'📖'):'📖',description:lessonMeta?(lessonMeta.description||''):'',level};
-  vocabWords=words.map(w=>({word:w.word,ph:w.phonetic||'',tr:w.definition,ex:w.example||''}));
-  grammarQs=drills;
-  vocabIndex=0;vocabFlipped=false;vocabScores={good:0,ok:0,bad:0};
-  grIndex=0;grCorrect=0;grAnswered=false;grShuffled=null;
+  await _loadLessonContent('db',lessonId);
   show('lesson');
+}
+
+// ─── IN-TRAINER LESSON PICKER (Vocab & Grammar screens) ─────────────
+// Lets a student switch which lesson they're drilling without leaving the
+// trainer and going back through Levels → Lessons → Lesson Hub every time.
+function _lessonPickerValue(){
+  return _dbCurrentLesson?('db:'+_dbCurrentLesson.id):('static:'+currentLessonIdx);
+}
+async function _populateLessonPicker(selectId){
+  const sel=document.getElementById(selectId);
+  if(!sel)return;
+  const lvl=CURRICULUM_DATA[currentLevel];
+  await fetchDBLessonsForLevel(currentLevel);
+  const dbLessons=_dbLessons[currentLevel]||[];
+  let html=lvl?lvl.lessons.map((l,idx)=>`<option value="static:${idx}">${_pEscHtml(l.title)}</option>`).join(''):'';
+  html+=dbLessons.map(l=>`<option value="db:${l.id}">${_pEscHtml(l.title)}</option>`).join('');
+  sel.innerHTML=html;
+  sel.value=_lessonPickerValue();
+}
+async function lessonPickerChanged(selectEl){
+  const val=selectEl.value;
+  if(val.startsWith('static:')){
+    await _loadLessonContent('static',{levelId:currentLevel,idx:Number(val.slice(7))});
+  }else if(val.startsWith('db:')){
+    await _loadLessonContent('db',val.slice(3));
+  }
+  const activeId=document.querySelector('.screen.active')?.id;
+  if(activeId==='screen-vocab'){await _populateLessonPicker('vocab-lesson-picker');restartVocab();}
+  else if(activeId==='screen-grammar'){await _populateLessonPicker('gr-lesson-picker');grammarRestart();}
 }
 // ─── CMS: SAVE LESSON ────────────────────────────────
 async function cmsSaveLesson(){
@@ -5237,7 +5515,20 @@ async function cmsSaveLesson(){
       }
     }catch(e){}
   }
-  cmsLevelChanged();
+  // Newly created lesson becomes the active lesson automatically — no need to
+  // re-pick it in a second dropdown before adding vocabulary/drills to it.
+  if(savedRows&&savedRows[0]){
+    delete _dbLessons[level];
+    await fetchDBLessonsForLevel(level);
+    const sel=document.getElementById('cms-active-lesson');
+    if(sel){
+      const lessons=_dbLessons[level]||[];
+      sel.innerHTML='<option value="__new__">+ Create a new lesson</option>'+lessons.map(l=>`<option value="${l.id}">${_pEscHtml(l.title)}</option>`).join('');
+      sel.value=savedRows[0].id;
+      sel.disabled=false;
+      cmsActiveLessonChanged();
+    }
+  }
 }
 // ─── CMS: VOCAB STAGING ───────────────────────────────
 let _vocabWordIdx=0;
@@ -5293,11 +5584,9 @@ function cmsInitVocabStaging(){
 // ─── CMS: SAVE VOCAB ─────────────────────────────────
 async function cmsSaveVocab(){
   if(!_sb||!session||session.role!=='teacher'){showToast('Teachers only');return;}
-  const lessonId=document.getElementById('cms-vocab-lesson').value;
-  if(!lessonId){showToast('Select a lesson first');return;}
+  if(!_cmsActiveLesson){showToast('Pick or create a lesson above first');return;}
   const cards=[...document.querySelectorAll('#cms-vocab-staging .cms-vocab-card')];
   if(!cards.length){showToast('Add at least one word');return;}
-  const masterLevel=(document.getElementById('cms-vocab-level')?.value||'').trim();
   const rows=[];
   for(const card of cards){
     const idx=card.id.replace('cms-wcard-','');
@@ -5305,11 +5594,11 @@ async function cmsSaveVocab(){
     const definition=(document.getElementById('cms-vocab-def-'+idx)?.value||'').trim();
     if(!word||!definition){showToast('Each word needs a word and translation');return;}
     rows.push({
-      lesson_id:lessonId,word,
+      lesson_id:_cmsActiveLesson.id,word,
       phonetic:(document.getElementById('cms-vocab-phonetic-'+idx)?.value||'').trim(),
       definition,
       example:(document.getElementById('cms-vocab-ex-'+idx)?.value||'').trim(),
-      cefr_level:masterLevel
+      cefr_level:_cmsActiveLesson.level
     });
   }
   const btn=document.getElementById('cms-vocab-btn');
@@ -5324,30 +5613,62 @@ async function cmsSaveVocab(){
   _vocabWordIdx=0;
   cmsAddWordBlock();
 }
-// ─── CMS: LOAD LESSON DROPDOWN ───────────────────────
-async function cmsLevelChanged(){
-  const level=document.getElementById('cms-vocab-level').value;
-  const sel=document.getElementById('cms-vocab-lesson');
-  if(!sel)return;
-  sel.disabled=true;
-  if(!level){sel.innerHTML='<option value="">② Select a lesson for this level…</option>';return;}
-  sel.innerHTML='<option value="">Loading…</option>';
+// ─── CMS: SHARED LEVEL + LESSON PICKER (drives both Vocabulary and Grammar Drills) ───
+let _cmsActiveLesson=null; // {id,title,level} — set once, used by both tabs below
+async function cmsActiveLevelChanged(){
+  const level=document.getElementById('cms-lesson-level').value;
+  const sel=document.getElementById('cms-active-lesson');
+  _cmsActiveLesson=null;
+  document.getElementById('cms-active-lesson-banner').style.display='none';
+  document.getElementById('cms-new-lesson-fields').style.display='none';
+  if(!level){sel.disabled=true;sel.innerHTML='<option value="">② Pick a lesson…</option>';return;}
+  sel.innerHTML='<option value="">Loading…</option>';sel.disabled=true;
   await fetchDBLessonsForLevel(level);
   const lessons=_dbLessons[level]||[];
-  if(!lessons.length){sel.innerHTML='<option value="">No lessons for this level yet</option>';return;}
-  sel.innerHTML='<option value="">— choose a lesson —</option>'+lessons.map(l=>`<option value="${l.id}">${_pEscHtml(l.title)}</option>`).join('');
+  sel.innerHTML='<option value="__new__">+ Create a new lesson</option>'+lessons.map(l=>`<option value="${l.id}">${_pEscHtml(l.title)}</option>`).join('');
   sel.disabled=false;
+  cmsActiveLessonChanged();
+}
+function cmsActiveLessonChanged(){
+  const level=document.getElementById('cms-lesson-level').value;
+  const sel=document.getElementById('cms-active-lesson');
+  const val=sel.value;
+  const newFields=document.getElementById('cms-new-lesson-fields');
+  const banner=document.getElementById('cms-active-lesson-banner');
+  if(!val||val==='__new__'){
+    _cmsActiveLesson=null;
+    newFields.style.display='block';
+    banner.style.display='none';
+    return;
+  }
+  newFields.style.display='none';
+  const title=sel.options[sel.selectedIndex]?.text||'Lesson';
+  _cmsActiveLesson={id:val,title,level};
+  banner.style.display='block';
+  document.getElementById('cms-active-lesson-name').textContent=title;
+}
+function cmsSwitchTab(which){
+  const showVocab=which==='vocab';
+  document.getElementById('cms-panel-vocab').style.display=showVocab?'block':'none';
+  document.getElementById('cms-panel-drills').style.display=showVocab?'none':'block';
+  document.getElementById('cms-tab-vocab').classList.toggle('active',showVocab);
+  document.getElementById('cms-tab-drills').classList.toggle('active',!showVocab);
 }
 async function cmsAutoGenerateVocab(idx){
   const wordEl=document.getElementById('cms-vocab-word-'+idx);
   const word=(wordEl?wordEl.value:'').trim();
   if(!word){showToast('Type a word first');return;}
+  // If the teacher already wrote an example sentence, send it along — it's the
+  // strongest possible disambiguation signal for words like "produce"/"record"/
+  // "object" that mean something different as a noun vs. a verb (see server-side
+  // prompt). Translate what they meant, not a generic dictionary-default sense.
+  const existingExample=(document.getElementById('cms-vocab-ex-'+idx)?.value||'').trim();
   const btn=event.currentTarget;
   const origHTML=btn.innerHTML;
   btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="margin-right:4px;vertical-align:-1px"></i>…';
   try{
     const base=(typeof ESSAY_ENDPOINT!=='undefined'?ESSAY_ENDPOINT:'').replace(/\/$/,'');
-    const res=await fetch(base+'/api/vocab-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({word,mode:'fill'})});
+    const res=await fetch(base+'/api/vocab-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({word,mode:'fill',existingExample:existingExample||undefined})});
     const json=await res.json();
     if(json.status!=='success'){showToast('AI error: '+(json.error||'unknown'));return;}
     if(json.phonetic){const el=document.getElementById('cms-vocab-phonetic-'+idx);if(el)el.value=json.phonetic;}
@@ -5358,9 +5679,8 @@ async function cmsAutoGenerateVocab(idx){
   finally{btn.disabled=false;btn.innerHTML=origHTML;}
 }
 async function cmsAISuggestWord(){
-  const lessonSel=document.getElementById('cms-vocab-lesson');
-  const lessonTitle=lessonSel&&lessonSel.selectedIndex>0?lessonSel.options[lessonSel.selectedIndex].text:'General English';
-  const targetLevel=(document.getElementById('cms-vocab-level')?.value||'').trim()||'B1';
+  const lessonTitle=_cmsActiveLesson?.title||'General English';
+  const targetLevel=_cmsActiveLesson?.level||'pre-intermediate';
   const existingWords=[...document.querySelectorAll('#cms-vocab-staging .cms-vocab-card')].map(c=>{
     const i=c.id.replace('cms-wcard-','');
     return (document.getElementById('cms-vocab-word-'+i)?.value||'').trim();
@@ -5390,17 +5710,40 @@ async function cmsAISuggestWord(){
   }catch(e){showToast('Network error: '+e.message);}
   finally{btn.disabled=false;btn.innerHTML=origHTML;}
 }
-function cmsLoadLessonDropdown(){cmsInitVocabStaging();}
+function cmsLoadLessonDropdown(){
+  cmsInitVocabStaging();
+  _cmsActiveLesson=null;
+  const levelSel=document.getElementById('cms-lesson-level');
+  const lessonSel=document.getElementById('cms-active-lesson');
+  if(levelSel)levelSel.value='';
+  if(lessonSel){lessonSel.disabled=true;lessonSel.innerHTML='<option value="">② Pick a lesson…</option>';}
+  const newFields=document.getElementById('cms-new-lesson-fields');
+  if(newFields)newFields.style.display='none';
+  const banner=document.getElementById('cms-active-lesson-banner');
+  if(banner)banner.style.display='none';
+  if(document.getElementById('cms-tab-vocab'))cmsSwitchTab('vocab');
+}
 
 // ─── AI GRAMMAR DRILLS GENERATOR ─────────────────────────────────────────────
 let _pendingDrills = null;
 
+// Slug (the scheme lessons.level / cms-lesson-level actually use) -> the short CEFR-ish
+// band the essay-api's /api/grammar-drills prompt was built around. Only used for the AI
+// generation request's wording — storage/reachability now runs entirely on the slug plus
+// lesson_id (see the migration note above saveDrillsToSupabase), so a mismatch here would
+// just be a slightly-off prompt hint, never a reachability bug.
+const DRILL_LEVEL_TO_BAND={beginner:'A1',elementary:'A2','pre-intermediate':'B1','pre-ielts':'B2',ielts:'C1'};
+
 async function generateGrammarDrills() {
   const topic = (document.getElementById('drill-topic')?.value || '').trim();
   if (!topic) { showToast('Please enter a grammar topic first.'); return; }
-  const level      = document.getElementById('drill-level')?.value || 'B1';
-  const difficulty = document.getElementById('drill-difficulty')?.value || 'medium';
-  const count      = parseInt(document.getElementById('drill-count')?.value || '5');
+  if (!_cmsActiveLesson) { showToast('Pick or create a lesson above first — drills are tied to a specific lesson now.'); return; }
+  const lessonId    = _cmsActiveLesson.id;
+  const level       = _cmsActiveLesson.level;
+  const lessonTitle = _cmsActiveLesson.title;
+  const band        = DRILL_LEVEL_TO_BAND[level] || 'B1';
+  const difficulty  = document.getElementById('drill-difficulty')?.value || 'medium';
+  const count       = parseInt(document.getElementById('drill-count')?.value || '5');
   const btn = document.getElementById('drill-gen-btn');
   btn.disabled = true;
   btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Generating…';
@@ -5410,11 +5753,11 @@ async function generateGrammarDrills() {
   try {
     const res = await fetch(ESSAY_ENDPOINT.replace(/\/$/, '') + '/api/grammar-drills', {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ topic, level, difficulty, count })
+      body: JSON.stringify({ topic, level: band, difficulty, count })
     });
     const data = await res.json();
     if (!res.ok || data.status !== 'success') throw new Error(data.error || `Server error ${res.status}`);
-    _pendingDrills = data;
+    _pendingDrills = { ...data, level, lessonId, lessonTitle };
     const list = document.getElementById('drill-list');
     if (list) {
       list.innerHTML = (data.drills || []).map((d, i) => `
@@ -5445,6 +5788,7 @@ async function saveDrillsToSupabase() {
   const rows = _pendingDrills.drills.map(d => ({
     topic:      _pendingDrills.topic,
     level:      _pendingDrills.level,
+    lesson_id:  _pendingDrills.lessonId,
     difficulty: _pendingDrills.difficulty,
     question:   d.question,
     options:    JSON.stringify(d.opts),
@@ -5514,7 +5858,10 @@ function show(id,el){
   if(id==='grades'){buildGrades();}
   if(id==='attendance')buildAtt();
   if(id==='homework')buildHw();
-  if(id==='grammar')grammarRestart();
+  if(id==='grammar'){_populateLessonPicker('gr-lesson-picker');grammarRestart();}
+  if(id==='vocab'){_populateLessonPicker('vocab-lesson-picker');renderVocab();document.getElementById('vocab-active').style.display='block';document.getElementById('vocab-done-screen').style.display='none';}
+  if(id==='dictation')renderDictationScreen();
+  if(id==='speaking')renderSpeakingScreen();
   if(id==='classroom')buildClassroom();
   if(id==='announce')buildAnnouncements();
   if(id==='levels')renderLevelsScreen();
@@ -5859,48 +6206,65 @@ async function renderLessonsScreen(){
   if(!gridEl)return;
   gridEl.innerHTML=lvl.lessons.map((lesson,idx)=>{
     const active=idx===currentLessonIdx;
-    return `<div class="lesson-card${active?' lesson-card-active':''}" onclick="enterLesson('${currentLevel}',${idx})">
+    return `<div class="lesson-card${active?' lesson-card-active':''}" style="--lesson-tint:${lvl.color}" onclick="enterLesson('${currentLevel}',${idx})">
       <div class="lesson-card-icon">${lesson.icon}</div>
       <div class="lesson-card-body">
         <div class="lesson-card-title">${lesson.title}</div>
         <div class="lesson-card-desc">${lesson.desc}</div>
         <div class="lesson-card-meta">${lesson.vocab.length} words · ${lesson.grammar.length} drills</div>
       </div>
-      <div class="lesson-card-arrow" style="color:${active?lvl.color:'var(--txt3)'}">›</div>
+      <div class="lesson-card-arrow">›</div>
     </div>`;
   }).join('');
   await fetchDBLessonsForLevel(currentLevel);
   const dbLessons=_dbLessons[currentLevel]||[];
   if(dbLessons.length){
-    const staticCount=lvl.lessons.length;
-    gridEl.innerHTML+=dbLessons.map((lesson)=>`<div class="lesson-card" style="border-left:3px solid var(--accent2)" onclick="enterDBLesson('${lesson.id}')">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="lesson-card-icon" style="font-size:28px;line-height:1">${_pEscHtml(lesson.icon||'📖')}</div>
-        <div style="flex:1;min-width:0">
-          <div class="lesson-card-title" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            ${_pEscHtml(lesson.title)}
-            <span style="font-size:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:20px;padding:2px 8px;font-weight:700;letter-spacing:.3px;flex-shrink:0">✦ NEW</span>
-          </div>
-          <div class="lesson-card-desc" style="margin-top:2px">${lesson.description?_pEscHtml(lesson.description):'<span style="color:var(--txt3);font-style:italic">Teacher-added lesson</span>'}</div>
+    gridEl.innerHTML+=dbLessons.map((lesson)=>`<div class="lesson-card" style="--lesson-tint:var(--accent2)" onclick="enterDBLesson('${lesson.id}')">
+      <div class="lesson-card-icon">${_pEscHtml(lesson.icon||'📖')}</div>
+      <div class="lesson-card-body">
+        <div class="lesson-card-title">
+          ${_pEscHtml(lesson.title)}
+          <span class="lesson-card-new-badge">✦ NEW</span>
         </div>
-        <div style="color:var(--accent2);font-size:18px;flex-shrink:0">›</div>
+        <div class="lesson-card-desc">${lesson.description?_pEscHtml(lesson.description):'<span style="color:var(--txt3);font-style:italic">Teacher-added lesson</span>'}</div>
       </div>
+      <div class="lesson-card-arrow">›</div>
     </div>`).join('');
   }
 }
-async function enterLesson(levelId,lessonIdx){
-  if(!CURRICULUM_DATA[levelId])return;
-  const lesson=CURRICULUM_DATA[levelId].lessons[lessonIdx];
-  if(!lesson)return;
-  _dbCurrentLesson=null;
-  currentLevel=levelId;
-  currentLessonIdx=lessonIdx;
-  vocabWords=lesson.vocab;
-  const dbDrills=await fetchGrammarDrillsForLevel(levelId);
-  grammarQs=dbDrills.length?lesson.grammar.concat(dbDrills):lesson.grammar;
+// Shared by enterLesson/enterDBLesson (navigate to the Lesson Hub) and the
+// in-trainer lesson picker (switch content without leaving Vocab/Grammar) —
+// one place that knows how to point vocabWords/grammarQs/_dbCurrentLesson at
+// a given lesson, so both callers stay in sync as the loading logic evolves.
+async function _loadLessonContent(kind,ref){
+  if(kind==='static'){
+    const{levelId,idx}=ref;
+    if(!CURRICULUM_DATA[levelId])return false;
+    const lesson=CURRICULUM_DATA[levelId].lessons[idx];
+    if(!lesson)return false;
+    _dbCurrentLesson=null;
+    currentLevel=levelId;
+    currentLessonIdx=idx;
+    vocabWords=lesson.vocab;
+    const dbDrills=await fetchGrammarDrillsForLevel(levelId);
+    grammarQs=dbDrills.length?lesson.grammar.concat(dbDrills):lesson.grammar;
+    saveStore({level:levelId,lessonIdx:idx});
+  }else{
+    const lessonId=ref;
+    let lessonMeta=null;
+    for(const k in _dbLessons){const f=_dbLessons[k].find(l=>l.id===lessonId);if(f){lessonMeta=f;break;}}
+    const level=lessonMeta?lessonMeta.level:currentLevel;
+    const[words,drills]=await Promise.all([fetchDBVocabForLesson(lessonId),fetchGrammarDrillsForLesson(lessonId,level)]);
+    _dbCurrentLesson={id:lessonId,title:lessonMeta?lessonMeta.title:'Lesson',icon:lessonMeta?(lessonMeta.icon||'📖'):'📖',description:lessonMeta?(lessonMeta.description||''):'',level};
+    vocabWords=words.map(w=>({word:w.word,ph:w.phonetic||'',tr:w.definition,ex:w.example||''}));
+    grammarQs=drills;
+  }
   vocabIndex=0;vocabFlipped=false;vocabScores={good:0,ok:0,bad:0};
   grIndex=0;grCorrect=0;grAnswered=false;grShuffled=null;
-  saveStore({level:levelId,lessonIdx:lessonIdx});
+  return true;
+}
+async function enterLesson(levelId,lessonIdx){
+  if(!await _loadLessonContent('static',{levelId,idx:lessonIdx}))return;
   show('lesson');
 }
 function renderLessonScreen(){
@@ -6045,40 +6409,351 @@ function restartVocab(){
   renderVocab();
 }
 
+// ─── DICTATION (LISTEN & TYPE) ──────────────────
+// Original content bank in `dictation_sentences` (Supabase), tagged by the same
+// level slugs used everywhere else (beginner/elementary/pre-intermediate/
+// pre-ielts/ielts). TTS is the browser's built-in Web Speech API — free, no
+// key, ships now (a paid TTS API can replace this later if voice quality ever
+// becomes the limiting factor, but that's a v2 concern).
+const DICTATION_SET_SIZE=5;
+let _ditSet=[], _ditIdx=0, _ditResults=[], _ditPlayCount=0;
+
+function _ditDaySeed(){
+  const d=new Date();
+  return d.getFullYear()*372+d.getMonth()*31+d.getDate();
+}
+function _ditHash(str){
+  let h=0;
+  for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;}
+  return h;
+}
+// Deterministic per-day pick: same student sees the same set if they revisit
+// today, but the set changes tomorrow. Unattempted sentences are prioritized;
+// once every sentence at this level has been attempted at least once, the
+// whole bank becomes eligible again (repetition is fine for a listening drill).
+function _pickDailyDictationSet(all, attemptedIds, count){
+  const seed=_ditDaySeed();
+  const fresh=all.filter(s=>!attemptedIds.has(s.id));
+  const pool=fresh.length>=count?fresh:all;
+  const ranked=[...pool].sort((a,b)=>_ditHash(seed+a.id)-_ditHash(seed+b.id));
+  return ranked.slice(0,count);
+}
+
+async function renderDictationScreen(){
+  const emptyEl=document.getElementById('dit-empty');
+  const activeEl=document.getElementById('dit-active');
+  const doneEl=document.getElementById('dit-done-wrap');
+  emptyEl.style.display='none';
+  doneEl.style.display='none';
+  activeEl.style.display='block';
+  if(!_sb){
+    activeEl.style.display='none';
+    emptyEl.textContent="Listen & Type needs a connection to load today's sentences. Please try again once you're back online.";
+    emptyEl.style.display='block';
+    return;
+  }
+  const level=currentLevel||'pre-intermediate';
+  const {data:sentences,error}=await _sb.from('dictation_sentences').select('*').eq('level',level);
+  if(error||!sentences||!sentences.length){
+    activeEl.style.display='none';
+    emptyEl.textContent='No dictation sentences available for this level yet.';
+    emptyEl.style.display='block';
+    return;
+  }
+  let attemptedIds=new Set();
+  if(session&&session.uid){
+    const{data:attempts}=await _sb.from('dictation_attempts').select('sentence_id').eq('student_id',session.uid);
+    if(attempts)attemptedIds=new Set(attempts.map(a=>a.sentence_id));
+  }
+  _ditSet=_pickDailyDictationSet(sentences,attemptedIds,DICTATION_SET_SIZE);
+  _ditIdx=0;_ditResults=[];
+  _renderDitCard();
+}
+
+function _renderDitCard(){
+  const s=_ditSet[_ditIdx];
+  if(!s)return;
+  _ditPlayCount=0;
+  document.getElementById('dit-counter').textContent=(_ditIdx+1)+' / '+_ditSet.length;
+  document.getElementById('dit-pfill').style.width=Math.round((_ditIdx/_ditSet.length)*100)+'%';
+  document.getElementById('dit-topic').textContent=s.topic||'Listening';
+  document.getElementById('dit-play-count').textContent='Not played yet';
+  document.getElementById('dit-input').value='';
+  document.getElementById('dit-input').disabled=false;
+  document.getElementById('dit-submit-btn').style.display='inline-block';
+  document.getElementById('dit-result').style.display='none';
+}
+
+function _ditSpeak(text,rate){
+  if(!('speechSynthesis' in window)){showToast('Speech playback is not supported in this browser');return;}
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';u.rate=rate;
+  const btn=document.getElementById('dit-play-btn');
+  u.onstart=()=>{if(btn)btn.classList.add('playing');};
+  u.onend=u.onerror=()=>{if(btn)btn.classList.remove('playing');};
+  window.speechSynthesis.speak(u);
+}
+function dictationPlay(){
+  const s=_ditSet[_ditIdx];if(!s)return;
+  _ditPlayCount++;
+  document.getElementById('dit-play-count').textContent='Played '+_ditPlayCount+'x';
+  _ditSpeak(s.text,0.95);
+}
+function dictationPlaySlow(){
+  const s=_ditSet[_ditIdx];if(!s)return;
+  _ditPlayCount++;
+  document.getElementById('dit-play-count').textContent='Played '+_ditPlayCount+'x';
+  _ditSpeak(s.text,0.6);
+}
+
+// Word-level LCS diff: aligns typed words against the target sentence so we can
+// mark correct/missing/extra words individually rather than a single pass/fail —
+// this is what makes the scoring meaningful feedback instead of just a percentage.
+function _ditWordDiff(target,input){
+  const norm=w=>w.toLowerCase().replace(/[^a-z0-9']/g,'');
+  const tWords=target.split(/\s+/).filter(Boolean);
+  const iWords=input.split(/\s+/).filter(Boolean);
+  const tNorm=tWords.map(norm), iNorm=iWords.map(norm);
+  const n=tNorm.length,m=iNorm.length;
+  const dp=Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  for(let i=1;i<=n;i++)for(let j=1;j<=m;j++){
+    dp[i][j]=tNorm[i-1]===iNorm[j-1]&&tNorm[i-1]!==''?dp[i-1][j-1]+1:Math.max(dp[i-1][j],dp[i][j-1]);
+  }
+  const ops=[];
+  let i=n,j=m;
+  while(i>0&&j>0){
+    if(tNorm[i-1]===iNorm[j-1]&&tNorm[i-1]!==''){ops.unshift({type:'correct',word:tWords[i-1]});i--;j--;}
+    else if(dp[i-1][j]>=dp[i][j-1]){ops.unshift({type:'missing',word:tWords[i-1]});i--;}
+    else{ops.unshift({type:'extra',word:iWords[j-1]});j--;}
+  }
+  while(i>0){ops.unshift({type:'missing',word:tWords[i-1]});i--;}
+  while(j>0){ops.unshift({type:'extra',word:iWords[j-1]});j--;}
+  const correctWords=ops.filter(o=>o.type==='correct').length;
+  return{ops,correctWords,totalWords:tWords.length};
+}
+function _ditDiffHTML(ops){
+  return ops.map(o=>'<span class="dit-word '+o.type+'">'+escHtml(o.word)+'</span>').join(' ');
+}
+
+async function dictationSubmit(){
+  const s=_ditSet[_ditIdx];if(!s)return;
+  const input=(document.getElementById('dit-input').value||'').trim();
+  if(!input){showToast('Type what you heard first');return;}
+  const{ops,correctWords,totalWords}=_ditWordDiff(s.text,input);
+  const accuracy=totalWords?Math.round((correctWords/totalWords)*100):0;
+  document.getElementById('dit-diff').innerHTML=_ditDiffHTML(ops);
+  document.getElementById('dit-accuracy').textContent=accuracy+'% accurate · '+correctWords+' / '+totalWords+' words';
+  document.getElementById('dit-result').style.display='block';
+  document.getElementById('dit-input').disabled=true;
+  document.getElementById('dit-submit-btn').style.display='none';
+  _ditResults.push({sentenceId:s.id,accuracy,correctWords,totalWords});
+  if(accuracy>=90){const box=document.getElementById('dit-diff');const r=box?box.getBoundingClientRect():null;celebrate({count:24,x:r?r.left+r.width/2:null,y:r?r.top+r.height/2:null});}
+  await _saveDictationAttempt(s.id,input,accuracy,correctWords,totalWords);
+}
+
+async function _saveDictationAttempt(sentenceId,inputText,accuracy,correctWords,totalWords){
+  if(!_sb||!session||!session.uid)return;
+  try{
+    await _sb.from('dictation_attempts').insert({
+      student_id:session.uid,sentence_id:sentenceId,input_text:inputText,
+      accuracy,correct_words:correctWords,total_words:totalWords,
+    });
+  }catch(e){/* attempt logging is best-effort — never block the trainer on it */}
+}
+
+function dictationNext(){
+  _ditIdx++;
+  if(_ditIdx>=_ditSet.length){
+    document.getElementById('dit-active').style.display='none';
+    const avg=_ditResults.length?Math.round(_ditResults.reduce((sum,r)=>sum+r.accuracy,0)/_ditResults.length):0;
+    document.getElementById('dit-score-text').textContent='Average accuracy: '+avg+'% across '+_ditResults.length+' sentences';
+    document.getElementById('dit-done-wrap').style.display='block';
+    return;
+  }
+  _renderDitCard();
+}
+function dictationRestart(){
+  renderDictationScreen();
+}
+
+// ─── SPEAKING PRACTICE ───────────────────────────
+// Original IELTS-style question bank in `speaking_questions` (Supabase),
+// tagged by part (1/2/3). No recording or AI evaluation in v1 per doc scope —
+// this is a "get a question, think on your feet" prompt tool, not a grader.
+let _spPart=1, _spBank={1:[],2:[],3:[]}, _spBankLoaded={1:false,2:false,3:false};
+let _spTimerInterval=null, _spTimerSecs=0, _spTimerPhase='prep';
+
+async function renderSpeakingScreen(){
+  speakingSetPart(_spPart||1);
+}
+
+async function speakingSetPart(part){
+  _spPart=part;
+  document.querySelectorAll('#sp-tabs .sp-tab').forEach(b=>b.classList.toggle('active',Number(b.dataset.part)===part));
+  _spResetTimer();
+  if(!_spBankLoaded[part]){
+    if(!_sb){
+      document.getElementById('sp-question').textContent="Speaking practice needs a connection to load questions. Please try again once you're back online.";
+      return;
+    }
+    const{data,error}=await _sb.from('speaking_questions').select('*').eq('part',part);
+    _spBank[part]=(!error&&data)?data:[];
+    _spBankLoaded[part]=true;
+  }
+  speakingRandom();
+}
+
+function speakingRandom(){
+  const bank=_spBank[_spPart]||[];
+  if(!bank.length){
+    document.getElementById('sp-question').textContent='No questions available for this part yet.';
+    document.getElementById('sp-cue-wrap').style.display='none';
+    document.getElementById('sp-timer-wrap').style.display='none';
+    return;
+  }
+  const q=bank[Math.floor(Math.random()*bank.length)];
+  document.getElementById('sp-topic').textContent=q.topic||'';
+  document.getElementById('sp-question').textContent=q.question||'';
+  _spResetTimer();
+  const cuePoints=q.cue_points;
+  if(Array.isArray(cuePoints)&&cuePoints.length){
+    document.getElementById('sp-cue-list').innerHTML=cuePoints.map(p=>'<li>'+escHtml(p)+'</li>').join('');
+    document.getElementById('sp-cue-wrap').style.display='block';
+    document.getElementById('sp-timer-wrap').style.display='block';
+  }else{
+    document.getElementById('sp-cue-wrap').style.display='none';
+    document.getElementById('sp-timer-wrap').style.display='none';
+  }
+}
+
+function _spFormatTime(secs){
+  const m=Math.floor(secs/60),s=secs%60;
+  return m+':'+String(s).padStart(2,'0');
+}
+function _spResetTimer(){
+  if(_spTimerInterval){clearInterval(_spTimerInterval);_spTimerInterval=null;}
+  _spTimerPhase='prep';_spTimerSecs=60;
+  const timerEl=document.getElementById('sp-timer');
+  const labelEl=document.getElementById('sp-timer-label');
+  const btnEl=document.getElementById('sp-timer-btn');
+  if(timerEl)timerEl.textContent=_spFormatTime(_spTimerSecs);
+  if(labelEl)labelEl.textContent='Preparation time';
+  if(btnEl)btnEl.textContent='Start prep timer';
+}
+// One button drives both phases: 60s silent prep (as in the real IELTS Part 2
+// format), then automatically rolls into a 2-minute speaking countdown.
+function speakingTimerToggle(){
+  const btnEl=document.getElementById('sp-timer-btn');
+  if(_spTimerInterval){
+    clearInterval(_spTimerInterval);_spTimerInterval=null;
+    btnEl.textContent=_spTimerPhase==='prep'?'Resume prep timer':'Resume speaking timer';
+    return;
+  }
+  btnEl.textContent='Pause';
+  _spTimerInterval=setInterval(()=>{
+    _spTimerSecs--;
+    if(_spTimerSecs<0){
+      if(_spTimerPhase==='prep'){
+        _spTimerPhase='speak';_spTimerSecs=120;
+        document.getElementById('sp-timer-label').textContent='Speaking time';
+        showToast('Prep time is up — start speaking!');
+      }else{
+        clearInterval(_spTimerInterval);_spTimerInterval=null;
+        document.getElementById('sp-timer').textContent='0:00';
+        document.getElementById('sp-timer-label').textContent='Time\'s up';
+        btnEl.textContent='Start prep timer';
+        showToast('Speaking time is up — nice work!');
+        return;
+      }
+    }
+    document.getElementById('sp-timer').textContent=_spFormatTime(_spTimerSecs);
+  },1000);
+}
+
 // ─── CHAT ───────────────────────────────────────
 let chatLog=[];
 let _chatPollLastTs=null;
 let _chatPollTimer=null;
 
 function chatInitials(){return (session&&session.name)?session.name.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase():'AT';}
+function _chatTimeOf(d){return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');}
 function renderChat(){
   const container=document.getElementById('chat-messages');if(!container)return;
   const init=chatInitials();
-  container.innerHTML=chatLog.map(m=>m.from==='me'
-    ?`<div class="chat-msg mine"><div class="chat-ava me">${escHtml(init)}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div></div></div>`
-    :`<div class="chat-msg other"><div class="chat-ava teacher">NI</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div></div></div>`
-  ).join('');
+  container.innerHTML=chatLog.map(m=>{
+    if(m.from!=='me'){
+      return `<div class="chat-msg other"><div class="chat-ava teacher">NI</div><div class="chat-msg-body"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div></div></div>`;
+    }
+    const failedCls=m.status==='failed'?' chat-bubble-failed':'';
+    const statusHTML=m.status==='failed'
+      ?`<div class="chat-status-failed" onclick="retryChatMsg('${m.id}')"><i class="ti ti-alert-circle"></i> Failed to send — tap to retry</div>`
+      :m.status==='pending'?`<div class="chat-status-pending">Sending…</div>`:'';
+    return `<div class="chat-msg mine"><div class="chat-ava me">${escHtml(init)}</div><div class="chat-msg-body"><div class="chat-bubble${failedCls}">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div>${statusHTML}</div></div>`;
+  }).join('');
   container.scrollTop=container.scrollHeight;
 }
-async function sendChat(){
-  const inp=document.getElementById('chat-in');
-  const msg=inp.value.trim();if(!msg)return;
-  const now=new Date();
-  const time=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  inp.value='';
-  draftClear('chat-in');
-  chatLog.push({from:'me',text:msg,time});
-  renderChat();
-  if(!session?.uid||!_sb)return;
+// Fetches the student's full own-group thread (their own messages + every teacher
+// reply) on chat open, so a reload always shows real persisted history — previously
+// nothing ever re-fetched the student's OWN sent messages, only new teacher replies
+// via pollTeacherReplies(), so a message could look "sent" then vanish on any reload.
+async function loadChatHistory(){
+  if(!session?.group||!_sb)return;
   try{
-    await _sb.from('messages').insert({
+    const{data,error}=await _sb.from('messages')
+      .select('id,sender_id,sender_role,text,created_at')
+      .eq('target_group',session.group)
+      .or(`sender_role.eq.teacher,sender_id.eq.${session.uid}`)
+      .order('created_at',{ascending:true})
+      .limit(300);
+    if(error||!data)return;
+    chatLog=data.map(row=>({
+      id:row.id,
+      from:row.sender_role==='teacher'?'teacher':'me',
+      text:row.text,
+      time:_chatTimeOf(new Date(row.created_at)),
+      status:'sent'
+    }));
+    if(data.length)_chatPollLastTs=data[data.length-1].created_at;
+    renderChat();
+  }catch(e){console.error('[Chat] history load failed:',e.message);}
+}
+async function _sendChatMsg(localId,text){
+  const msg=chatLog.find(m=>m.id===localId);
+  try{
+    const{error}=await _sb.from('messages').insert({
       sender_id:session.uid,
       sender_name:session.name,
       sender_role:'student',
       target_group:session.group,
-      text:msg
+      text
     });
-  }catch(e){console.error('[Chat] send failed:',e.message);}
+    if(error)throw error;
+    if(msg)msg.status='sent';
+  }catch(e){
+    console.error('[Chat] send failed:',e.message);
+    if(msg)msg.status='failed';
+  }
+  renderChat();
+}
+async function sendChat(){
+  const inp=document.getElementById('chat-in');
+  const msg=inp.value.trim();if(!msg)return;
+  if(!session?.uid||!_sb){showToast('Not signed in — cannot send');return;}
+  const now=new Date();
+  const localId='local-'+now.getTime()+'-'+Math.random().toString(36).slice(2,7);
+  inp.value='';
+  draftClear('chat-in');
+  chatLog.push({id:localId,from:'me',text:msg,time:_chatTimeOf(now),status:'pending'});
+  renderChat();
+  await _sendChatMsg(localId,msg);
+}
+function retryChatMsg(localId){
+  const msg=chatLog.find(m=>m.id===localId);
+  if(!msg)return;
+  msg.status='pending';
+  renderChat();
+  _sendChatMsg(localId,msg.text);
 }
 async function pollTeacherReplies(){
   if(!session?.group||!_sb)return;
@@ -6099,14 +6774,14 @@ async function pollTeacherReplies(){
       _chatPollLastTs=row.created_at;
       const t=new Date(row.created_at);
       const time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');
-      chatLog.push({from:'teacher',text:row.text,time});
+      chatLog.push({id:row.id,from:'teacher',text:row.text,time,status:'sent'});
     });
     renderChat();
   }catch(e){console.error('[Chat] poll failed:',e.message);}
 }
-function startChatPolling(){
+async function startChatPolling(){
   if(_chatPollTimer)clearInterval(_chatPollTimer);
-  pollTeacherReplies();
+  await loadChatHistory();
   _chatPollTimer=setInterval(pollTeacherReplies,8000);
 }
 document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
@@ -6320,9 +6995,9 @@ function renderTChatMessages(){
     const t=new Date(m.created_at);
     const time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');
     if(m.sender_role==='teacher'){
-      return `<div class="chat-msg mine"><div class="chat-ava me">${escHtml((m.sender_name||'T').trim().slice(0,2).toUpperCase())}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
+      return `<div class="chat-msg mine"><div class="chat-ava me">${escHtml((m.sender_name||'T').trim().slice(0,2).toUpperCase())}</div><div class="chat-msg-body"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
     }
-    return `<div class="chat-msg other"><div class="chat-ava teacher">${escHtml(activeTChatStudent.init)}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
+    return `<div class="chat-msg other"><div class="chat-ava teacher">${escHtml(activeTChatStudent.init)}</div><div class="chat-msg-body"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
   }).join('');
   el.scrollTop=el.scrollHeight;
 }
@@ -6352,31 +7027,42 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(ti)ti.addEventListener('keydown',e=>{if(e.key==='Enter')sendTeacherMsg();});
 });
 
-// ─── MATERIALS MANAGEMENT ────────────────────────
+// ─── MATERIALS MANAGEMENT (Supabase table + Storage bucket) ─────────────────
+// Was localStorage-only (published_materials key, files as base64 inside that
+// same entry) — meant a teacher "publishing" a material only ever existed in
+// their own browser. Now backed by the materials/material_files tables and the
+// 'materials' Storage bucket, so it's actually visible across devices.
 const MAT_ICONS={PDF:'ti-file-type-pdf',Video:'ti-video',Audio:'ti-player-play',Link:'ti-external-link',Book:'ti-book'};
 const MAT_CLASSES={PDF:'pdf',Video:'video',Audio:'audio',Link:'link',Book:'pdf'};
+const MATERIALS_BUCKET='materials';
 
 let _matCache=null;
-function loadMaterials(){
-  if(_matCache!==null)return _matCache;
-  try{_matCache=JSON.parse(localStorage.getItem('published_materials'))||[];}catch(e){_matCache=[];}
+async function loadMaterials(forceRefresh){
+  if(_matCache!==null&&!forceRefresh)return _matCache;
+  if(!_sb){_matCache=[];return _matCache;}
+  const{data,error}=await _sb.from('materials').select('*,material_files(*)').order('created_at',{ascending:false}).limit(100);
+  _matCache=(!error&&data)?data:[];
   return _matCache;
 }
-function saveMaterials(m){
-  _matCache=m;
-  try{localStorage.setItem('published_materials',JSON.stringify(m));}catch(e){showToast('Storage full — material saved in memory only');}
-}
 
+let _matSelectedFiles=[];
 function matFileChosen(input){
   const lbl=document.getElementById('mat-file-label');
   const span=document.getElementById('mat-file-name');
-  if(input.files&&input.files[0]){
-    const f=input.files[0];
-    if(f.size>10*1024*1024){showToast('File is larger than 10 MB — please use a link instead');input.value='';return;}
-    span.textContent=f.name;
+  const files=input.files?Array.from(input.files):[];
+  const tooBig=files.find(f=>f.size>10*1024*1024);
+  if(tooBig){
+    showToast(`"${tooBig.name}" is larger than 10 MB — please use a link instead`);
+    input.value='';_matSelectedFiles=[];
+    span.textContent='Choose files or drag here…';lbl.classList.remove('has-file');
+    return;
+  }
+  _matSelectedFiles=files;
+  if(files.length){
+    span.textContent=files.length===1?files[0].name:files.length+' files selected';
     lbl.classList.add('has-file');
   }else{
-    span.textContent='Choose file or drag here…';
+    span.textContent='Choose files or drag here…';
     lbl.classList.remove('has-file');
   }
 }
@@ -6391,93 +7077,121 @@ function closeMatModal(){
   draftClear('mat-title','mat-link');
   document.getElementById('mat-type').value='PDF';
   const fi=document.getElementById('mat-file');if(fi)fi.value='';
-  const fn=document.getElementById('mat-file-name');if(fn)fn.textContent='Choose file or drag here…';
+  _matSelectedFiles=[];
+  const fn=document.getElementById('mat-file-name');if(fn)fn.textContent='Choose files or drag here…';
   const fl=document.getElementById('mat-file-label');if(fl)fl.classList.remove('has-file');
   document.querySelectorAll('#mat-group-checks input').forEach(cb=>{cb.checked=cb.value==='All Groups';});
 }
-function saveMaterial(){
+async function saveMaterial(){
+  if(!_sb||!session||session.role!=='teacher'){showToast('Teachers only');return;}
   const title=(document.getElementById('mat-title').value||'').trim();
   if(!title){showToast('Enter a material title');return;}
   const type=document.getElementById('mat-type').value;
   const link=(document.getElementById('mat-link').value||'').trim();
   const groups=Array.from(document.querySelectorAll('#mat-group-checks input:checked')).map(cb=>cb.value);
   if(!groups.length){showToast('Select at least one target group');return;}
-  const fileInput=document.getElementById('mat-file');
-  const file=fileInput&&fileInput.files&&fileInput.files[0]?fileInput.files[0]:null;
-  const date=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-  const author=session?session.name:'Teacher';
-  const doSave=(dataUrl,fileName)=>{
-    const mat={id:Date.now(),title,type,link,dataUrl:dataUrl||'',fileName:fileName||'',groups,date,author};
-    const mats=loadMaterials();
-    mats.unshift(mat);
-    saveMaterials(mats);
+  const btn=document.getElementById('mat-publish-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Publishing…';}
+  try{
+    const{data:matRow,error:matErr}=await _sb.from('materials').insert({title,type,link:link||null,groups,author:session.name}).select('id').single();
+    if(matErr)throw matErr;
+    // Publish a whole batch of files in one submit — upload each, skip (and report)
+    // any single failure rather than losing the entire material over one bad file.
+    for(const file of _matSelectedFiles){
+      const path=`${matRow.id}/${Date.now()}-${file.name}`;
+      const{error:upErr}=await _sb.storage.from(MATERIALS_BUCKET).upload(path,file);
+      if(upErr){showToast(`"${file.name}" failed to upload: ${upErr.message}`);continue;}
+      await _sb.from('material_files').insert({material_id:matRow.id,file_path:path,file_name:file.name,file_size:file.size});
+    }
     closeMatModal();
-    renderTeacherMaterials();
-    renderStudentMaterials();
+    await loadMaterials(true);
+    await renderTeacherMaterials();
+    await renderStudentMaterials();
     showToast('Material published 📂');
-  };
-  if(file){
-    const reader=new FileReader();
-    reader.onload=e=>doSave(e.target.result,file.name);
-    reader.onerror=()=>showToast('File read error');
-    reader.readAsDataURL(file);
-  }else{
-    doSave('','');
+  }catch(e){
+    showToast('Publish failed: '+e.message);
   }
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Publish';}
 }
-function deleteMaterial(id){
-  const mats=loadMaterials().filter(m=>m.id!==id);
-  saveMaterials(mats);
-  renderTeacherMaterials();
-  renderStudentMaterials();
+async function deleteMaterial(id){
+  if(!_sb||!session||session.role!=='teacher')return;
+  const mats=await loadMaterials();
+  const mat=mats.find(m=>m.id===id);
+  const paths=(mat?.material_files||[]).map(f=>f.file_path);
+  if(paths.length)await _sb.storage.from(MATERIALS_BUCKET).remove(paths);
+  const{error}=await _sb.from('materials').delete().eq('id',id);
+  if(error){showToast('Delete failed: '+error.message);return;}
+  await loadMaterials(true);
+  await renderTeacherMaterials();
+  await renderStudentMaterials();
   showToast('Material removed');
 }
-function renderTeacherMaterials(){
+async function renderTeacherMaterials(){
   const el=document.getElementById('teacher-mat-list');if(!el)return;
-  const mats=loadMaterials();
+  const mats=await loadMaterials();
   if(!mats.length){el.innerHTML='<div style="font-size:12px;color:var(--txt3);margin-bottom:4px">No materials published yet. Click "Add Material" to publish.</div>';return;}
-  el.innerHTML='<div class="sec" style="margin-top:0">Published by you</div>'+mats.map(m=>`
-    <div class="mat-item" style="padding-right:6px">
+  el.innerHTML='<div class="sec" style="margin-top:0">Published by you</div>'+mats.map(m=>{
+    const fileCount=(m.material_files||[]).length;
+    const fileNote=fileCount>1?fileCount+' files':fileCount===1?m.material_files[0].file_name:m.link?'link':'';
+    const dateStr=new Date(m.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    return `<div class="mat-item" style="padding-right:6px" onclick="openMatDetail('${m.id}')">
       <div class="mat-icon ${MAT_CLASSES[m.type]||'pdf'}"><i class="ti ${MAT_ICONS[m.type]||'ti-file'}"></i></div>
       <div class="mat-body">
         <div class="mat-title">${escHtml(m.title)}</div>
-        <div class="mat-meta">${escHtml(m.type)}${m.fileName?' · '+escHtml(m.fileName):m.link?' · link':''} · ${escHtml(m.groups.join(', '))} · ${escHtml(m.date)}</div>
+        <div class="mat-meta">${escHtml(m.type)}${fileNote?' · '+escHtml(fileNote):''} · ${escHtml((m.groups||[]).join(', '))} · ${escHtml(dateStr)}</div>
       </div>
-      <button type="button" onclick="deleteMaterial(${m.id})" style="background:none;border:none;color:var(--red);cursor:pointer;padding:6px;font-size:14px;flex-shrink:0" title="Remove"><i class="ti ti-trash"></i></button>
-    </div>`).join('');
+      <button type="button" onclick="event.stopPropagation();deleteMaterial('${m.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;padding:6px;font-size:14px;flex-shrink:0" title="Remove"><i class="ti ti-trash"></i></button>
+    </div>`;
+  }).join('');
 }
-function renderStudentMaterials(){
+async function renderStudentMaterials(){
   const el=document.getElementById('student-mat-list');if(!el)return;
-  const mats=loadMaterials();
+  const mats=await loadMaterials();
   const group=session?session.group:'';
-  const visible=mats.filter(m=>m.groups.includes('All Groups')||m.groups.includes(group));
+  const visible=mats.filter(m=>(m.groups||[]).includes('All Groups')||(m.groups||[]).includes(group));
   if(!visible.length){el.innerHTML='';return;}
-  el.innerHTML='<div class="sec" style="margin-top:0">From your teacher</div>'+visible.map(m=>`
-    <div class="mat-item" data-mat-id="${m.id}" onclick="studentMatOpen(this)">
+  el.innerHTML='<div class="sec" style="margin-top:0">From your teacher</div>'+visible.map(m=>{
+    const fileCount=(m.material_files||[]).length;
+    const fileNote=fileCount>1?' <span style="font-size:10px;color:var(--txt3);font-weight:400">('+fileCount+' files)</span>':'';
+    const dateStr=new Date(m.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    return `<div class="mat-item" onclick="openMatDetail('${m.id}')">
       <div class="mat-icon ${MAT_CLASSES[m.type]||'pdf'}"><i class="ti ${MAT_ICONS[m.type]||'ti-file'}"></i></div>
       <div class="mat-body">
-        <div class="mat-title">${escHtml(m.title)}</div>
-        <div class="mat-meta">${escHtml(m.type)} · ${escHtml(m.date)} · by ${escHtml(m.author||'Teacher')}</div>
+        <div class="mat-title">${escHtml(m.title)}${fileNote}</div>
+        <div class="mat-meta">${escHtml(m.type)} · ${escHtml(dateStr)} · by ${escHtml(m.author||'Teacher')}</div>
       </div>
-      <i class="ti ${m.dataUrl?'ti-download':m.link?'ti-external-link':'ti-download'} mat-action"></i>
-    </div>`).join('');
+      <i class="ti ti-chevron-right mat-action"></i>
+    </div>`;
+  }).join('');
 }
-function studentMatOpen(el){
-  const id=parseInt(el.dataset.matId,10);
-  const m=loadMaterials().find(x=>x.id===id);
+// Opens every attached file (even if there's only one) plus the link if provided —
+// replaces the old single-file-assumption studentMatOpen(), shared by both roles.
+async function openMatDetail(id){
+  if(!_sb)return;
+  const mats=await loadMaterials();
+  const m=mats.find(x=>x.id===id);
   if(!m)return;
-  if(m.dataUrl){
-    const a=document.createElement('a');
-    a.href=m.dataUrl;
-    a.download=m.fileName||m.title;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }else if(m.link){
-    window.open(m.link,'_blank');
-  }else{
-    showToast((m.type==='Audio'?'▶':'⬇')+' '+m.title);
-  }
+  document.getElementById('mat-detail-title').innerHTML=`<i class="ti ${MAT_ICONS[m.type]||'ti-file'}" style="margin-right:7px;color:var(--accent);vertical-align:-2px"></i>${escHtml(m.title)}`;
+  const files=m.material_files||[];
+  const fileRows=files.map(f=>{
+    const url=_sb.storage.from(MATERIALS_BUCKET).getPublicUrl(f.file_path).data.publicUrl;
+    const sizeStr=f.file_size?(f.file_size>1024*1024?(f.file_size/1024/1024).toFixed(1)+' MB':Math.round(f.file_size/1024)+' KB'):'';
+    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" download="${escHtml(f.file_name)}" class="mat-item" style="text-decoration:none;color:inherit">
+      <div class="mat-icon ${MAT_CLASSES[m.type]||'pdf'}"><i class="ti ti-file"></i></div>
+      <div class="mat-body"><div class="mat-title">${escHtml(f.file_name)}</div><div class="mat-meta">${escHtml(sizeStr)}</div></div>
+      <i class="ti ti-download mat-action"></i>
+    </a>`;
+  }).join('');
+  const linkRow=m.link?`<a href="${escHtml(m.link)}" target="_blank" rel="noopener" class="mat-item" style="text-decoration:none;color:inherit">
+      <div class="mat-icon link"><i class="ti ti-external-link"></i></div>
+      <div class="mat-body"><div class="mat-title">Open link</div><div class="mat-meta">${escHtml(m.link)}</div></div>
+      <i class="ti ti-arrow-right mat-action"></i>
+    </a>`:'';
+  document.getElementById('mat-detail-body').innerHTML=(fileRows+linkRow)||'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">No files or link attached.</div>';
+  document.getElementById('mat-detail-modal').classList.add('open');
+}
+function closeMatDetail(){
+  document.getElementById('mat-detail-modal').classList.remove('open');
 }
 
 // ─── LESSON DATE JOURNAL ─────────────────────────
