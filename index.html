@@ -1119,11 +1119,6 @@ mark.error-glow:hover{filter:brightness(0.78);}
 .group-tab:hover{background:var(--bg4);color:var(--txt);}
 .group-tab.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 0 14px rgba(124,110,255,0.3);}
 /* ── TEACHER DASH SUB-TABS ── */
-.tdash-subnav{display:flex;gap:6px;margin-bottom:18px;background:var(--bg2);border-radius:14px;padding:4px;border:0.5px solid var(--line2);}
-.tdash-subnav-btn{flex:1;padding:9px 16px;border-radius:11px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;background:transparent;border:none;color:var(--txt2);transition:all 0.22s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.tdash-subnav-btn i{font-size:14px;vertical-align:-1px;}
-.tdash-subnav-btn:hover{color:var(--txt);background:var(--bg3);}
-.tdash-subnav-btn.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(124,110,255,0.35);}
 /* ── TEACHER DASH STAT CARDS TOP ROW ── */
 .tdash-top-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
 .tdash-stat-card{background:var(--bg2);border-radius:16px;border:0.5px solid var(--line2);padding:16px 18px;display:flex;flex-direction:column;gap:4px;}
@@ -1200,6 +1195,9 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 .menu-btn i{color:var(--txt);font-size:18px;}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:49;}
 .sidebar-backdrop.open{display:block;}
+
+.cms-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+@media (max-width: 900px){.cms-grid{grid-template-columns:1fr;}}
 
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width: 980px){
@@ -1282,7 +1280,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
 .back-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;background:var(--bg3);border:0.5px solid var(--line2);font-size:12px;font-weight:500;color:var(--txt2);cursor:pointer;margin-bottom:14px;transition:background .15s;}
 .back-pill:hover{background:var(--bg4);}
 /* ─── PDF / PRINT ─── */
-.download-report-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;background:var(--bg3);border:0.5px solid var(--line2);font-size:12px;font-weight:600;color:var(--txt1);cursor:pointer;transition:background .15s;}
+.download-report-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;background:var(--bg3);border:0.5px solid var(--line2);font-size:13px;font-weight:600;color:var(--txt1);cursor:pointer;transition:background .15s;}
 .download-report-btn:hover{background:var(--bg4);}
 .print-only{display:none;}
 @media print{
@@ -1355,6 +1353,31 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
     <div class="login-hint">
       Student: <b>student</b> / <b>student123</b><br>
       Teacher: <b>teacher</b> / <b>teacher2026</b>
+    </div>
+
+    <div id="signup-toggle-wrap" style="text-align:center;margin-top:14px">
+      <a href="#" onclick="toggleSignupForm();return false;" style="font-size:12px;color:var(--accent)">New student? Create an account</a>
+    </div>
+
+    <div id="signup-form" style="display:none;margin-top:14px;padding-top:14px;border-top:0.5px solid var(--line2)">
+      <label class="login-lbl" for="signup-name">Full name</label>
+      <input class="login-in" id="signup-name" placeholder="Your full name">
+
+      <label class="login-lbl" for="signup-group">Group</label>
+      <select class="login-in" id="signup-group"></select>
+
+      <label class="login-lbl" for="signup-email">Email</label>
+      <input class="login-in" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email">
+
+      <label class="login-lbl" for="signup-password">Password</label>
+      <input class="login-in" id="signup-password" type="password" placeholder="At least 6 characters" autocomplete="new-password">
+
+      <div class="login-btns" style="margin-top:10px">
+        <button type="button" class="login-btn primary" onclick="doSignup()"><i class="ti ti-user-plus"></i> Create account</button>
+      </div>
+      <div style="text-align:center;margin-top:10px">
+        <a href="#" onclick="toggleSignupForm();return false;" style="font-size:12px;color:var(--txt3)">Back to sign in</a>
+      </div>
     </div>
   </div>
 </div>
@@ -2109,12 +2132,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
   <!-- Group selector tabs -->
   <div class="group-tabs" id="group-tabs"></div>
 
-  <!-- Sub-tab navigation -->
-  <div class="tdash-subnav">
-    <button type="button" class="tdash-subnav-btn active" id="tdash-tab-overview" onclick="switchTdashTab('overview')"><i class="ti ti-layout-dashboard"></i> Overview</button>
-    <button type="button" class="tdash-subnav-btn" id="tdash-tab-cms" onclick="switchTdashTab('cms')"><i class="ti ti-edit"></i> Content (CMS)</button>
-  </div>
-
   <!-- ═══ OVERVIEW PANEL ═══ -->
   <div id="tdash-panel-overview">
 
@@ -2181,9 +2198,19 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <div class="sec" style="margin-top:0"><i class="ti ti-clipboard-list" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Homework for this group</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
         <input class="ai-in" id="td-hw-title" style="flex:2;min-width:120px" placeholder="Task title (e.g. Unit 6 exercises p.50)">
-        <input class="ai-in" id="td-hw-due" style="flex:1;min-width:90px" placeholder="Due date">
+        <select class="grade-sel" id="td-hw-skill" style="flex-shrink:0">
+          <option value="">Skill (optional)…</option>
+          <option value="Grammar">Grammar</option>
+          <option value="Speaking">Speaking</option>
+          <option value="Listening">Listening</option>
+          <option value="Writing">Writing</option>
+          <option value="Vocabulary">Vocabulary</option>
+          <option value="Reading">Reading</option>
+        </select>
+        <input class="ai-in" id="td-hw-due" type="date" style="flex:1;min-width:130px">
         <button type="button" class="hw-btn" style="flex-shrink:0" onclick="addHomeworkT()"><i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add</button>
       </div>
+      <textarea class="ai-in" id="td-hw-instructions" style="width:100%;min-height:56px;margin-bottom:8px;resize:vertical" placeholder="Instructions for students (optional but recommended)"></textarea>
       <div id="td-hw-list"></div>
     </div>
 
@@ -2203,18 +2230,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
     </div>
 
   </div><!-- /tdash-panel-overview -->
-
-  <!-- ═══ CMS PANEL (stub — full CMS moved to #screen-cms) ═══ -->
-  <div id="tdash-panel-cms" style="display:none">
-    <div class="card glass" style="padding:20px;text-align:center">
-      <i class="ti ti-database" style="font-size:2rem;color:var(--accent);margin-bottom:8px;display:block"></i>
-      <div style="font-size:15px;font-weight:700;color:var(--txt1);margin-bottom:6px">Content Management</div>
-      <div style="font-size:13px;color:var(--txt2);margin-bottom:14px">Lessons, vocabulary and grammar drills are managed in the Content (CMS) hub.</div>
-      <button type="button" class="hw-btn" onclick="show('cms',document.querySelector('[data-id=cms]'))" style="display:inline-flex;align-items:center;gap:6px">
-        <i class="ti ti-arrow-right"></i>Go to Content CMS
-      </button>
-    </div>
-  </div><!-- /tdash-panel-cms -->
 
 </div><!-- /screen-tdash -->
 
@@ -2241,73 +2256,78 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
     <button type="button" id="cms-lesson-btn" class="hw-btn" style="width:100%" onclick="cmsSaveLesson()"><i class="ti ti-device-floppy" style="margin-right:5px;vertical-align:-1px"></i>Save Lesson to Supabase</button>
   </div>
 
-  <!-- Add Vocabulary Words -->
-  <div class="card glass" style="margin-bottom:16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div class="sec" style="margin:0"><i class="ti ti-vocabulary" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Add Vocabulary Words</div>
-      <span id="cms-vocab-badge" style="display:none;font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px"></span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <select class="ai-in" id="cms-vocab-level" onchange="cmsLevelChanged()">
-        <option value="">① Pick a level…</option>
-        <option value="beginner">Beginner A1</option>
-        <option value="elementary">Elementary A2</option>
-        <option value="pre-intermediate">Pre-Intermediate B1</option>
-        <option value="pre-ielts">Pre-IELTS B2</option>
-        <option value="ielts">IELTS Prep C1</option>
-      </select>
-      <select class="ai-in" id="cms-vocab-lesson" disabled>
-        <option value="">② Select lesson…</option>
-      </select>
-    </div>
-    <button type="button" class="hw-btn" style="width:100%;margin-bottom:12px;background:var(--purple);opacity:0.9" onclick="cmsAISuggestWord()">
-      <i class="ti ti-bulb" style="margin-right:5px;vertical-align:-1px"></i>AI Suggest Word for This Topic
-    </button>
-    <div id="cms-vocab-staging"></div>
-    <div style="display:flex;gap:8px;margin-top:6px">
-      <button type="button" class="hw-btn" style="flex:1;background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2)" onclick="cmsAddWordBlock()">
-        <i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add Another Word
-      </button>
-      <button type="button" id="cms-vocab-btn" class="hw-btn" style="flex:2" onclick="cmsSaveVocab()">
-        <i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase
-      </button>
-    </div>
-  </div>
+  <!-- Two independent columns: Vocabulary | Grammar Drills -->
+  <div class="cms-grid">
 
-  <!-- AI Grammar Drills Generator -->
-  <div class="card glass">
-    <div class="sec" style="margin-top:0"><i class="ti ti-robot" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>AI Grammar Drills Generator</div>
-    <div style="font-size:12px;color:var(--txt2);margin-bottom:12px;background:var(--bg3);border-radius:8px;padding:8px 12px;border-left:3px solid var(--accent)">
-      Generate MCQ grammar practice questions with AI. Choose a topic, level and difficulty, then save to Supabase for students.
-    </div>
-    <input class="ai-in" id="drill-topic" style="width:100%;margin-bottom:8px" placeholder="Grammar topic (e.g. Present Perfect, Conditionals, Passive Voice)…">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-      <select class="ai-in" id="drill-level">
-        <option value="A2">Elementary A2</option>
-        <option value="B1" selected>Pre-Int B1</option>
-        <option value="B2">Pre-IELTS B2</option>
-        <option value="C1">IELTS Prep C1</option>
-      </select>
-      <select class="ai-in" id="drill-difficulty">
-        <option value="easy">Easy</option>
-        <option value="medium" selected>Medium</option>
-        <option value="hard">Hard</option>
-      </select>
-      <input class="ai-in" id="drill-count" type="number" min="2" max="15" value="5" placeholder="2–15">
-    </div>
-    <button type="button" id="drill-gen-btn" class="hw-btn" style="width:100%;margin-bottom:14px" onclick="generateGrammarDrills()">
-      <i class="ti ti-wand" style="margin-right:5px;vertical-align:-1px"></i>Generate Grammar Drills with AI
-    </button>
-    <div id="drill-preview" style="display:none">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em">Preview</div>
-        <button type="button" id="drill-save-btn" class="hw-btn" style="padding:7px 14px;font-size:12px" onclick="saveDrillsToSupabase()">
-          <i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase
+    <!-- Add Vocabulary Words -->
+    <div class="card glass">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="sec" style="margin:0"><i class="ti ti-vocabulary" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Add Vocabulary Words</div>
+        <span id="cms-vocab-badge" style="display:none;font-size:11px;font-weight:700;background:var(--accent);color:#fff;padding:2px 10px;border-radius:20px"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <select class="ai-in" id="cms-vocab-level" onchange="cmsLevelChanged()">
+          <option value="">① Pick a level…</option>
+          <option value="beginner">Beginner A1</option>
+          <option value="elementary">Elementary A2</option>
+          <option value="pre-intermediate">Pre-Intermediate B1</option>
+          <option value="pre-ielts">Pre-IELTS B2</option>
+          <option value="ielts">IELTS Prep C1</option>
+        </select>
+        <select class="ai-in" id="cms-vocab-lesson" disabled>
+          <option value="">② Select lesson…</option>
+        </select>
+      </div>
+      <button type="button" class="hw-btn" style="width:100%;margin-bottom:12px;background:var(--purple);opacity:0.9" onclick="cmsAISuggestWord()">
+        <i class="ti ti-bulb" style="margin-right:5px;vertical-align:-1px"></i>AI Suggest Word for This Topic
+      </button>
+      <div id="cms-vocab-staging"></div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button type="button" class="hw-btn" style="flex:1;background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2)" onclick="cmsAddWordBlock()">
+          <i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add Another Word
+        </button>
+        <button type="button" id="cms-vocab-btn" class="hw-btn" style="flex:2" onclick="cmsSaveVocab()">
+          <i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase
         </button>
       </div>
-      <div id="drill-list"></div>
     </div>
-  </div>
+
+    <!-- AI Grammar Drills Generator -->
+    <div class="card glass">
+      <div class="sec" style="margin-top:0"><i class="ti ti-robot" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>AI Grammar Drills Generator</div>
+      <div style="font-size:12px;color:var(--txt2);margin-bottom:12px;background:var(--bg3);border-radius:8px;padding:8px 12px;border-left:3px solid var(--accent)">
+        Generate MCQ grammar practice questions with AI. Choose a topic, level and difficulty, then save to Supabase for students. Drills are shared by every lesson at that level (built-in and teacher-created alike).
+      </div>
+      <input class="ai-in" id="drill-topic" style="width:100%;margin-bottom:8px" placeholder="Grammar topic (e.g. Present Perfect, Conditionals, Passive Voice)…">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+        <select class="ai-in" id="drill-level">
+          <option value="A2">Elementary A2</option>
+          <option value="B1" selected>Pre-Int B1</option>
+          <option value="B2">Pre-IELTS B2</option>
+          <option value="C1">IELTS Prep C1</option>
+        </select>
+        <select class="ai-in" id="drill-difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <input class="ai-in" id="drill-count" type="number" min="2" max="15" value="5" placeholder="2–15">
+      </div>
+      <button type="button" id="drill-gen-btn" class="hw-btn" style="width:100%;margin-bottom:14px" onclick="generateGrammarDrills()">
+        <i class="ti ti-wand" style="margin-right:5px;vertical-align:-1px"></i>Generate Grammar Drills with AI
+      </button>
+      <div id="drill-preview" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:12px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.07em">Preview</div>
+          <button type="button" id="drill-save-btn" class="hw-btn" style="padding:7px 14px;font-size:12px" onclick="saveDrillsToSupabase()">
+            <i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase
+          </button>
+        </div>
+        <div id="drill-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /cms-grid -->
 </div><!-- /screen-cms -->
 
 <!-- ══ PROGRESS HUB SCREEN ════════════════════════════════════════════════ -->
@@ -2492,6 +2512,62 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
   </div>
 </div>
 
+<!-- PROGRESS HUB: STUDENT RADAR MODAL (reuses buildGrades()) -->
+<div class="modal-overlay" id="pgh-radar-modal-overlay" onclick="if(event.target===this)closeProgressRadar()">
+  <div class="modal-box" style="max-width:480px;width:92%">
+    <div class="modal-head">
+      <div class="modal-title" id="pgh-radar-modal-title">Grades</div>
+      <button type="button" class="modal-close" onclick="closeProgressRadar()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:0 20px 20px">
+      <div class="card" style="display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <canvas id="pgh-radar-canvas" width="220" height="220"></canvas>
+        <div style="flex:1;min-width:140px">
+          <div class="sec" style="margin-bottom:14px">Skills</div>
+          <div id="pgh-radar-legend"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec">Recent grades</div>
+        <div id="pgh-grade-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ESSAY SUBMISSION DETAIL MODAL (teacher, Epic 5B) -->
+<div class="modal-overlay" id="essay-sub-modal-overlay" onclick="if(event.target===this)closeEssaySubmission()">
+  <div class="modal-box" style="max-width:640px;width:94%">
+    <div class="modal-head">
+      <div class="modal-title" id="essay-sub-modal-title">Essay Submission</div>
+      <button type="button" class="modal-close" onclick="closeEssaySubmission()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:0 20px 20px;max-height:70vh;overflow-y:auto">
+      <div id="essay-sub-meta" style="font-size:12px;color:var(--txt3);margin-bottom:12px"></div>
+      <div id="essay-sub-text" style="background:var(--surface2);border-radius:10px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;margin-bottom:14px;max-height:220px;overflow-y:auto"></div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button type="button" class="hw-btn" style="padding:8px 14px;font-size:12px" onclick="toggleEssaySubMistakes()"><i class="ti ti-list-check"></i> Show Mistakes</button>
+        <button type="button" class="hw-btn" style="padding:8px 14px;font-size:12px;background:var(--bg3);color:var(--txt1);border:0.5px solid var(--line2)" onclick="toggleEssaySubBand()"><i class="ti ti-certificate"></i> IELTS Band</button>
+      </div>
+      <div id="essay-sub-mistakes" style="display:none;margin-bottom:14px"></div>
+      <div id="essay-sub-band" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOMEWORK GRADING MODAL -->
+<div class="modal-overlay" id="hw-grade-modal-overlay" onclick="if(event.target===this)closeHwGradeModal()">
+  <div class="modal-box" style="max-width:480px;width:92%">
+    <div class="modal-head">
+      <div class="modal-title" id="hw-grade-modal-title">Homework</div>
+      <button type="button" class="modal-close" onclick="closeHwGradeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div id="hw-grade-modal-body" style="padding:0 20px 20px">
+      <div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>
+    </div>
+  </div>
+</div>
+
 <!-- PAYMENT MODAL -->
 <div class="modal-overlay" id="pay-modal-overlay" onclick="if(event.target===this)closePayModal()">
   <div class="modal-box">
@@ -2582,6 +2658,10 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
   <div class="card" style="padding:16px 18px 14px;margin-bottom:12px">
     <!-- General mode: single textarea -->
     <div id="essay-input-general">
+      <input id="portal-general-topic" type="text" maxlength="120"
+        style="width:100%;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:9px 12px;font-size:12.5px;font-family:inherit;color:var(--txt2);outline:none;margin-bottom:10px"
+        placeholder="Essay topic/title (optional — used to label it in your teacher's inbox)"
+        oninput="_saveEssayDraft({generalTopic:this.value})">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
         <span style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--txt3)">Your essay</span>
         <span style="font-size:11px;color:var(--txt3)">Words: <b id="portal-wc">0</b></span>
@@ -2600,7 +2680,8 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       </div>
       <textarea id="portal-task1-prompt" rows="3"
         style="width:100%;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:11px 14px;font-size:12.5px;font-family:inherit;line-height:1.65;color:var(--txt2);resize:vertical;outline:none;margin-bottom:10px"
-        placeholder="Paste the Task 1 question / chart description here…" spellcheck="false"></textarea>
+        placeholder="Paste the Task 1 question / chart description here…" spellcheck="false"
+        oninput="_saveEssayDraft({task1Prompt:this.value})"></textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <span style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--txt3)">Your response</span>
         <span style="font-size:11px;color:var(--txt3)">Words: <b id="portal-wc-t1">0</b></span>
@@ -2608,7 +2689,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <textarea id="portal-task1-ta" rows="7"
         style="width:100%;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:13px 14px;font-size:13.5px;font-family:inherit;line-height:1.75;color:var(--txt1);resize:vertical;outline:none"
         placeholder="Write your Task 1 report here (150–200 words)…" spellcheck="false"
-        oninput="document.getElementById('portal-wc-t1').textContent=this.value.trim().split(/\s+/).filter(Boolean).length"></textarea>
+        oninput="portalWcT1(this)"></textarea>
       <div style="margin-top:10px">
         <div style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">CHART / DIAGRAM (optional)</div>
         <div style="display:flex;align-items:center;gap:10px">
@@ -2629,7 +2710,8 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       </div>
       <textarea id="portal-task2-prompt" rows="3"
         style="width:100%;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:11px 14px;font-size:12.5px;font-family:inherit;line-height:1.65;color:var(--txt2);resize:vertical;outline:none;margin-bottom:10px"
-        placeholder="Paste the Task 2 question here…" spellcheck="false"></textarea>
+        placeholder="Paste the Task 2 question here…" spellcheck="false"
+        oninput="_saveEssayDraft({task2Prompt:this.value})"></textarea>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
         <span style="font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--txt3)">Your essay</span>
         <span style="font-size:11px;color:var(--txt3)">Words: <b id="portal-wc-t2">0</b></span>
@@ -2637,7 +2719,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-bubble{color
       <textarea id="portal-task2-ta" rows="8"
         style="width:100%;background:var(--bg3);border:0.5px solid var(--line2);border-radius:10px;padding:13px 14px;font-size:13.5px;font-family:inherit;line-height:1.75;color:var(--txt1);resize:vertical;outline:none"
         placeholder="Write your Task 2 essay here (250–300 words)…" spellcheck="false"
-        oninput="document.getElementById('portal-wc-t2').textContent=this.value.trim().split(/\s+/).filter(Boolean).length"></textarea>
+        oninput="portalWcT2(this)"></textarea>
     </div>
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:12px">
@@ -2812,6 +2894,7 @@ function handleTask1Image(input) {
 
 function setEssayMode(mode) {
   activeEssayMode = mode;
+  _saveEssayDraft({mode});
   ['general','task1','task2'].forEach(m => {
     const inp = document.getElementById('essay-input-' + m);
     const btn = document.getElementById('essay-mode-' + m);
@@ -2839,11 +2922,77 @@ function _getEssayPromptText() {
   if (activeEssayMode === 'task2') return (document.getElementById('portal-task2-prompt')?.value || '').trim();
   return '';
 }
+// Topic shown in the teacher's essay inbox. Task 1/2 already have a real
+// prompt field, reuse it; General mode gets its own short topic input,
+// falling back to the essay's first few words if left blank.
+function _getEssayTopic() {
+  if (activeEssayMode === 'task1' || activeEssayMode === 'task2') return _getEssayPromptText();
+  const explicit = (document.getElementById('portal-general-topic')?.value || '').trim();
+  if (explicit) return explicit;
+  const text = _getEssayText();
+  return text ? text.split(/\s+/).slice(0, 8).join(' ') + (text.split(/\s+/).length > 8 ? '…' : '') : '';
+}
 
+function _saveEssayDraft(patch) {
+  const stored = loadStore();
+  const draft = (stored.essayDraft && typeof stored.essayDraft === 'object') ? stored.essayDraft : {};
+  saveStore({essayDraft: {...draft, ...patch}});
+}
+// Persist the last-computed check/band results too, not just raw text —
+// mirrors the app's own single-shared-panel behavior (one results area,
+// last write wins, same as portalRenderResults/portalRenderBandScore
+// already do at runtime) rather than inventing new per-mode isolation.
+function _saveEssayCheckResult(rawText, data) {
+  const stored = loadStore();
+  const draft = (stored.essayDraft && typeof stored.essayDraft === 'object') ? stored.essayDraft : {};
+  saveStore({essayDraft: {...draft, checkResult: {rawText, data}}});
+}
+function _saveEssayBandResult(data) {
+  const stored = loadStore();
+  const draft = (stored.essayDraft && typeof stored.essayDraft === 'object') ? stored.essayDraft : {};
+  saveStore({essayDraft: {...draft, bandResult: data}});
+}
 function portalWc(ta) {
   document.getElementById('portal-wc').textContent =
     ta.value.trim().split(/\s+/).filter(Boolean).length;
-  saveStore({essayDraft: ta.value});
+  _saveEssayDraft({general: ta.value});
+}
+function portalWcT1(ta) {
+  document.getElementById('portal-wc-t1').textContent =
+    ta.value.trim().split(/\s+/).filter(Boolean).length;
+  _saveEssayDraft({task1: ta.value});
+}
+function portalWcT2(ta) {
+  document.getElementById('portal-wc-t2').textContent =
+    ta.value.trim().split(/\s+/).filter(Boolean).length;
+  _saveEssayDraft({task2: ta.value});
+}
+function restoreEssayDrafts() {
+  const stored = loadStore().essayDraft;
+  if (!stored) return;
+  // Older saves stored a plain string (just the general essay text) — still support it.
+  const d = (typeof stored === 'object') ? stored : {general: stored};
+  const gTa = document.getElementById('portal-essay-ta');
+  if (gTa && d.general) { gTa.value = d.general; portalWc(gTa); }
+  const gTopic = document.getElementById('portal-general-topic');
+  if (gTopic && d.generalTopic) gTopic.value = d.generalTopic;
+  const t1p = document.getElementById('portal-task1-prompt');
+  if (t1p && d.task1Prompt) t1p.value = d.task1Prompt;
+  const t1a = document.getElementById('portal-task1-ta');
+  if (t1a && d.task1) { t1a.value = d.task1; portalWcT1(t1a); }
+  const t2p = document.getElementById('portal-task2-prompt');
+  if (t2p && d.task2Prompt) t2p.value = d.task2Prompt;
+  const t2a = document.getElementById('portal-task2-ta');
+  if (t2a && d.task2) { t2a.value = d.task2; portalWcT2(t2a); }
+  if (d.mode) setEssayMode(d.mode);
+  // Restore the last-computed check/band results too, so a reload shows
+  // exactly what was there before — nothing recomputed, no AI call re-run.
+  if (d.checkResult && d.checkResult.rawText && d.checkResult.data) {
+    portalRenderResults(d.checkResult.rawText, d.checkResult.data);
+  }
+  if (d.bandResult) {
+    portalRenderBandScore(d.bandResult);
+  }
 }
 
 function _pEscHtml(s) {
@@ -3013,6 +3162,7 @@ async function portalCheckEssay() {
     const data = await res.json();
     if (!res.ok || data.status!=='success') throw new Error(data.error||`Server error ${res.status}`);
     portalRenderResults(text, data);
+    _saveEssayCheckResult(text, data);
     saveEssayHistory('grammar', text, data);
   } catch(err) {
     console.error('Essay check failed:', err);
@@ -3080,6 +3230,7 @@ async function portalGetBandScore() {
     const data = await res.json();
     if (!res.ok || data.status!=='success') throw new Error(data.error||`Server error ${res.status}`);
     portalRenderBandScore(data);
+    _saveEssayBandResult(data);
     saveEssayHistory('band', text, data);
   } catch(err) {
     console.error('Band score failed:', err);
@@ -3098,21 +3249,11 @@ function _pBandColor(band) {
   return '#f06060';
 }
 
-function portalRenderBandScore(data) {
-  _portalBandData = data;
-  const panel = document.getElementById('portal-band-panel');
-  panel.style.display = 'flex';
-
-  const overall = data.overallBand || 0;
-  const color   = _pBandColor(overall);
-
-  const overallEl = document.getElementById('portal-band-overall');
-  overallEl.textContent = `Band ${overall.toFixed(1)}`;
-  overallEl.style.color = color;
-
-  document.getElementById('portal-band-summary').textContent = data.summary || '';
-
-  document.getElementById('portal-band-criteria').innerHTML = (data.criteria || []).map(c => {
+// Extracted so the teacher's cached-view modal (Epic 5B) can reuse the
+// exact same criteria/strengths/weaknesses rendering instead of a second,
+// diverging implementation — see _pBuildBandPanel below.
+function _pBandCriteriaHtml(criteria) {
+  return (criteria || []).map(c => {
     const cc  = _pBandColor(c.band);
     const pct = (c.band / 9) * 100;
     return `<div style="background:var(--bg3);border-radius:8px;padding:10px 12px;border:0.5px solid var(--line2)">
@@ -3126,29 +3267,69 @@ function portalRenderBandScore(data) {
       <div style="font-size:11px;color:var(--txt2);line-height:1.5">${_pEscHtml(c.comment)}</div>
     </div>`;
   }).join('');
+}
+function _pBandListHtml(items) {
+  return (items || []).map(s => `<li>${_pEscHtml(s)}</li>`).join('');
+}
 
-  document.getElementById('portal-band-strengths').innerHTML =
-    (data.keyStrengths || []).map(s => `<li>${_pEscHtml(s)}</li>`).join('');
-  document.getElementById('portal-band-weaknesses').innerHTML =
-    (data.keyWeaknesses || []).map(w => `<li>${_pEscHtml(w)}</li>`).join('');
+function portalRenderBandScore(data) {
+  _portalBandData = data;
+  const panel = document.getElementById('portal-band-panel');
+  panel.style.display = 'flex';
+
+  const overall = data.overallBand || 0;
+  const color   = _pBandColor(overall);
+
+  const overallEl = document.getElementById('portal-band-overall');
+  overallEl.textContent = `Band ${overall.toFixed(1)}`;
+  overallEl.style.color = color;
+
+  document.getElementById('portal-band-summary').textContent = data.summary || '';
+  document.getElementById('portal-band-criteria').innerHTML = _pBandCriteriaHtml(data.criteria);
+  document.getElementById('portal-band-strengths').innerHTML = _pBandListHtml(data.keyStrengths);
+  document.getElementById('portal-band-weaknesses').innerHTML = _pBandListHtml(data.keyWeaknesses);
 
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// Self-contained HTML version of the same band panel, for read-only reuse
+// in the teacher's cached-submission modal (no element IDs to fight over).
+function _pBuildBandPanel(data) {
+  const overall = data.overallBand || 0;
+  const color   = _pBandColor(overall);
+  return `<div style="border:0.5px solid var(--line2);border-radius:12px;overflow:hidden">
+    <div style="padding:14px 20px 12px;border-bottom:0.5px solid var(--line);display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px">🎓</span>
+        <span style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--txt3)">IELTS Band Prediction</span>
+      </div>
+      <div style="font-size:26px;font-weight:800;letter-spacing:-1px;color:${color}">Band ${overall.toFixed(1)}</div>
+    </div>
+    <div style="font-size:12px;color:var(--txt2);line-height:1.6;padding:12px 20px 10px;border-bottom:0.5px solid var(--line2)">${_pEscHtml(data.summary||'')}</div>
+    <div style="padding:10px 16px;display:flex;flex-direction:column;gap:8px">${_pBandCriteriaHtml(data.criteria)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:0.5px solid var(--line2)">
+      <div style="padding:12px 16px;border-right:0.5px solid var(--line2)">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#34c4a0;margin-bottom:6px">Key Strengths</div>
+        <ul style="margin:0;padding:0 0 0 14px;font-size:11.5px;color:var(--txt2);line-height:1.8">${_pBandListHtml(data.keyStrengths)}</ul>
+      </div>
+      <div style="padding:12px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#f06060;margin-bottom:6px">To Improve</div>
+        <ul style="margin:0;padding:0 0 0 14px;font-size:11.5px;color:var(--txt2);line-height:1.8">${_pBandListHtml(data.keyWeaknesses)}</ul>
+      </div>
+    </div>
+  </div>`;
+}
+
 // ─── DATA ────────────────────────────────────────
-const skills=[
-  {name:'Grammar',val:82,color:'#5b9cf6'},
-  {name:'Speaking',val:68,color:'#e070b0'},
-  {name:'Listening',val:75,color:'#34c4a0'},
-  {name:'Writing',val:88,color:'#fbbf24'},
-  {name:'Vocabulary',val:60,color:'#9b72f5'},
-  {name:'Reading',val:78,color:'#fb923c'},
-];
-const grades=[
-  {name:'Unit 5 Test — Grammar',date:'05 June',score:4.5},
-  {name:'Speaking Practice',date:'02 June',score:4.0},
-  {name:'Listening Test',date:'28 May',score:3.5},
-  {name:'Writing Essay',date:'24 May',score:4.5},
+// Skill metadata only (name+color) — real per-skill values come from
+// `grade_events` in Supabase, fetched live in buildGrades().
+const SKILLS_META=[
+  {name:'Grammar',color:'#5b9cf6'},
+  {name:'Speaking',color:'#e070b0'},
+  {name:'Listening',color:'#34c4a0'},
+  {name:'Writing',color:'#fbbf24'},
+  {name:'Vocabulary',color:'#9b72f5'},
+  {name:'Reading',color:'#fb923c'},
 ];
 const students=[
   {pos:1,init:'ZA',name:'Zafar A.',pts:520,me:false},
@@ -3163,18 +3344,6 @@ const students=[
   {pos:10,init:'OT',name:'Otabek T.',pts:260,me:false},
   {pos:11,init:'LB',name:'Lobar B.',pts:230,me:false},
   {pos:12,init:'RM',name:'Rustam M.',pts:200,me:false},
-];
-const hwData=[
-  {id:1,title:'Present Perfect exercises — pp. 47–49',due:'13 June',desc:'Do exercises 1–5 on pages 47–49 of the textbook. Pay special attention to the verb form and time markers.',done:false,
-   students:[{init:'ZA',name:'Zafar A.',status:'done',score:'5/5'},{init:'DS',name:'Dilnoza S.',status:'done',score:'4/5'},{init:'AT',name:'Azizbek T.',status:'pending',score:'—'},{init:'MK',name:'Malika K.',status:'done',score:'5/5'},{init:'JR',name:'Jasur R.',status:'pending',score:'—'}]},
-  {id:2,title:'Essay: «My ideal city» (150 words)',due:'13 June',desc:'Write a 150–180 word essay. Structure: introduction, 2 body paragraphs, conclusion. Use Present Perfect at least 3 times.',done:false,
-   students:[{init:'ZA',name:'Zafar A.',status:'done',score:'5/5'},{init:'DS',name:'Dilnoza S.',status:'pending',score:'—'},{init:'AT',name:'Azizbek T.',status:'pending',score:'—'},{init:'MK',name:'Malika K.',status:'done',score:'4/5'},{init:'JR',name:'Jasur R.',status:'done',score:'3/5'}]},
-  {id:3,title:'Vocabulary list Unit 5 — learn 20 words',due:'09 June',desc:'Learn 20 words from Unit 5. Oral check next lesson.',done:true,
-   students:[{init:'ZA',name:'Zafar A.',status:'done',score:'20/20'},{init:'DS',name:'Dilnoza S.',status:'done',score:'18/20'},{init:'AT',name:'Azizbek T.',status:'done',score:'17/20'},{init:'MK',name:'Malika K.',status:'done',score:'20/20'},{init:'JR',name:'Jasur R.',status:'done',score:'15/20'}]},
-  {id:4,title:'Peer Review: essay «My summer plans» — Dilnoza S.',due:'14 June',desc:'Read your classmate\'s essay and leave a rating + a short comment. It helps her see the text from the outside, and you to practise analysing others\' mistakes.',done:false,peerReview:true,
-   peerAuthor:{init:'DS',name:'Dilnoza S.'},
-   peerText:'This summer I have many plans. First, I will visit my grandmother in Samarkand for one week. We always have a great time together and she cooks delicious food. After that, my family and I are going to travel to Charvak lake. I have never been there before, so I am very excited. Finally, I want to read at least three books in English to improve my vocabulary. I think this summer will be very useful and unforgettable for me.',
-   students:[{init:'ZA',name:'Zafar A.',status:'done',score:'⭐ 4'},{init:'AT',name:'Azizbek T.',status:'pending',score:'—'},{init:'MK',name:'Malika K.',status:'done',score:'⭐ 5'},{init:'JR',name:'Jasur R.',status:'pending',score:'—'}]},
 ];
 const attData=[
   {d:2,p:true,topic:'Grammar & Speaking'},{d:4,p:true,topic:'Listening & Vocab'},{d:6,p:false,topic:'Writing Workshop'},
@@ -3940,6 +4109,38 @@ const STORE_KEY='motion_portal_v8';
 function loadStore(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||{};}catch(e){return {};}}
 function saveStore(patch){try{const s=loadStore();localStorage.setItem(STORE_KEY,JSON.stringify({...s,...patch}));}catch(e){}}
 
+// ─── DRAFT AUTOSAVE ──────────────────────────────
+// Generic autosave for free-text inputs across the whole app, so an accidental
+// reload never wipes something the user was in the middle of typing.
+function draftAutosave(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const drafts=loadStore().fieldDrafts||{};
+  if(drafts[id]&&!el.value)el.value=drafts[id];
+  el.addEventListener('input',()=>{
+    const s=loadStore();
+    saveStore({fieldDrafts:{...(s.fieldDrafts||{}),[id]:el.value}});
+  });
+}
+function draftClear(...ids){
+  const s=loadStore();
+  if(!s.fieldDrafts)return;
+  const drafts={...s.fieldDrafts};
+  ids.forEach(id=>delete drafts[id]);
+  saveStore({fieldDrafts:drafts});
+}
+function initDraftAutosave(){
+  [
+    'chat-in','tchat-in',              // classroom chat
+    'ai-q',                            // AI assistant question box
+    'ann-input','td-ann-input',        // announcements composer
+    'td-topic','td-hw-title','td-hw-instructions','td-hw-due', // teacher dashboard quick fields
+    'cms-lesson-icon','cms-lesson-title','cms-lesson-desc', // CMS: create lesson
+    'drill-topic','drill-count',       // CMS: AI grammar drills
+    'mat-title','mat-link',            // materials add form
+  ].forEach(draftAutosave);
+}
+
 // ─── THEME ──────────────────────────────────────
 function applyTheme(theme){
   document.documentElement.setAttribute('data-theme',theme);
@@ -4055,35 +4256,39 @@ const GROUP_SCHEDULES={
   'Pre-IELTS B2':      {days:'Mon / Wed',      time:'17:00–18:30',room:'Room 4',teacher:'Ms. Nilufar'},
   'IELTS Prep C1':     {days:'Sat / Sun',      time:'10:00–12:00',room:'Room 5',teacher:'Ms. Nilufar'},
 };
-const GROUP_ROSTERS={
-  'Pre-Intermediate B1':students.map(s=>({init:s.init,name:s.name})),
-  'Beginner A1':[
-    {init:'AS',name:'Aziza S.'},{init:'TM',name:'Timur M.'},{init:'KH',name:'Kamola H.'},
-    {init:'JB',name:'Javohir B.'},{init:'MD',name:'Madina D.'},{init:'UR',name:'Ulugbek R.'},
-    {init:'SA',name:'Sevara A.'},{init:'DN',name:'Doston N.'},{init:'FN',name:'Farida N.'},
-    {init:'BM',name:'Bobur M.'},{init:'GU',name:'Gulnora U.'},{init:'SP',name:'Sherzod P.'}
-  ],
-  'Elementary A2':[
-    {init:'LK',name:'Lola K.'},{init:'RH',name:'Rustam H.'},{init:'NA',name:'Nodira A.'},
-    {init:'SB',name:'Sarvar B.'},{init:'ZT',name:'Zulayho T.'},{init:'HU',name:'Hamza U.'},
-    {init:'DM',name:'Dilnoza M.'},{init:'AK',name:'Akbar K.'},{init:'MF',name:'Malika F.'},
-    {init:'OT',name:'Otabek T.'}
-  ],
-  'Pre-IELTS B2':[
-    {init:'EB',name:'Eldor B.'},{init:'NK',name:'Nozima K.'},{init:'GS',name:'Gulbahor S.'},
-    {init:'OR',name:'Otabek R.'},{init:'YN',name:'Yulduz N.'},{init:'CK',name:'Charos K.'},
-    {init:'MS',name:'Muazzam S.'},{init:'JR',name:'Jasur R.'},{init:'AL',name:'Asilbek L.'}
-  ],
-  'IELTS Prep C1':[
-    {init:'NF',name:'Nafisa F.'},{init:'IK',name:'Islom K.'},{init:'GA',name:'Gulnora A.'},
-    {init:'SH',name:'Shaxzod H.'},{init:'OM',name:'Oydin M.'},{init:'RT',name:'Rashid T.'},
-    {init:'ZN',name:'Zarina N.'},{init:'FT',name:'Firdavs T.'},{init:'KD',name:'Kamola D.'}
-  ]
-};
+// Real roster, replacing the old hardcoded GROUP_ROSTERS fake-student object.
+// Returns [] on any failure (no Supabase client, network error, or RLS denial)
+// rather than falling back to fake names — a teacher must never be shown a
+// fake student mixed in with real ones. Callers are responsible for an empty
+// state, matching the app's existing convention elsewhere (essay history, etc).
+let _rosterCache={};
+async function fetchGroupRoster(group,forceRefresh){
+  if(!_sb||!group)return[];
+  if(!forceRefresh&&_rosterCache[group])return _rosterCache[group];
+  try{
+    const{data,error}=await _sb.from('profiles').select('id,full_name,avatar,group_name').eq('role','student').eq('group_name',group).order('full_name',{ascending:true});
+    if(error||!data)return[];
+    const roster=data.map(p=>({id:p.id,init:p.avatar||_initialsFromName(p.full_name),name:p.full_name||'Unknown'}));
+    _rosterCache[group]=roster;
+    return roster;
+  }catch(e){return[];}
+}
+function invalidateRosterCache(group){
+  if(group)delete _rosterCache[group];else _rosterCache={};
+}
 let session=loadStore().session||null;
 
 function showLogin(){const o=document.getElementById('login-overlay');if(o)o.style.display='flex';}
 function hideLogin(){const o=document.getElementById('login-overlay');if(o)o.style.display='none';}
+
+function _applyAndGo(s){
+  session=s;
+  saveStore({session});
+  applySession();
+  hideLogin();
+  updateStreakTracker();
+  restoreLastScreen();
+}
 
 async function doLogin(){
   const loginVal=(document.getElementById('login-user').value||'').trim().toLowerCase();
@@ -4093,22 +4298,6 @@ async function doLogin(){
   // Local demo users — used as primary auth when Supabase is unreachable/unconfigured,
   // and as a fallback when Supabase returns auth errors (e.g. users not yet seeded).
   const localUser=USERS.find(u=>u.login===loginVal&&u.password===pass);
-
-  function _applyAndGo(s){
-    session=s;
-    saveStore({session});
-    applySession();
-    hideLogin();
-    updateStreakTracker();
-    const stored=loadStore();
-    const defaultDest=session.role==='teacher'?'tdash':'home';
-    const dest=stored.lastScreen||defaultDest;
-    if(stored.essayDraft){
-      const ta=document.getElementById('portal-essay-ta');
-      if(ta){ta.value=stored.essayDraft;portalWc(ta);}
-    }
-    show(dest,document.querySelector(`[data-id="${dest}"]`));
-  }
 
   if(_sb){
     const email=loginVal.includes('@')?loginVal:loginVal+'@motion.edu';
@@ -4141,6 +4330,25 @@ async function doLogin(){
 
     // Supabase auth failed — fall back to local demo users before showing error.
     if(localUser){
+      // Try to give the demo account a real (anonymous) Supabase session so its
+      // writes/reads pass existing auth.uid()-based RLS policies. If anonymous
+      // sign-ins aren't enabled yet (or any error occurs), fall through to the
+      // old fake local-uid behavior — demo login must never break.
+      try{
+        const{data:anonData,error:anonError}=await _sb.auth.signInAnonymously();
+        if(!anonError&&anonData?.user){
+          await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
+          // updateUser() only changes the database record + local user object — the
+          // signed JWT itself is unchanged and still carries the OLD (empty) metadata
+          // until a real token refresh happens. Force that refresh now, synchronously,
+          // so any role-based RLS check (e.g. the teacher dashboard reading
+          // public_essay_history) sees the new role immediately instead of up to an
+          // hour later on Supabase's natural auto-refresh cycle.
+          await _sb.auth.refreshSession();
+          _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:anonData.user.id});
+          return;
+        }
+      }catch(anonErr){/* anonymous sign-in unavailable — fall through below */}
       const _st=loadStore();
       let _lid=_st.localUid;
       if(!_lid){_lid='local-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);saveStore({localUid:_lid});}
@@ -4176,6 +4384,50 @@ function showLoginError(msg){
   const p=document.getElementById('login-pass');
   if(p){p.value='';p.focus();}
 }
+function toggleSignupForm(){
+  const f=document.getElementById('signup-form');
+  const t=document.getElementById('signup-toggle-wrap');
+  if(!f)return;
+  const showing=f.style.display!=='none';
+  f.style.display=showing?'none':'block';
+  if(t)t.style.display=showing?'flex':'none';
+  if(!showing){
+    const gsel=document.getElementById('signup-group');
+    if(gsel&&!gsel.dataset.filled){
+      gsel.innerHTML=GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
+      gsel.dataset.filled='1';
+    }
+  }
+}
+function _initialsFromName(name){
+  const parts=(name||'').trim().split(/\s+/);
+  return ((parts[0]?.[0]||'')+(parts[1]?.[0]||'')).toUpperCase()||'??';
+}
+async function doSignup(){
+  const name=(document.getElementById('signup-name').value||'').trim();
+  const group=document.getElementById('signup-group').value;
+  const email=(document.getElementById('signup-email').value||'').trim().toLowerCase();
+  const pass=document.getElementById('signup-password').value||'';
+  if(!name||!email||!pass){showLoginError('Fill in name, email, and password to create an account');return;}
+  if(pass.length<6){showLoginError('Password must be at least 6 characters');return;}
+  if(!_sb){showLoginError('Cannot create an account right now — check your connection and reload the page');return;}
+  const avatar=_initialsFromName(name);
+  const btn=document.querySelector('#signup-form .login-btn.primary');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Creating…';}
+  try{
+    const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{role:'student',name,group,avatar}}});
+    if(error){showLoginError(error.message);return;}
+    if(data?.session){
+      _applyAndGo({role:'student',name,group,avatar,uid:data.user.id,email:data.user.email||email});
+    }else{
+      showLoginError('Account created — check your email to confirm, then sign in.');
+    }
+  }catch(e){
+    showLoginError('Sign up failed: '+e.message);
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-user-plus"></i> Create account';}
+  }
+}
 function togglePassVis(){
   const inp=document.getElementById('login-pass');
   const ic=document.getElementById('login-eye-ic');
@@ -4205,8 +4457,14 @@ function applySession(){
   document.querySelectorAll('.js-initials').forEach(e=>e.textContent=init);
   if(session.role==='teacher'){
     tGroup=session.group;
-    show('tdash',document.querySelector('[data-id="tdash"]'));
   }
+}
+function restoreLastScreen(){
+  if(!session)return;
+  restoreEssayDrafts();
+  const stored=loadStore();
+  const dest=stored.lastScreen||(session.role==='teacher'?'tdash':'home');
+  show(dest,document.querySelector(`[data-id="${dest}"]`));
 }
 function initialsOf(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();}
 
@@ -4255,6 +4513,7 @@ async function postAnnouncement(){
   announcements.unshift({author,date:'Just now',text:t,targetGroup});
   saveStore({announcements});
   inp.value='';
+  draftClear('ann-input');
   if(_sb){
     try{
       await _sb.from('announcements').insert({author,text:t,target_group:targetGroup});
@@ -4270,7 +4529,7 @@ function teacherData(){return loadStore().teacher||{att:{},grades:{},hw:{},notes
 function saveTeacher(d){saveStore({teacher:d});}
 function todayKey(){return new Date().toDateString();}
 
-function renderTeacherDash(){
+async function renderTeacherDash(){
   // ── Group tabs ──
   const tabs=document.getElementById('group-tabs');
   if(tabs)tabs.innerHTML=GROUPS.map(g=>`<button type="button" class="group-tab${g===tGroup?' active':''}" onclick="setTGroup('${escHtml(g)}')">${escHtml(g)}</button>`).join('');
@@ -4279,7 +4538,9 @@ function renderTeacherDash(){
   const lsel=document.getElementById('lesson-select');
   if(lsel&&lsel.value!==activeLesson)lsel.value=activeLesson;
 
-  const roster=GROUP_ROSTERS[tGroup]||[];
+  const rEl0=document.getElementById('td-roster');
+  if(rEl0)rEl0.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.3rem"></i></div>';
+  const roster=await fetchGroupRoster(tGroup);
   const d=teacherData();
   const attKey=tGroup+'|'+activeLesson;
   const att=(d.att||{})[attKey]||{};
@@ -4305,32 +4566,35 @@ function renderTeacherDash(){
 
   // ── Roster ──
   const rEl=document.getElementById('td-roster');
-  if(rEl)rEl.innerHTML=roster.map(s=>{
-    const present=att[s.init]!==false;
-    const grade=grades[s.init]||'';
-    const note=notes[s.init]||'';
+  if(rEl)rEl.innerHTML=roster.length?roster.map(s=>{
+    const present=att[s.id]!==false;
+    const grade=grades[s.id]||'';
+    const note=notes[s.id]||'';
     const gbClass=grade?'g'+grade:'';
     return `<div class="td-row">
       <div class="td-ava">${escHtml(s.init)}</div>
-      <div class="td-name" style="cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px" onclick="showStudentAnalytics('${s.init}','${escHtml(s.name)}')" title="View analytics">${escHtml(s.name)}</div>
-      <button type="button" class="att-toggle ${present?'on':'off'}" onclick="toggleAtt('${s.init}')">${present?'<i class="ti ti-check"></i> Present':'<i class="ti ti-x"></i> Absent'}</button>
-      <select class="grade-sel" onchange="setGradeT('${s.init}',this.value)">
+      <div class="td-name" style="cursor:pointer;color:var(--accent);text-decoration:underline;text-underline-offset:3px" onclick="showStudentAnalytics('${s.id}','${escHtml(s.name)}')" title="View analytics">${escHtml(s.name)}</div>
+      <button type="button" class="att-toggle ${present?'on':'off'}" onclick="toggleAtt('${s.id}')">${present?'<i class="ti ti-check"></i> Present':'<i class="ti ti-x"></i> Absent'}</button>
+      <select class="grade-sel" id="skill-sel-${s.id}" title="Which skill this grade is for">
+        <option value="">Skill…</option>
+        ${['Grammar','Speaking','Listening','Writing','Vocabulary','Reading'].map(sk=>`<option value="${sk}">${sk}</option>`).join('')}
+      </select>
+      <select class="grade-sel" onchange="setGradeT('${s.id}',this.value)">
         <option value=""${grade===''?' selected':''}>Grade…</option>
         ${['5','4','3','2'].map(g=>`<option value="${g}"${grade===g?' selected':''}>${g}</option>`).join('')}
       </select>
-      <button type="button" class="td-note-btn" title="Add note" onclick="toggleNoteRow('${s.init}')"><i class="ti ti-notes"></i></button>
+      <button type="button" class="td-note-btn" title="Add note" onclick="toggleNoteRow('${s.id}')"><i class="ti ti-notes"></i></button>
     </div>
-    <div class="td-note-row${note?' open':''}" id="note-row-${s.init}">
-      <textarea class="td-note-in" rows="2" placeholder="Note about ${escHtml(s.name)}…" onchange="setNoteT('${s.init}',this.value)" onblur="setNoteT('${s.init}',this.value)">${escHtml(note)}</textarea>
+    <div class="td-note-row${note?' open':''}" id="note-row-${s.id}">
+      <textarea class="td-note-in" rows="2" placeholder="Note about ${escHtml(s.name)}…" onchange="setNoteT('${s.id}',this.value)" onblur="setNoteT('${s.id}',this.value)">${escHtml(note)}</textarea>
     </div>`;
-  }).join('');
+  }).join(''):'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">No students in this group yet.</div>';
 
   // ── Stats ──
-  const presentCount=roster.filter(s=>att[s.init]!==false).length;
+  const presentCount=roster.filter(s=>att[s.id]!==false).length;
   const pct=roster.length?Math.round(presentCount/roster.length*100):0;
-  const gradeVals=roster.map(s=>parseInt(grades[s.init]||'0')).filter(Boolean);
+  const gradeVals=roster.map(s=>parseInt(grades[s.id]||'0')).filter(Boolean);
   const avg=gradeVals.length?( gradeVals.reduce((a,b)=>a+b,0)/gradeVals.length).toFixed(1):'—';
-  const hwList=(d.hw[tGroup])||[];
   const el_stu=document.getElementById('td-stu');if(el_stu)el_stu.textContent=roster.length;
   const el_att=document.getElementById('td-att');if(el_att)el_att.textContent=roster.length?pct+'%':'—';
   const el_avg=document.getElementById('td-avg');if(el_avg)el_avg.textContent=avg;
@@ -4340,22 +4604,37 @@ function renderTeacherDash(){
   renderProgressOverview();
   // ── Essay Overview ──
   renderEssayOverview();
-  // ── Homework list with submission tracking ──
-  const hwSubmit=(d.hwSubmit)||{};
+  // ── Homework list with real submission tracking ──
   const hl=document.getElementById('td-hw-list');
-  if(hl)hl.innerHTML=hwList.length?hwList.map((h,i)=>{
-    const subKey=tGroup+'|'+i;
-    const submitted=hwSubmit[subKey]||{};
-    const submitCount=roster.filter(s=>submitted[s.init]).length;
-    const chips=roster.map(s=>`<span class="hw-sub-chip${submitted[s.init]?' done':''}" onclick="toggleHwSubmit(${i},'${s.init}')" title="${escHtml(s.name)}">${escHtml(s.init)}</span>`).join('');
+  if(hl)hl.innerHTML='<div style="text-align:center;padding:12px;color:var(--txt3)"><i class="ti ti-loader-2"></i></div>';
+  let hwList=[],subsByHw={};
+  if(_sb){
+    const{data:hwRows}=await _sb.from('homework').select('*').eq('group_name',tGroup).order('created_at',{ascending:false});
+    hwList=hwRows||[];
+    if(hwList.length){
+      const{data:subRows}=await _sb.from('homework_submissions').select('*').in('homework_id',hwList.map(h=>h.id));
+      (subRows||[]).forEach(s=>{(subsByHw[s.homework_id]=subsByHw[s.homework_id]||[]).push(s);});
+    }
+  }
+  if(hl)hl.innerHTML=hwList.length?hwList.map(h=>{
+    const subs=subsByHw[h.id]||[];
+    const submitCount=subs.length;
+    const dueStr=h.due_date?new Date(h.due_date+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—';
+    const chips=roster.map(s=>{
+      const sub=subs.find(x=>x.student_id===s.id);
+      if(!sub)return `<span class="hw-sub-chip" style="opacity:0.5" title="${escHtml(s.name)} — not submitted">${escHtml(s.init)}</span>`;
+      const graded=sub.status==='graded';
+      const style=graded?'':'background:color-mix(in srgb,#f59e0b 20%,transparent);border-color:#f59e0b;color:#f59e0b';
+      return `<span class="hw-sub-chip${graded?' done':''}" style="cursor:pointer;${style}" onclick="openHwGradeModal('${sub.id}','${escHtml(s.name)}')" title="${escHtml(s.name)} — ${graded?'graded, click to review':'submitted, click to grade'}">${escHtml(s.init)}</span>`;
+    }).join('');
     return `<div class="td-hw-item" style="flex-direction:column;align-items:flex-start">
       <div style="display:flex;align-items:center;gap:10px;width:100%">
         <i class="ti ti-clipboard-list" style="color:var(--accent);flex-shrink:0"></i>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:500">${escHtml(h.title)}</div>
-          <div style="font-size:10px;color:var(--txt3)">Due: ${escHtml(h.due||'—')} · ${submitCount}/${roster.length} submitted</div>
+          <div style="font-size:10px;color:var(--txt3)">Due: ${dueStr} · ${submitCount}/${roster.length} submitted</div>
         </div>
-        <button type="button" class="td-del" onclick="delHomeworkT(${i})" aria-label="Delete"><i class="ti ti-trash"></i></button>
+        <button type="button" class="td-del" onclick="delHomeworkT('${h.id}')" aria-label="Delete"><i class="ti ti-trash"></i></button>
       </div>
       <div class="hw-sub-row">${chips}</div>
     </div>`;
@@ -4392,39 +4671,43 @@ function renderProgressOverview(){
 
 async function renderEssayOverview(){
   const el=document.getElementById('td-essay-overview');if(!el)return;
+  const prevFilter=document.getElementById('td-essay-group-filter')?.value||'';
   el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:8px 0">Loading submissions…</div>';
   try{
     if(!_sb)throw new Error('No database connection');
-    const {data,error}=await _sb.from('public_essay_history').select('*').order('submitted_at',{ascending:false}).limit(30);
+    // Capped at 200 — plenty for a class-sized app; raise if this project
+    // ever has a group history deep enough to need real pagination.
+    const {data,error}=await _sb.from('essay_submissions').select('*').order('submitted_at',{ascending:false}).limit(200);
     if(error)throw error;
-    if(!data||!data.length){
-      el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:8px 0">No essays submitted yet.</div>';
+    const rows=data||[];
+    const groups=[...new Set(rows.map(r=>r.group_name).filter(Boolean))].sort();
+    const filterHtml=`<div style="margin-bottom:10px">
+      <select id="td-essay-group-filter" class="grade-sel" onchange="renderEssayOverview()">
+        <option value=""${prevFilter?'':' selected'}>All groups</option>
+        ${groups.map(g=>`<option value="${escHtml(g)}"${g===prevFilter?' selected':''}>${escHtml(g)}</option>`).join('')}
+      </select>
+    </div>`;
+    const filtered=prevFilter?rows.filter(r=>r.group_name===prevFilter):rows;
+    if(!filtered.length){
+      el.innerHTML=filterHtml+'<div style="font-size:12px;color:var(--txt3);padding:8px 0">No essays submitted yet.</div>';
       return;
     }
-    el.innerHTML=`<div style="overflow-x:auto">
+    el.innerHTML=filterHtml+`<div style="overflow-x:auto">
       <table class="essay-overview-tbl" style="width:100%;border-collapse:collapse;font-size:12px">
         <thead><tr style="border-bottom:1px solid var(--line2)">
-          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Student</th>
           <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Group</th>
-          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Mode</th>
-          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Words</th>
-          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Date</th>
-          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Preview</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Student</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Time</th>
+          <th style="text-align:left;padding:6px 8px;color:var(--txt3);font-weight:600">Topic</th>
         </tr></thead>
-        <tbody>${data.map(row=>{
-          const ts=row.submitted_at||row.created_at||'';
-          const dateStr=ts?new Date(ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'}):'—';
-          const preview=(row.essay_text||'').slice(0,70).replace(/\s+/g,' ')+'…';
-          const wc=row.word_count||((row.essay_text||'').trim().split(/\s+/).filter(Boolean).length);
-          const mode=row.essay_mode||'general';
-          const modeLabel=mode==='task1'?'Task 1':mode==='task2'?'Task 2':'General';
-          return `<tr style="border-bottom:0.5px solid var(--line2)">
+        <tbody>${filtered.map(row=>{
+          const dateStr=row.submitted_at?new Date(row.submitted_at).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+          const topic=row.topic||'(no topic)';
+          return `<tr style="border-bottom:0.5px solid var(--line2);cursor:pointer;transition:background .15s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''" onclick="openEssaySubmission('${row.id}')">
+            <td style="padding:6px 8px;color:var(--txt3)">${escHtml(row.group_name||'—')}</td>
             <td style="padding:6px 8px;font-weight:600">${escHtml(row.student_name||'Unknown')}</td>
-            <td style="padding:6px 8px;color:var(--txt3)">${escHtml(row.group||'—')}</td>
-            <td style="padding:6px 8px;color:var(--txt2)">${escHtml(modeLabel)}</td>
-            <td style="padding:6px 8px;color:var(--txt3)">${wc}</td>
-            <td style="padding:6px 8px;color:var(--txt3)">${dateStr}</td>
-            <td style="padding:6px 8px;color:var(--txt2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(preview)}</td>
+            <td style="padding:6px 8px;color:var(--txt3)">${escHtml(dateStr)}</td>
+            <td style="padding:6px 8px;color:var(--txt2);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(topic)}</td>
           </tr>`;
         }).join('')}</tbody>
       </table>
@@ -4434,6 +4717,57 @@ async function renderEssayOverview(){
   }
 }
 
+// ─── ESSAY SUBMISSION DETAIL MODAL (teacher) ─────────────────────────────
+// Both "Show Mistakes" and "IELTS Band" render only cached data
+// (errors_json/band_json) stored at submit time — never a fresh AI call.
+let _essaySubCurrent = null;
+async function openEssaySubmission(id){
+  const ov=document.getElementById('essay-sub-modal-overlay');
+  if(!ov||!_sb)return;
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+  document.getElementById('essay-sub-meta').textContent='Loading…';
+  document.getElementById('essay-sub-text').textContent='';
+  document.getElementById('essay-sub-mistakes').style.display='none';
+  document.getElementById('essay-sub-band').style.display='none';
+  const{data:row,error}=await _sb.from('essay_submissions').select('*').eq('id',id).maybeSingle();
+  if(error||!row){document.getElementById('essay-sub-meta').textContent='Unable to load this submission.';return;}
+  _essaySubCurrent=row;
+  const titleEl=document.getElementById('essay-sub-modal-title');
+  const modeLabel=row.essay_mode==='task1'?'IELTS Task 1':row.essay_mode==='task2'?'IELTS Task 2':'General Essay';
+  if(titleEl)titleEl.textContent=(row.student_name||'Student')+' — '+modeLabel;
+  const dateStr=row.submitted_at?new Date(row.submitted_at).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+  document.getElementById('essay-sub-meta').innerHTML=`${escHtml(row.group_name||'—')} · ${escHtml(dateStr)} · ${row.word_count||0} words${row.topic?' · '+escHtml(row.topic):''}`;
+  document.getElementById('essay-sub-text').textContent=row.essay_text||'';
+}
+function closeEssaySubmission(){
+  const ov=document.getElementById('essay-sub-modal-overlay');
+  if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
+  _essaySubCurrent=null;
+}
+function toggleEssaySubMistakes(){
+  const wrap=document.getElementById('essay-sub-mistakes');
+  if(!wrap||!_essaySubCurrent)return;
+  if(wrap.style.display!=='none'){wrap.style.display='none';return;}
+  const errors=_essaySubCurrent.errors_json;
+  if(!errors||!errors.length){
+    wrap.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — the student didn\'t run a grammar/style check before submitting.</div>';
+  }else{
+    wrap.innerHTML=`<div style="margin-bottom:10px">${_pBuildHighlight(_essaySubCurrent.essay_text,errors)}</div>${_pBuildCards(errors)}`;
+  }
+  wrap.style.display='block';
+}
+function toggleEssaySubBand(){
+  const wrap=document.getElementById('essay-sub-band');
+  if(!wrap||!_essaySubCurrent)return;
+  if(wrap.style.display!=='none'){wrap.style.display='none';return;}
+  const band=_essaySubCurrent.band_json;
+  wrap.innerHTML=band
+    ?_pBuildBandPanel(band)
+    :'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">Not checked — the student didn\'t request an IELTS Band score before submitting.</div>';
+  wrap.style.display='block';
+}
+
 function toggleAtt(init){
   const d=teacherData();const k=tGroup+'|'+activeLesson;
   d.att=d.att||{};d.att[k]=d.att[k]||{};
@@ -4441,17 +4775,26 @@ function toggleAtt(init){
   d.att[k][init]=!cur;
   saveTeacher(d);renderTeacherDash();
 }
-function setGradeT(init,val){
+async function setGradeT(sid,val){
   const gradeKey=tGroup+'|'+activeLesson;
   const d=teacherData();d.grades=d.grades||{};d.grades[gradeKey]=d.grades[gradeKey]||{};
-  d.grades[gradeKey][init]=val;saveTeacher(d);
-  if(val)showToast('Grade '+val+' saved for '+init+' ✅');
+  d.grades[gradeKey][sid]=val;saveTeacher(d);
+  const roster=_rosterCache[tGroup]||[];
+  const studentName=roster.find(s=>s.id===sid)?.name||'student';
   // re-render only stats
-  const roster=GROUP_ROSTERS[tGroup]||[];
   const grades=d.grades[gradeKey]||{};
-  const gradeVals=roster.map(s=>parseInt(grades[s.init]||'0')).filter(Boolean);
+  const gradeVals=roster.map(s=>parseInt(grades[s.id]||'0')).filter(Boolean);
   const avg=gradeVals.length?(gradeVals.reduce((a,b)=>a+b,0)/gradeVals.length).toFixed(1):'—';
   const el=document.getElementById('td-avg');if(el)el.textContent=avg;
+  if(!val)return;
+  const skill=document.getElementById('skill-sel-'+sid)?.value||'';
+  if(!skill){showToast('Grade '+val+' saved for '+studentName+' — pick a skill too so it shows in their grade history');return;}
+  if(!_sb||!session?.uid){showToast('Grade '+val+' saved for '+studentName+' ✅');return;}
+  const lsel=document.getElementById('lesson-select');
+  const label=lsel&&lsel.options[lsel.selectedIndex]?lsel.options[lsel.selectedIndex].text:activeLesson;
+  const{error}=await _sb.from('grade_events').insert({student_id:sid,skill,value:Number(val),label,source:'manual',created_by:session.uid});
+  if(error){showToast('Grade saved, but failed to record in history: '+error.message);return;}
+  showToast('Grade '+val+' saved for '+studentName+' ✅');
 }
 function toggleNoteRow(init){
   const row=document.getElementById('note-row-'+init);
@@ -4473,50 +4816,94 @@ function saveTopicT(){
   document.getElementById('td-topic-saved').innerHTML=`<i class="ti ti-check" style="color:var(--green);margin-right:4px;vertical-align:-1px"></i>Saved: <b>${escHtml(t)}</b>`;
   showToast('Lesson topic saved ✅');
 }
-function toggleHwSubmit(hwIdx,init){
-  const d=teacherData();
-  d.hwSubmit=d.hwSubmit||{};
-  const key=tGroup+'|'+hwIdx;
-  d.hwSubmit[key]=d.hwSubmit[key]||{};
-  d.hwSubmit[key][init]=!d.hwSubmit[key][init];
-  saveTeacher(d);renderTeacherDash();
-}
-function addHomeworkT(){
+async function addHomeworkT(){
   const t=(document.getElementById('td-hw-title').value||'').trim();
+  const instructions=(document.getElementById('td-hw-instructions')?.value||'').trim();
+  const skill=(document.getElementById('td-hw-skill')?.value||'').trim();
   const due=(document.getElementById('td-hw-due').value||'').trim();
   if(!t){showToast('Enter a homework title');return;}
-  const d=teacherData();d.hw[tGroup]=d.hw[tGroup]||[];
-  d.hw[tGroup].unshift({title:t,due});saveTeacher(d);
-  document.getElementById('td-hw-title').value='';document.getElementById('td-hw-due').value='';
+  if(!_sb||!session?.uid){showToast('Cannot add homework right now — check your connection');return;}
+  const{error}=await _sb.from('homework').insert({group_name:tGroup,title:t,instructions,skill:skill||null,due_date:due||null,created_by:session.uid});
+  if(error){showToast('Failed to add homework: '+error.message);return;}
+  document.getElementById('td-hw-title').value='';
+  if(document.getElementById('td-hw-instructions'))document.getElementById('td-hw-instructions').value='';
+  if(document.getElementById('td-hw-skill'))document.getElementById('td-hw-skill').value='';
+  document.getElementById('td-hw-due').value='';
+  draftClear('td-hw-title','td-hw-instructions','td-hw-due');
   renderTeacherDash();showToast('Homework added for '+tGroup+' 📚');
 }
-function delHomeworkT(i){
-  const d=teacherData();(d.hw[tGroup]||[]).splice(i,1);
-  // shift submission keys
-  const newSubmit={};
-  Object.entries(d.hwSubmit||{}).forEach(([k,v])=>{
-    const [grp,idx]=k.split('|');
-    if(grp!==tGroup){newSubmit[k]=v;return;}
-    const n=parseInt(idx);
-    if(n<i)newSubmit[k]=v;
-    else if(n>i)newSubmit[grp+'|'+(n-1)]=v;
-  });
-  d.hwSubmit=newSubmit;
-  saveTeacher(d);renderTeacherDash();
+async function delHomeworkT(hwId){
+  if(!_sb)return;
+  const{error}=await _sb.from('homework').delete().eq('id',hwId);
+  if(error){showToast('Delete failed: '+error.message);return;}
+  renderTeacherDash();
 }
-function exportAttT(){
-  const roster=GROUP_ROSTERS[tGroup]||[];
+async function openHwGradeModal(subId,studentName){
+  const ov=document.getElementById('hw-grade-modal-overlay');
+  const titleEl=document.getElementById('hw-grade-modal-title');
+  const body=document.getElementById('hw-grade-modal-body');
+  if(!ov||!body)return;
+  if(titleEl)titleEl.textContent=studentName+' — Homework';
+  body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>';
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+  if(!_sb){body.innerHTML='<div style="color:var(--txt3);padding:20px">No database connection.</div>';return;}
+  const{data:sub,error}=await _sb.from('homework_submissions').select('*').eq('id',subId).maybeSingle();
+  if(error||!sub){body.innerHTML='<div style="color:var(--txt3);padding:20px">Unable to load submission.</div>';return;}
+  body.innerHTML=`
+    <div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Submitted answer</div>
+    <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--txt1);white-space:pre-wrap;max-height:220px;overflow-y:auto;margin-bottom:16px">${escHtml(sub.submitted_text)}</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      <div style="flex:0 0 90px">
+        <label class="login-lbl" for="hw-grade-in">Grade</label>
+        <select class="login-in" id="hw-grade-in">
+          <option value="">—</option>
+          ${['5','4','3','2'].map(g=>`<option value="${g}"${sub.grade===g?' selected':''}>${g}</option>`).join('')}
+        </select>
+      </div>
+      <div style="flex:1">
+        <label class="login-lbl" for="hw-feedback-in">Feedback</label>
+        <textarea class="hw-textarea" id="hw-feedback-in" style="min-height:70px">${escHtml(sub.feedback_text||'')}</textarea>
+      </div>
+    </div>
+    <button type="button" class="login-btn primary" onclick="saveHwGrade('${subId}')"><i class="ti ti-check"></i> Save grade</button>
+  `;
+}
+function closeHwGradeModal(){
+  const ov=document.getElementById('hw-grade-modal-overlay');
+  if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
+}
+async function saveHwGrade(subId){
+  const grade=document.getElementById('hw-grade-in').value;
+  const feedback=(document.getElementById('hw-feedback-in').value||'').trim();
+  if(!_sb||!session?.uid)return;
+  const{error}=await _sb.from('homework_submissions').update({status:'graded',grade:grade||null,feedback_text:feedback||null,graded_at:new Date().toISOString(),graded_by:session.uid}).eq('id',subId);
+  if(error){showToast('Save failed: '+error.message);return;}
+  if(grade){
+    const{data:sub}=await _sb.from('homework_submissions').select('student_id, homework:homework_id(skill,title)').eq('id',subId).maybeSingle();
+    const hw=sub?.homework;
+    if(sub?.student_id&&hw?.skill){
+      const{error:geError}=await _sb.from('grade_events').insert({student_id:sub.student_id,skill:hw.skill,value:Number(grade),label:'Homework: '+(hw.title||''),source:'homework',source_id:subId,created_by:session.uid});
+      if(geError)console.warn('[Motion] Grade saved, but failed to record in grade history:',geError.message);
+    }
+  }
+  showToast('Grade saved ✅');
+  closeHwGradeModal();
+  renderTeacherDash();
+}
+async function exportAttT(){
+  const roster=await fetchGroupRoster(tGroup);
   const d=teacherData();
   const attKey=tGroup+'|'+todayKey();
   const att=(d.att||{})[attKey]||{};
-  const grades=(d.grades||{})[tGroup]||{};
+  const grades=(d.grades||{})[tGroup+'|'+activeLesson]||{};
   const notes=(d.notes||{})[tGroup]||{};
   let txt=tGroup+' — Attendance & Grades — '+todayKey()+'\n';
   txt+='='.repeat(50)+'\n';
   roster.forEach((s,i)=>{
-    const p=att[s.init]!==false?'Present':'Absent';
-    const g=grades[s.init]||'—';
-    const n=notes[s.init]?'  Note: '+notes[s.init]:'';
+    const p=att[s.id]!==false?'Present':'Absent';
+    const g=grades[s.id]||'—';
+    const n=notes[s.id]?'  Note: '+notes[s.id]:'';
     txt+=(i+1)+'. '+s.name+': '+p+', Grade: '+g+n+'\n';
   });
   txt+='\nGenerated by Motion Portal · '+new Date().toLocaleString();
@@ -4535,6 +4922,7 @@ async function postAnnouncementT(){
   const author=session?session.name:'Teacher';
   announcements.unshift({author,date:'Just now',text:t,targetGroup});
   saveStore({announcements});inp.value='';
+  draftClear('td-ann-input');
   if(_sb){
     try{
       await _sb.from('announcements').insert({author,text:t,target_group:targetGroup});
@@ -4550,7 +4938,8 @@ async function saveEssayToHistory(){
   const btn=document.getElementById('portal-save-btn');
   const text=_getEssayText();
   if(!text){showToast('No essay to save');return;}
-  if(!_sb||!session?.uid){showToast('Please log in to save essays');return;}
+  if(!session?.uid){showToast('Please log in to save essays');return;}
+  if(!_sb){showToast('Cloud sync unavailable — check your connection and reload the page');return;}
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Saving…';}
   const checkType=_portalBandData?'band':(_portalErrors&&_portalErrors.length?'grammar':'general');
   try{
@@ -4567,24 +4956,40 @@ async function submitEssayToTeacher(){
   const btn=document.getElementById('portal-submit-btn');
   const text=_getEssayText();
   if(!text){showToast('No essay to submit');return;}
+  // Require at least one check to already exist — submitting blind means
+  // the teacher's inbox would have nothing real to show (never re-run the
+  // AI check on the teacher's behalf, so there's no "check it for them" path).
+  if(!_portalBandData&&(!_portalErrors||!_portalErrors.length)){
+    showToast('Run "Check Essay" or "IELTS Band" first, so your teacher can see the results');
+    return;
+  }
+  if(!_sb||!session?.uid){showToast('Cannot submit right now — check your connection');return;}
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Submitting…';}
   const wc=text.split(/\s+/).filter(Boolean).length;
-  const promptText=_getEssayPromptText();
-  const aiFeedback=_portalBandData?JSON.stringify(_portalBandData):(_portalErrors.length?JSON.stringify({errors:_portalErrors}):null);
-  try{
-    const res=await fetch(ESSAY_ENDPOINT.replace(/\/$/, '')+'/api/save-essay',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:session?.uid,student_name:session?.name,essay_text:text,prompt_text:promptText||null,essay_mode:activeEssayMode,word_count:wc,ai_feedback:aiFeedback,group:session?.group})
-    });
-    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`Server error ${res.status}`);}
-  }catch(e){showToast('Submit failed: '+e.message);if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Submit to Teacher';}return;}
+  const topic=_getEssayTopic();
+  const{error}=await _sb.from('essay_submissions').insert({
+    student_id:session.uid,
+    student_name:session.name,
+    group_name:session.group,
+    essay_mode:activeEssayMode,
+    topic:topic||null,
+    essay_text:text,
+    word_count:wc,
+    errors_json:_portalErrors&&_portalErrors.length?_portalErrors:null,
+    band_json:_portalBandData||null
+  });
+  if(error){
+    showToast('Submit failed: '+error.message);
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Submit to Teacher';}
+    return;
+  }
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-check"></i> Submitted to Teacher ✅';}
   showToast('Essay submitted to your teacher ✅');
 }
 
 // ─── STUDENT ANALYTICS MODAL ─────────────────────────────────────────────────
 
-async function showStudentAnalytics(init,name){
+async function showStudentAnalytics(sid,name){
   const ov=document.getElementById('sa-modal-overlay');
   const titleEl=document.getElementById('sa-modal-title');
   const body=document.getElementById('sa-modal-body');
@@ -4594,30 +4999,45 @@ async function showStudentAnalytics(init,name){
   ov.classList.add('open');
   trapFocus(ov.querySelector('.modal-box'));
 
-  // Gather local data
+  // Look up this student's actual group from their profile — using the
+  // viewing teacher's own session.group here was a pre-existing bug: it
+  // broke whenever a teacher viewed a student from a group other than
+  // their own currently-selected one (e.g. from Progress Hub with a
+  // different group picked in its own dropdown).
+  let studentGroup='';
+  if(_sb){
+    try{
+      const{data:prof}=await _sb.from('profiles').select('group_name').eq('id',sid).maybeSingle();
+      studentGroup=prof?.group_name||'';
+    }catch(e){}
+  }
   const d=loadStore();
-  const tGroup=session&&session.group?session.group:'';
-  const todayAtt=(d.att&&d.att[tGroup])||{};
-  const todayGrade=(d.grades&&d.grades[tGroup])||{};
-  const present=todayAtt[init]!==false;
-  const grade=todayGrade[init]||'—';
-  const note=(d.notes&&d.notes[tGroup]&&d.notes[tGroup][init])||'';
+  const todayAtt=(d.att&&d.att[studentGroup+'|'+activeLesson])||{};
+  const todayGrade=(d.grades&&d.grades[studentGroup+'|'+activeLesson])||{};
+  const present=todayAtt[sid]!==false;
+  const grade=todayGrade[sid]||'—';
+  const note=(d.notes&&d.notes[studentGroup]&&d.notes[studentGroup][sid])||'';
+  const init=_initialsFromName(name);
 
-  // Essay history from Supabase — match by name since student uid unknown from teacher side
+  // Essay history — was querying the `essay_history` table, whose RLS is
+  // student-self-only (auth.uid()=user_id), so a teacher's session always
+  // got 0 rows back silently, for every student, always. `public_essay_history`
+  // is the one teachers can actually read (see supabase/migrations/003), and
+  // it has a real user_id column, so this now filters correctly per student
+  // instead of returning nothing.
   let essays=[];
-  let submittedCount=0;
   let avgWc=0;
   if(_sb){
     try{
-      const{data:rows,error}=await _sb.from('essay_history').select('word_count,check_type,created_at').order('created_at',{ascending:false}).limit(50);
+      const{data:rows,error}=await _sb.from('public_essay_history').select('word_count,essay_mode,submitted_at').eq('user_id',sid).order('submitted_at',{ascending:false}).limit(50);
       if(!error&&rows){
         essays=rows;
-        submittedCount=rows.filter(r=>r.check_type==='submitted').length;
         const wcs=rows.map(r=>r.word_count).filter(Boolean);
         avgWc=wcs.length?Math.round(wcs.reduce((a,b)=>a+b,0)/wcs.length):0;
       }
     }catch(e){}
   }
+  const submittedCount=essays.length;
 
   const gradeColor={'5':'var(--green)','4':'var(--green)','3':'#f59e0b','2':'var(--red)','—':'var(--txt3)'};
   const attColor=present?'var(--green)':'var(--red)';
@@ -4627,7 +5047,7 @@ async function showStudentAnalytics(init,name){
       <div style="width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;flex-shrink:0">${escHtml(init)}</div>
       <div>
         <div style="font-weight:700;font-size:15px">${escHtml(name)}</div>
-        <div style="font-size:12px;color:var(--txt3)">${escHtml(tGroup)}</div>
+        <div style="font-size:12px;color:var(--txt3)">${escHtml(studentGroup||'—')}</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px">
@@ -4654,10 +5074,13 @@ async function showStudentAnalytics(init,name){
     </div>`:''}
     ${essays.length?`<div style="font-size:11px;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Recent Submissions</div>
     <div style="display:flex;flex-direction:column;gap:6px;max-height:140px;overflow-y:auto">
-      ${essays.slice(0,8).map(r=>`<div style="background:var(--surface2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:12px;color:var(--txt2)">${r.check_type==='submitted'?'<span style="color:var(--accent);font-weight:600">Submitted</span>':escHtml(r.check_type||'check')}</span>
-        <span style="font-size:12px;color:var(--txt3)">${r.word_count?r.word_count+' wds':''} ${r.created_at?new Date(r.created_at).toLocaleDateString('en-GB'):''}</span>
-      </div>`).join('')}
+      ${essays.slice(0,8).map(r=>{
+        const modeLabel=r.essay_mode==='task1'?'Task 1':r.essay_mode==='task2'?'Task 2':'General';
+        return `<div style="background:var(--surface2);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:var(--txt2)"><span style="color:var(--accent);font-weight:600">Submitted</span> · ${escHtml(modeLabel)}</span>
+        <span style="font-size:12px;color:var(--txt3)">${r.word_count?r.word_count+' wds':''} ${r.submitted_at?new Date(r.submitted_at).toLocaleDateString('en-GB'):''}</span>
+      </div>`;
+      }).join('')}
     </div>`:'<div style="text-align:center;padding:16px;color:var(--txt3);font-size:13px"><i class="ti ti-inbox" style="font-size:1.5rem;display:block;margin-bottom:6px"></i>No essay data yet</div>'}
   `;
 }
@@ -4667,10 +5090,27 @@ function closeStudentAnalytics(){
   if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
 }
 
+// Progress Hub → same radar as the student's own Grades screen (Epic 4).
+// Reuses buildGrades() itself, parameterized, rather than a second
+// diverging implementation.
+async function openProgressRadar(sid,name){
+  const ov=document.getElementById('pgh-radar-modal-overlay');
+  const titleEl=document.getElementById('pgh-radar-modal-title');
+  if(!ov)return;
+  if(titleEl)titleEl.textContent=name+' — Grades';
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+  await buildGrades({studentId:sid,canvasId:'pgh-radar-canvas',legendId:'pgh-radar-legend',listId:'pgh-grade-list'});
+}
+function closeProgressRadar(){
+  const ov=document.getElementById('pgh-radar-modal-overlay');
+  if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
+}
+
 async function saveEssayHistory(checkType, text, data) {
   if (!_sb || !session || !session.uid) return;
   const wc = text.split(/\s+/).filter(Boolean).length;
-  await _sb.from('essay_history').insert({
+  const { error } = await _sb.from('essay_history').insert({
     user_id:      session.uid,
     essay_text:   text,
     word_count:   wc,
@@ -4680,6 +5120,7 @@ async function saveEssayHistory(checkType, text, data) {
     band_summary: checkType !== 'grammar' ? (data.summary       ?? null) : null,
     check_type:   checkType,
   });
+  if (error) throw new Error(error.message);
 }
 
 async function loadEssayHistory() {
@@ -4782,6 +5223,7 @@ async function cmsSaveLesson(){
   showToast('Lesson saved! ✨ Enhancing with AI…');
   document.getElementById('cms-lesson-title').value='';
   document.getElementById('cms-lesson-desc').value='';
+  draftClear('cms-lesson-title','cms-lesson-desc');
   const needsAI=(icon==='📖'||!desc);
   if(needsAI&&savedRows&&savedRows[0]){
     try{
@@ -5011,13 +5453,13 @@ async function saveDrillsToSupabase() {
   }));
   const { error } = await _sb.from('grammar_drills').insert(rows);
   if (error) { showToast('Save failed: ' + error.message); }
-  else { showToast(`Saved ${rows.length} drills to Supabase ✅`); _pendingDrills = null; document.getElementById('drill-preview').style.display='none'; }
+  else { showToast(`Saved ${rows.length} drills to Supabase ✅`); _pendingDrills = null; document.getElementById('drill-preview').style.display='none'; draftClear('drill-topic'); }
   btn.disabled = false;
   btn.innerHTML = '<i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase';
 }
 
 // ─── TEACHER PROGRESS HUB ────────────────────────────────────────────────────
-function renderProgressHub() {
+async function renderProgressHub() {
   const group = (document.getElementById('progress-group-sel')?.value || '').trim();
   const list  = document.getElementById('progress-student-list');
   if (!list) return;
@@ -5025,7 +5467,8 @@ function renderProgressHub() {
     list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txt3);font-size:13px"><i class="ti ti-users" style="font-size:1.5rem;display:block;margin-bottom:8px"></i>Select a group to view students</div>';
     return;
   }
-  const roster = (typeof GROUP_ROSTERS !== 'undefined' && GROUP_ROSTERS[group]) || [];
+  list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.5rem"></i></div>';
+  const roster = await fetchGroupRoster(group);
   if (!roster.length) {
     list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txt3);font-size:13px">No students found for this group.</div>';
     return;
@@ -5033,7 +5476,7 @@ function renderProgressHub() {
   const d = loadStore();
   const tData = d.teacher || {};
   const todayKey = new Date().toDateString();
-  const grades   = (tData.grades   && tData.grades[group])               || {};
+  const grades   = (tData.grades   && tData.grades[group+'|'+activeLesson]) || {};
   const hw       = (tData.hw       && tData.hw[group])                   || {};
   const leagues  = ['🥉Bronze','🥈Silver','🥇Gold','💎Platinum','👑Diamond'];
   list.innerHTML = roster.map((s, i) => {
@@ -5041,8 +5484,8 @@ function renderProgressHub() {
     const xp      = Math.floor(Math.random() * 4000 + 200);
     const league  = leagues[Math.floor(xp / 1000)] || leagues[0];
     const paid    = i % 3 !== 2;
-    const grade   = grades[s.init] || '—';
-    return `<div style="display:grid;grid-template-columns:1fr 70px 70px 80px 90px;align-items:center;padding:11px 16px;border-bottom:0.5px solid var(--line2);cursor:pointer;transition:background .15s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''" onclick="showStudentAnalytics('${s.init}','${escHtml(s.name)}')">
+    const grade   = grades[s.id] || '—';
+    return `<div style="display:grid;grid-template-columns:1fr 70px 70px 80px 90px;align-items:center;padding:11px 16px;border-bottom:0.5px solid var(--line2);cursor:pointer;transition:background .15s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''" onclick="openProgressRadar('${s.id}','${escHtml(s.name)}')">
       <div style="display:flex;align-items:center;gap:10px">
         <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">${s.init}</div>
         <div>
@@ -5058,26 +5501,6 @@ function renderProgressHub() {
       </div>
     </div>`;
   }).join('');
-}
-
-// ─── TEACHER DASH SUB-TABS ────────────────────────────
-function switchTdashTab(tab){
-  const overview=document.getElementById('tdash-panel-overview');
-  const cms=document.getElementById('tdash-panel-cms');
-  const btnO=document.getElementById('tdash-tab-overview');
-  const btnC=document.getElementById('tdash-tab-cms');
-  if(tab==='cms'){
-    if(overview)overview.style.display='none';
-    if(cms)cms.style.display='';
-    if(btnO)btnO.classList.remove('active');
-    if(btnC)btnC.classList.add('active');
-    cmsInitVocabStaging();
-  }else{
-    if(overview)overview.style.display='';
-    if(cms)cms.style.display='none';
-    if(btnO)btnO.classList.add('active');
-    if(btnC)btnC.classList.remove('active');
-  }
 }
 
 function show(id,el){
@@ -5185,76 +5608,67 @@ document.addEventListener('click',function(e){
 });
 
 // ─── HOMEWORK ───────────────────────────────────
-function buildHw(){
+async function buildHw(){
   const el=document.getElementById('hw-card');if(!el)return;
-  el.innerHTML=hwData.map(hw=>`
-    <div class="hw-item">
-      <div class="hw-head" onclick="toggleHw(${hw.id})">
-        <div class="hw-idx${hw.done?' done':''}" id="hwidx${hw.id}">${hw.done?'<i class="ti ti-check"></i>':(hw.peerReview?'<i class="ti ti-message-2-heart"></i>':hw.id)}</div>
+  if(!session||!session.group||!_sb){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)">Homework unavailable — check your connection and reload.</div>';return;}
+  el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.5rem"></i></div>';
+  const{data:hwRows,error:hwErr}=await _sb.from('homework').select('*').eq('group_name',session.group).order('due_date',{ascending:true});
+  if(hwErr||!hwRows){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)">Unable to load homework.</div>';return;}
+  const{data:subRows}=await _sb.from('homework_submissions').select('*').eq('student_id',session.uid);
+  const subByHw={};
+  (subRows||[]).forEach(s=>{subByHw[s.homework_id]=s;});
+
+  const ps=document.querySelector('#screen-homework .ps');
+  if(ps)ps.textContent=hwRows.filter(h=>!subByHw[h.id]).length+' active · tap to expand';
+
+  if(!hwRows.length){
+    el.innerHTML='<div style="text-align:center;padding:32px;color:var(--txt3)"><i class="ti ti-clipboard-list" style="font-size:2rem;display:block;margin-bottom:8px"></i>No homework assigned yet.</div>';
+    return;
+  }
+
+  el.innerHTML=hwRows.map((hw,i)=>{
+    const sub=subByHw[hw.id];
+    const status=!sub?'pending':(sub.status==='graded'?'graded':'submitted');
+    const dueStr=hw.due_date?new Date(hw.due_date+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'—';
+    const statusLabel=status==='pending'?'Not submitted':status==='submitted'?'Awaiting feedback':'Graded';
+    const statusColor=status==='pending'?'var(--red)':status==='submitted'?'#f59e0b':'var(--green)';
+    return `<div class="hw-item">
+      <div class="hw-head" onclick="toggleHw('${hw.id}')">
+        <div class="hw-idx${status!=='pending'?' done':''}" id="hwidx${hw.id}">${status==='graded'?'<i class="ti ti-check"></i>':(i+1)}</div>
         <div style="flex:1">
-          <div class="hw-ttl">${hw.title}</div>
-          <div class="hw-due">Deadline: ${hw.due}</div>
+          <div class="hw-ttl">${escHtml(hw.title)}</div>
+          <div class="hw-due">Deadline: ${dueStr}</div>
         </div>
         <i class="ti ti-chevron-down hw-chevron" id="hwch${hw.id}"></i>
       </div>
       <div class="hw-detail" id="hwdet${hw.id}">
         <div class="hw-inner">
-          <div class="hw-desc">${hw.desc}</div>
-          <div class="hw-dl-row"><span class="hw-dl-lbl"><i class="ti ti-calendar-event" style="margin-right:4px;vertical-align:-2px;color:var(--txt3)"></i>Deadline</span><span class="hw-dl-val" style="color:${hw.done?'var(--green)':'var(--red)'}">${hw.due}</span></div>
-          <div class="hw-dl-row"><span class="hw-dl-lbl"><i class="ti ti-circle-check" style="margin-right:4px;vertical-align:-2px;color:var(--txt3)"></i>Status</span><span style="font-size:11px;font-weight:500;color:${hw.done?'var(--green)':'var(--txt2)'}">${hw.done?'✓ Submitted':'Awaiting submission'}</span></div>
-          ${hw.peerReview?`
-          <div class="peer-card">
-            <div class="peer-author">
-              <div class="hw-st-ava" style="background:rgba(155,114,245,0.15);color:var(--purple)">${hw.peerAuthor.init}</div>
-              <div style="font-size:12px;font-weight:500">${hw.peerAuthor.name} · «My summer plans»</div>
+          <div class="hw-desc">${escHtml(hw.instructions||'')}</div>
+          <div class="hw-dl-row"><span class="hw-dl-lbl"><i class="ti ti-calendar-event" style="margin-right:4px;vertical-align:-2px;color:var(--txt3)"></i>Deadline</span><span class="hw-dl-val" style="color:${status==='pending'?'var(--red)':'var(--green)'}">${dueStr}</span></div>
+          <div class="hw-dl-row"><span class="hw-dl-lbl"><i class="ti ti-circle-check" style="margin-right:4px;vertical-align:-2px;color:var(--txt3)"></i>Status</span><span style="font-size:11px;font-weight:500;color:${statusColor}">${statusLabel}</span></div>
+          ${sub?`<div class="hw-dl-row" style="align-items:flex-start"><span class="hw-dl-lbl"><i class="ti ti-pencil" style="margin-right:4px;vertical-align:-2px;color:var(--txt3)"></i>Your answer</span><span style="font-size:12px;color:var(--txt2);white-space:pre-wrap">${escHtml(sub.submitted_text)}</span></div>`:''}
+          ${sub&&sub.status==='graded'?`
+          <div class="hw-students" style="margin-top:10px">
+            <div class="hw-st-label"><i class="ti ti-star" style="margin-right:5px;vertical-align:-2px"></i>Grade &amp; feedback</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 0">
+              <div style="font-weight:700;font-size:1.2rem;color:var(--green)">${escHtml(sub.grade||'—')}</div>
+              <div style="font-size:12px;color:var(--txt2);flex:1">${escHtml(sub.feedback_text||'No written feedback.')}</div>
             </div>
-            <div class="peer-text">"${hw.peerText}"</div>
-            <div style="font-size:10px;color:var(--txt3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px"><i class="ti ti-star" style="margin-right:4px;vertical-align:-2px"></i>Your rating</div>
-            <div class="peer-stars" id="peer-stars-${hw.id}">${[1,2,3,4,5].map(n=>`<i class="ti ti-star peer-star" data-v="${n}" onclick="setPeerStar(${hw.id},${n})"></i>`).join('')}</div>
-            <textarea class="hw-textarea" id="peer-comment-${hw.id}" placeholder="What was good? What could be improved? (in English or Russian)" style="min-height:60px"></textarea>
           </div>`:''}
-          <div class="hw-students">
-            <div class="hw-st-label"><i class="ti ti-users" style="margin-right:5px;vertical-align:-2px"></i>${hw.peerReview?'Who has already reviewed':'Group students'}</div>
-            ${hw.students.map(s=>`<div class="hw-st-row"><div class="hw-st-ava">${s.init}</div><div class="hw-st-name">${s.name}</div><div class="hw-st-score" style="color:${s.status==='done'?'var(--green)':'var(--txt3)'}">${s.status==='done'?s.score:'Not submitted'}</div></div>`).join('')}
-          </div>
-          ${!hw.done?`
+          ${!sub?`
           <div class="hw-submit-area">
-            ${!hw.peerReview?`
             <div style="font-size:11px;color:var(--txt3);margin-bottom:7px;letter-spacing:0.05em;text-transform:uppercase"><i class="ti ti-pencil" style="margin-right:4px;vertical-align:-2px"></i>Submit answer</div>
-            <textarea class="hw-textarea" id="hw-text-${hw.id}" placeholder="Write your answer or paste the task text..."></textarea>`:''}
-            <button type="button" class="hw-btn" onclick="${hw.peerReview?`submitPeerReview(${hw.id},event)`:`submitHw(${hw.id},event)`}"><i class="ti ti-send" style="margin-right:5px;vertical-align:-1px"></i>${hw.peerReview?'Send review':'Send'}</button>
-          </div>`:'<button type="button" class="hw-btn done-btn"><i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Already submitted</button>'}
+            <textarea class="hw-textarea" id="hw-text-${hw.id}" placeholder="Write your answer or paste the task text..."></textarea>
+            <button type="button" class="hw-btn" onclick="submitHw('${hw.id}',event)"><i class="ti ti-send" style="margin-right:5px;vertical-align:-1px"></i>Send</button>
+          </div>`:`<button type="button" class="hw-btn done-btn"><i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>${status==='graded'?'Graded':'Already submitted'}</button>`}
         </div>
       </div>
-    </div>`).join('');
-}
-let peerRatings={};
-function setPeerStar(id,v){
-  peerRatings[id]=v;
-  document.querySelectorAll(`#peer-stars-${id} .peer-star`).forEach(s=>{
-    s.classList.toggle('on',parseInt(s.dataset.v)<=v);
+    </div>`;
+  }).join('');
+  hwRows.forEach(hw=>{
+    if(subByHw[hw.id])return;
+    draftAutosave('hw-text-'+hw.id);
   });
-}
-function submitPeerReview(id,e){
-  e.stopPropagation();
-  const hw=hwData.find(h=>h.id===id);if(!hw)return;
-  const rating=peerRatings[id];
-  const comment=document.getElementById('peer-comment-'+id);
-  if(!rating){
-    showToast('Give a star rating before sending ⭐');
-    return;
-  }
-  if(!comment||!comment.value.trim()){
-    comment.style.borderColor='rgba(240,96,96,0.5)';
-    comment.placeholder='Write a short comment before sending!';
-    setTimeout(()=>{comment.style.borderColor='';},2000);
-    return;
-  }
-  hw.done=true;
-  hw.students=hw.students.map(s=>s.init==='AT'?{...s,status:'done',score:'⭐ '+rating}:s);
-  buildHw();
-  toggleHw(id);
-  showToast('Review sent! Dilnoza will see your feedback 💬');
 }
 function toggleHw(id){
   const det=document.getElementById('hwdet'+id);
@@ -5264,21 +5678,22 @@ function toggleHw(id){
   document.querySelectorAll('.hw-chevron').forEach(c=>c.classList.remove('open'));
   if(!isOpen){det.classList.add('open');ch.classList.add('open');}
 }
-function submitHw(id,e){
+async function submitHw(hwId,e){
   e.stopPropagation();
-  const hw=hwData.find(h=>h.id===id);if(!hw)return;
-  const ta=document.getElementById('hw-text-'+id);
+  const ta=document.getElementById('hw-text-'+hwId);
   if(!ta||!ta.value.trim()){
     ta.style.borderColor='rgba(240,96,96,0.5)';
     ta.placeholder='Write an answer before sending!';
     setTimeout(()=>{ta.style.borderColor='';},2000);
     return;
   }
-  hw.done=true;
-  hw.students=hw.students.map(s=>s.init==='AT'?{...s,status:'done',score:'—'}:s);
+  if(!_sb||!session?.uid){showToast('Cannot submit right now — check your connection');return;}
+  const text=ta.value.trim();
+  const{error}=await _sb.from('homework_submissions').insert({homework_id:hwId,student_id:session.uid,submitted_text:text});
+  if(error){showToast('Submit failed: '+error.message);return;}
+  draftClear('hw-text-'+hwId);
+  showToast('Submitted! Your teacher will check it soon ✅');
   buildHw();
-  toggleHw(id);
-  showToast('Submitted! Ms. Nilufar will check it soon ✅');
 }
 
 // ─── TOAST ──────────────────────────────────────
@@ -5303,10 +5718,28 @@ function showToast(msg){
 }
 
 // ─── GRADES RADAR ───────────────────────────────
-function buildGrades(){
-  const canvas=document.getElementById('radarCanvas');if(!canvas)return;
+async function buildGrades(opts={}){
+  const studentId=opts.studentId||session?.uid;
+  const canvas=document.getElementById(opts.canvasId||'radarCanvas');if(!canvas)return;
   const ctx=canvas.getContext('2d');
-  const cx=110,cy=110,r=85,sides=skills.length;
+  const cx=110,cy=110,r=85,sides=SKILLS_META.length;
+
+  let events=[];
+  if(_sb&&studentId){
+    const{data,error}=await _sb.from('grade_events').select('*').eq('student_id',studentId).order('created_at',{ascending:false});
+    if(!error&&data)events=data;
+  }
+
+  // Both current sources (manual + homework) grade on a 0–5 scale, matching
+  // the grade dropdowns teachers use — so the radar shows percent-of-5.
+  // Revisit this normalization once essay-sourced (IELTS 0–9 band) events
+  // start feeding grade_events (Epic 5).
+  const skillData=SKILLS_META.map(s=>{
+    const vals=events.filter(e=>e.skill===s.name).map(e=>Number(e.value)||0);
+    const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;
+    return{...s,val:Math.max(0,Math.min(100,Math.round(avg/5*100)))};
+  });
+
   ctx.clearRect(0,0,220,220);
   const step=Math.PI*2/sides;
   function pt(i,rad){return[cx+Math.cos(i*step-Math.PI/2)*rad,cy+Math.sin(i*step-Math.PI/2)*rad];}
@@ -5317,19 +5750,19 @@ function buildGrades(){
   });
   for(let i=0;i<sides;i++){const p=pt(i,r);ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(...p);ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;ctx.stroke();}
   ctx.beginPath();
-  skills.forEach((s,i)=>{const p=pt(i,r*s.val/100);i===0?ctx.moveTo(...p):ctx.lineTo(...p);});
+  skillData.forEach((s,i)=>{const p=pt(i,r*s.val/100);i===0?ctx.moveTo(...p):ctx.lineTo(...p);});
   ctx.closePath();
   ctx.fillStyle='rgba(124,110,255,0.1)';ctx.fill();
   ctx.strokeStyle='rgba(124,110,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
-  skills.forEach((s,i)=>{
+  skillData.forEach((s,i)=>{
     const p=pt(i,r*s.val/100);
     ctx.beginPath();ctx.arc(...p,4,0,Math.PI*2);
     ctx.fillStyle=s.color;ctx.fill();
     const lp=pt(i,r*1.25);
     ctx.fillStyle='rgba(255,255,255,0.45)';ctx.font='10px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.name,...lp);
   });
-  const leg=document.getElementById('radar-legend');if(!leg)return;
-  leg.innerHTML=skills.map(s=>`
+  const leg=document.getElementById(opts.legendId||'radar-legend');if(!leg)return;
+  leg.innerHTML=skillData.map(s=>`
     <div class="rl-item">
       <div class="rl-dot" style="background:${s.color}"></div>
       <div class="rl-name">${s.name}</div>
@@ -5337,15 +5770,18 @@ function buildGrades(){
       <div class="rl-val">${s.val}%</div>
     </div>`).join('');
   setTimeout(()=>{leg.querySelectorAll('.rl-bar-f').forEach(b=>{b.style.width=b.dataset.w;});},100);
-  const gl=document.getElementById('grade-list');if(!gl)return;
-  gl.innerHTML=grades.map(g=>{
-    const pct=g.score/5*100;
-    const col=g.score>=4.5?'var(--green)':g.score>=3.5?'var(--gold)':'var(--red)';
+  const gl=document.getElementById(opts.listId||'grade-list');if(!gl)return;
+  const recent=events.slice(0,10);
+  gl.innerHTML=recent.length?recent.map(g=>{
+    const score=Number(g.value)||0;
+    const col=score>=4.5?'var(--green)':score>=3.5?'var(--gold)':'var(--red)';
+    const dateStr=g.created_at?new Date(g.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'';
+    const name=g.skill+(g.label?' — '+g.label:'');
     return`<div style="display:flex;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--line);">
-      <div style="flex:1"><div style="font-size:13px;font-weight:500">${g.name}</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">${g.date}</div></div>
-      <div style="font-size:16px;font-weight:600;color:${col}">${g.score}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:500">${escHtml(name)}</div><div style="font-size:11px;color:var(--txt3);margin-top:2px">${escHtml(dateStr)}</div></div>
+      <div style="font-size:16px;font-weight:600;color:${col}">${score}</div>
     </div>`;
-  }).join('');
+  }).join(''):'<div style="font-size:12px;color:var(--txt3);padding:16px 0;text-align:center">No grades yet.</div>';
 }
 
 // ─── ATTENDANCE ─────────────────────────────────
@@ -5452,7 +5888,7 @@ async function renderLessonsScreen(){
     </div>`).join('');
   }
 }
-function enterLesson(levelId,lessonIdx){
+async function enterLesson(levelId,lessonIdx){
   if(!CURRICULUM_DATA[levelId])return;
   const lesson=CURRICULUM_DATA[levelId].lessons[lessonIdx];
   if(!lesson)return;
@@ -5460,7 +5896,8 @@ function enterLesson(levelId,lessonIdx){
   currentLevel=levelId;
   currentLessonIdx=lessonIdx;
   vocabWords=lesson.vocab;
-  grammarQs=lesson.grammar;
+  const dbDrills=await fetchGrammarDrillsForLevel(levelId);
+  grammarQs=dbDrills.length?lesson.grammar.concat(dbDrills):lesson.grammar;
   vocabIndex=0;vocabFlipped=false;vocabScores={good:0,ok:0,bad:0};
   grIndex=0;grCorrect=0;grAnswered=false;grShuffled=null;
   saveStore({level:levelId,lessonIdx:lessonIdx});
@@ -5629,6 +6066,7 @@ async function sendChat(){
   const now=new Date();
   const time=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
   inp.value='';
+  draftClear('chat-in');
   chatLog.push({from:'me',text:msg,time});
   renderChat();
   if(!session?.uid||!_sb)return;
@@ -5706,6 +6144,7 @@ async function askAI(){
   const msgs=document.getElementById('ai-messages');
   const btn=document.getElementById('ai-btn');
   document.getElementById('ai-q').value='';
+  draftClear('ai-q');
   aiHistory.push({role:'user',content:q});
   msgs.innerHTML+=aiRowHTML('user',q);
   msgs.scrollTop=msgs.scrollHeight;
@@ -5742,39 +6181,36 @@ async function askAI(){
   }
 }
 
-// ─── TEACHER CHAT — cascading group → student ────
-// Storage key: motion_chats[group_slug][student_init]
+// ─── TEACHER CHAT — cascading group → student, backed by the real `messages` table ────
+// `messages` is group-scoped only (sender_id/sender_name/sender_role/target_group/text) —
+// there is no per-student recipient column, so a teacher's reply lands in the same
+// group-wide stream every student in that group already polls (see pollTeacherReplies).
+// The per-student list below is a filtered VIEW (that student's own messages + every
+// teacher reply to the group), not a private 1:1 channel — it used to be backed by
+// localStorage (motion_chats) and never touched Supabase, which is why teacher replies
+// never reached students. Now both sides read/write the same table.
 let activeTChatGroup=null;
-let activeTChatStudent=null; // {init, name, group}
+let activeTChatStudent=null; // {id,init,name,group,slug}
+let _tchatMsgCache={}; // groupName -> messages[]
+let _tchatPollTimer=null;
 
 function slugify(s){return s.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');}
 
-function loadMotionChats(){
-  try{return JSON.parse(localStorage.getItem('motion_chats'))||{};}
-  catch(e){return {};}
-}
-function saveMotionChats(c){
-  try{localStorage.setItem('motion_chats',JSON.stringify(c));}
-  catch(e){showToast('Storage error');}
-}
-function getChatHistory(groupSlug,studentInit){
-  const c=loadMotionChats();
-  return (c[groupSlug]||{})[studentInit]||[];
-}
-function pushChatMsg(groupSlug,studentInit,msg){
-  const c=loadMotionChats();
-  if(!c[groupSlug])c[groupSlug]={};
-  if(!c[groupSlug][studentInit])c[groupSlug][studentInit]=[];
-  c[groupSlug][studentInit].push(msg);
-  saveMotionChats(c);
+async function fetchGroupMessages(groupName){
+  if(!_sb||!groupName)return[];
+  const{data,error}=await _sb.from('messages').select('id,sender_id,sender_name,sender_role,text,created_at').eq('target_group',groupName).order('created_at',{ascending:true}).limit(300);
+  if(error||!data)return _tchatMsgCache[groupName]||[];
+  _tchatMsgCache[groupName]=data;
+  return data;
 }
 
-function initTeacherChat(){
+async function initTeacherChat(){
   // Render group list (tier 1)
   const groupEl=document.getElementById('tchat-group-list');
   if(!groupEl)return;
-  groupEl.innerHTML=GROUPS.map(g=>{
-    const cnt=(GROUP_ROSTERS[g]||[]).length;
+  const rosters=await Promise.all(GROUPS.map(g=>fetchGroupRoster(g)));
+  groupEl.innerHTML=GROUPS.map((g,i)=>{
+    const cnt=rosters[i].length;
     const slug=slugify(g);
     return `<div class="tchat-group-row${activeTChatGroup===slug?' active':''}" id="tcgrp-${slug}" onclick="selectTChatGroup('${slug}','${escHtml(g)}')">
       <div class="tchat-group-dot"></div>
@@ -5782,12 +6218,25 @@ function initTeacherChat(){
       <div class="tchat-group-cnt">${cnt}</div>
     </div>`;
   }).join('');
+  if(activeTChatGroup){
+    const groupName=GROUPS.find(g=>slugify(g)===activeTChatGroup)||'';
+    await fetchGroupMessages(groupName);
+  }
   // Render student list (tier 2) — only students in active group
+  renderTChatStudentList();
+  if(activeTChatStudent)renderTChatMessages();
+  if(!_tchatPollTimer)_tchatPollTimer=setInterval(pollTeacherChat,8000);
+}
+
+async function pollTeacherChat(){
+  if(!activeTChatGroup)return;
+  const groupName=GROUPS.find(g=>slugify(g)===activeTChatGroup)||'';
+  await fetchGroupMessages(groupName);
   renderTChatStudentList();
   if(activeTChatStudent)renderTChatMessages();
 }
 
-function selectTChatGroup(slug,name){
+async function selectTChatGroup(slug,name){
   activeTChatGroup=slug;
   activeTChatStudent=null;
   // Reset main panel
@@ -5807,24 +6256,24 @@ function selectTChatGroup(slug,name){
   // Update student header label
   const hd=document.getElementById('tchat-stu-hd');
   if(hd)hd.textContent='Students · '+escHtml(name);
+  await fetchGroupMessages(name);
   renderTChatStudentList();
 }
 
-function renderTChatStudentList(){
+async function renderTChatStudentList(){
   const listEl=document.getElementById('tchat-student-list');
   if(!listEl)return;
   if(!activeTChatGroup){listEl.innerHTML='<div style="font-size:10px;color:var(--txt3);padding:10px 12px">Select a group above</div>';return;}
   // Find the group name from slug
   const groupName=GROUPS.find(g=>slugify(g)===activeTChatGroup)||'';
-  const roster=GROUP_ROSTERS[groupName]||[];
+  const roster=await fetchGroupRoster(groupName);
   if(!roster.length){listEl.innerHTML='<div style="font-size:10px;color:var(--txt3);padding:10px 12px">No students in this group</div>';return;}
-  const chats=loadMotionChats();
-  const groupChats=chats[activeTChatGroup]||{};
+  const groupMsgs=_tchatMsgCache[groupName]||[];
   listEl.innerHTML=roster.map(s=>{
-    const hist=groupChats[s.init]||[];
-    const last=hist.length?hist[hist.length-1].text.slice(0,26)+'…':'No messages';
-    const isActive=activeTChatStudent&&activeTChatStudent.init===s.init;
-    return `<div class="tchat-stu${isActive?' active':''}" id="tcstu-${activeTChatGroup}-${s.init}" onclick="selectTChatStudent('${s.init}','${escHtml(s.name)}','${activeTChatGroup}','${escHtml(groupName)}')">
+    const own=groupMsgs.filter(m=>m.sender_role==='student'&&m.sender_id===s.id);
+    const last=own.length?own[own.length-1].text.slice(0,26)+'…':'No messages';
+    const isActive=activeTChatStudent&&activeTChatStudent.id===s.id;
+    return `<div class="tchat-stu${isActive?' active':''}" id="tcstu-${activeTChatGroup}-${escHtml(s.id)}" onclick="selectTChatStudent('${escHtml(s.id)}','${s.init}','${escHtml(s.name)}','${activeTChatGroup}','${escHtml(groupName)}')">
       <div class="tchat-stu-ava">${s.init}</div>
       <div class="tchat-stu-info">
         <div class="tchat-stu-name">${escHtml(s.name)}</div>
@@ -5834,10 +6283,10 @@ function renderTChatStudentList(){
   }).join('');
 }
 
-function selectTChatStudent(init,name,groupSlug,groupName){
-  activeTChatStudent={init,name,group:groupName,slug:groupSlug};
+function selectTChatStudent(id,init,name,groupSlug,groupName){
+  activeTChatStudent={id,init,name,group:groupName,slug:groupSlug};
   document.querySelectorAll('.tchat-stu').forEach(el=>el.classList.remove('active'));
-  const el=document.getElementById('tcstu-'+groupSlug+'-'+init);if(el)el.classList.add('active');
+  const el=document.getElementById('tcstu-'+groupSlug+'-'+id);if(el)el.classList.add('active');
   // Update header
   const head=document.getElementById('tchat-head');
   if(head)head.innerHTML=`
@@ -5861,28 +6310,38 @@ function renderTChatMessages(){
     el.innerHTML='<div class="tchat-empty"><i class="ti ti-message-dots"></i><span>Pick a group, then a student</span></div>';
     return;
   }
-  const hist=getChatHistory(activeTChatStudent.slug,activeTChatStudent.init);
+  const groupMsgs=_tchatMsgCache[activeTChatStudent.group]||[];
+  const hist=groupMsgs.filter(m=>(m.sender_role==='student'&&m.sender_id===activeTChatStudent.id)||m.sender_role==='teacher');
   if(!hist.length){
     el.innerHTML=`<div class="tchat-empty"><i class="ti ti-message-circle"></i>No messages yet.<br>Start the conversation with <b>${escHtml(activeTChatStudent.name)}</b></div>`;
     return;
   }
   el.innerHTML=hist.map(m=>{
-    if(m.from==='teacher'){
-      return `<div class="chat-msg mine"><div class="chat-ava me">NI</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div></div></div>`;
+    const t=new Date(m.created_at);
+    const time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');
+    if(m.sender_role==='teacher'){
+      return `<div class="chat-msg mine"><div class="chat-ava me">${escHtml((m.sender_name||'T').trim().slice(0,2).toUpperCase())}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
     }
-    return `<div class="chat-msg other"><div class="chat-ava teacher">${escHtml(activeTChatStudent.init)}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(m.time)}</div></div></div>`;
+    return `<div class="chat-msg other"><div class="chat-ava teacher">${escHtml(activeTChatStudent.init)}</div><div><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-time">${escHtml(time)}</div></div></div>`;
   }).join('');
   el.scrollTop=el.scrollHeight;
 }
 
-function sendTeacherMsg(){
-  if(!activeTChatStudent)return;
+async function sendTeacherMsg(){
+  if(!activeTChatStudent||!_sb||!session?.uid)return;
   const inp=document.getElementById('tchat-in');
   const msg=(inp.value||'').trim();if(!msg)return;
-  const now=new Date();
-  const time=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  pushChatMsg(activeTChatStudent.slug,activeTChatStudent.init,{from:'teacher',text:msg,time});
   inp.value='';
+  draftClear('tchat-in');
+  const{error}=await _sb.from('messages').insert({
+    sender_id:session.uid,
+    sender_name:session.name,
+    sender_role:'teacher',
+    target_group:activeTChatStudent.group,
+    text:msg
+  });
+  if(error){showToast('Send failed: '+error.message);return;}
+  await fetchGroupMessages(activeTChatStudent.group);
   renderTChatMessages();
   renderTChatStudentList();
 }
@@ -5929,6 +6388,7 @@ function closeMatModal(){
   document.getElementById('mat-modal').classList.remove('open');
   document.getElementById('mat-title').value='';
   document.getElementById('mat-link').value='';
+  draftClear('mat-title','mat-link');
   document.getElementById('mat-type').value='PDF';
   const fi=document.getElementById('mat-file');if(fi)fi.value='';
   const fn=document.getElementById('mat-file-name');if(fn)fn.textContent='Choose file or drag here…';
@@ -6086,7 +6546,7 @@ function grammarRender(){
   document.getElementById('gr-next').style.display='none';
   grAnswered=false;
   const opts=document.getElementById('gr-options');
-  opts.innerHTML=q.opts.map((o,i)=>`<div class="gr-opt" onclick="grammarAnswer(${i})">${o}</div>`).join('');
+  opts.innerHTML=q.opts.map((o,i)=>`<div class="gr-opt" onclick="grammarAnswer(${i})">${escHtml(o)}</div>`).join('');
 }
 function grammarAnswer(i){
   if(grAnswered)return;
@@ -6103,9 +6563,9 @@ function grammarAnswer(i){
   if(i===q.correct){
     grCorrect++;
     celebrate({count:28,y:window.innerHeight*0.35});
-    fb.innerHTML=`<span style="color:var(--green);font-weight:600">✅ Correct!</span> ${q.exp}`;
+    fb.innerHTML=`<span style="color:var(--green);font-weight:600">✅ Correct!</span> ${escHtml(q.exp)}`;
   }else{
-    fb.innerHTML=`<span style="color:var(--red);font-weight:600">❌ Wrong.</span> ${q.exp}`;
+    fb.innerHTML=`<span style="color:var(--red);font-weight:600">❌ Wrong.</span> ${escHtml(q.exp)}`;
   }
   document.getElementById('gr-next').style.display='inline-block';
   document.getElementById('gr-next').textContent=grIndex+1<grammarQs.length?'Next question →':'Finish training';
@@ -6200,7 +6660,7 @@ function toggleTpinfoEdit(forceShow){
   }
 }
 
-function renderTeacherProfile(){
+async function renderTeacherProfile(){
   const stuEl=document.getElementById('profile-student-section');
   const tchEl=document.getElementById('profile-teacher-section');
   if(!stuEl||!tchEl)return;
@@ -6232,7 +6692,8 @@ function renderTeacherProfile(){
   const tags=document.getElementById('profile-tags');
   if(tags)tags.innerHTML=`<span class="ptag hl">Teacher</span><span class="ptag">CELTA Certified</span><span class="ptag">${GROUPS.length} Groups</span><span class="ptag">Since 2024</span>`;
   // Total metrics
-  const totalStudents=GROUPS.reduce((sum,g)=>(sum+(GROUP_ROSTERS[g]||[]).length),0);
+  const allRosters=await Promise.all(GROUPS.map(g=>fetchGroupRoster(g)));
+  const totalStudents=allRosters.reduce((sum,r)=>sum+r.length,0);
   const metricsEl=document.getElementById('tprof-metrics');
   if(metricsEl)metricsEl.innerHTML=`
     <div class="tprof-metric">
@@ -6249,7 +6710,7 @@ function renderTeacherProfile(){
   const icons=['A1','A2','B1','B2','IE'];
   cardsEl.innerHTML=GROUPS.map((g,i)=>{
     const sched=GROUP_SCHEDULES[g]||{};
-    const cnt=(GROUP_ROSTERS[g]||[]).length;
+    const cnt=allRosters[i].length;
     const start=GROUP_START_DATES[g]||new Date('2026-01-01');
     const startStr=start.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
     const dur=groupDuration(start);
@@ -6527,6 +6988,8 @@ makeClickablesAccessible();
 updatePayUI();
 buildPlan();
 applySession();
+initDraftAutosave();
+restoreLastScreen();
 updateStreakTracker();
 // Restore Supabase auth session on page load (handles refresh without re-login)
 if(_sb){
@@ -6544,6 +7007,7 @@ if(_sb){
       };
       saveStore({session});
       applySession();
+      restoreLastScreen();
       hideLogin();
     }
   }).catch(()=>{});
@@ -6563,6 +7027,7 @@ if(_sb){
       };
       saveStore({session});
       applySession();
+      restoreLastScreen();
       hideLogin();
     }
   });
