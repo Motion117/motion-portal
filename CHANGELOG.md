@@ -3,6 +3,52 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Security fix — leaked password in admin_role.sql + credential policy locked in
+
+**⚠ Critical finding, fixed:** `supabase/admin_role.sql` had been hand-edited
+(outside this session) to contain a real plaintext password
+(`v_pw text := 'mirazam1108'`) instead of the `CHANGE_ME_BEFORE_RUNNING`
+placeholder. That edit was committed (`ed12a93`) and pushed to
+`origin/main` — the password has been sitting in this repo's public git
+history. Because `admin_role.sql` had never actually been *run*, no live
+Supabase account was ever created with it, but running the file as-is
+would have created the real production admin account with an
+already-leaked password.
+
+**Fixed:**
+- Restored the `CHANGE_ME_BEFORE_RUNNING` placeholder so the file's own
+  guard (`raise exception` if the placeholder is left in) protects against
+  running it unedited.
+- Removed a stray, duplicated `declare v_admin uuid := ...; v_pw text := 'admin';`
+  fragment that had been pasted directly in front of the file's opening
+  comment header (outside any `do $$ ... $$` block) — that's invalid
+  top-level SQL and would have thrown a syntax error before anything else
+  in the file ran.
+- Fixed the seed block's "does this already exist" check, which queried
+  `email='motionlearnuz@gmial.com'` (a typo'd domain, and not the account
+  actually being created) while the insert below it used `admin@motion.edu`
+  — the check now matches the email that's actually inserted, so re-running
+  the file is safely a no-op instead of attempting a duplicate insert.
+
+**Action needed from you:** `mirazam1108` must be treated as burned —
+don't reuse it anywhere, including as the real admin password. Pick a new
+one when you fill in `CHANGE_ME_BEFORE_RUNNING`. Optionally, since the old
+value lives permanently in git history, you may want to ask whether this
+repo is public and consider scrubbing history (`git filter-repo` / GitHub's
+secret-removal tooling) — I did not do this myself since rewriting pushed
+history is destructive and needs your explicit go-ahead.
+
+**Credential policy — closed, not changed:** per your explicit instruction,
+account creation, deletion, and password/login resets stay strictly
+admin-only. Checked the app: every call site for `admin_create_user`,
+`admin_delete_user`, and `admin_update_credentials` (via `adminCreateUser()`,
+`adminDeleteUser()`, `adminResetCreds()`) lives only inside the admin
+dashboard, gated behind `data-role="admin"` — there is no teacher-facing
+path to any of them. This closes the open question from the previous
+addendum: teachers get no credential powers over themselves or anyone
+else, full stop. If a teacher forgets their password, they contact the
+admin, same as students.
+
 ## Addendum — Username login + Freeze/Unfreeze accounts
 
 **⚠ First, an important finding:** the addendum said to do this "after
