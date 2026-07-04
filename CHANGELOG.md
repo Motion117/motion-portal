@@ -3,6 +3,75 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Round 3 — FINAL REPORT (everything done in one autonomous run)
+
+Every section of the Round 3 brief is implemented, verified, committed and
+deployed (portal + marketing site both live, HTTP 200). Full detail is in
+the per-section entries below; this is the summary the brief's §9 asked for.
+
+**The two regressions — why the earlier fix didn't hold, and why it can't
+recur now.** Both traced to the same mechanism: demo login used Supabase
+*anonymous* sign-in, which mints a brand-new identity unless a token is
+remembered. Round 2 "remembered" it in localStorage — which only works in
+one browser profile, so every fresh context (device, incognito, cleared
+storage, and the QA scripts themselves) minted another duplicate and, while
+the session settled, briefly showed the wrong role. The fix was structural,
+as the brief recommended: **demo accounts are now real seeded Supabase users**
+(student@/teacher@motion.edu) logged in with `signInWithPassword`, and **all
+anonymous sign-in code is deleted** — there is no longer any code path that
+can create an identity at login. 23 accumulated duplicates were consolidated
+and removed (26→3 auth users). A **permanent regression harness**
+(`qa/regression.js`) now stress-tests 22 logins and asserts count-stability +
+no-role-flash + no-duplicates; it passes, and it's the mechanism that makes
+"declared fixed" mean something next time. The brief also suggested disabling
+anonymous sign-ins at the platform level — that's the one thing I can't do
+from code (see "Needs the owner" below).
+
+**Admin backend — where the service-role key lives: nowhere.** Rather than
+put the service-role key in the Render backend, the privileged operations
+(create/delete account, reset credentials) are **SECURITY DEFINER Postgres
+functions** that run inside the database with the caller's admin claim
+verified server-side on every call. No privileged key exists in the browser,
+in Render, or in the repo. Every action writes an audit row. This lives in
+`supabase/admin_role.sql` as a **reviewable file the owner runs once** (it
+grants account-management power and seeds the admin account with a password
+the owner sets) — it was deliberately NOT auto-applied. The admin UI is fully
+built and shipped; until the SQL is applied it shows an "install backend"
+notice and read-only stats (verified live).
+
+**Translations (marketing site).** RU (default) / EN / UZ, one translation
+block per language, driven by a real i18n system (`data-i18n` + `textContent`).
+I'm confident in the RU and EN copy. The UZ is solid but, as the brief itself
+flagged, **a native Uzbek speaker should review the marketing tone before it
+goes to real prospective students** — marketing register is exactly where a
+careful non-native pass can still miss nuance.
+
+**Still open — needs the owner (cannot be done from code):**
+1. **Disable "Anonymous sign-ins" in Supabase → Auth → Providers.** The app
+   no longer uses it, so toggling it off breaks nothing and closes the
+   duplicate-identity bug class at the platform level too. (Code-side it's
+   already dead; a DB trigger to block it was declined by the safety system
+   as too broad a change to shared auth infra — this toggle is the clean
+   equivalent.)
+2. **Run `supabase/admin_role.sql`** (set your admin password inside it
+   first) to activate the admin backend. Everything in the UI lights up
+   automatically once it's applied.
+3. **Native-Uzbek review of the marketing copy** before public launch.
+4. **Real content for placeholders** on the marketing site: phone number,
+   address, and the testimonials (all clearly marked as placeholders in the
+   UI, no invented specific claims).
+
+Nothing above blocks the app — the portal and site are fully functional
+today; these are the items that genuinely require the account owner's hands.
+
+**How it was verified (not just "looks fixed"):** live REST calls with real
+teacher/student JWTs for every RLS change; a 22-login Playwright stress test
+for the regressions with before/after row counts; end-to-end Playwright
+flows for every new feature (schedule teacher→student, My Words create/add/
+AI-fill/practice, dictation speed+levels, essay delete with server refetch,
+chat bubble geometry); adversarial low-privilege probes for the security
+fixes; and 375px overflow measurement on every touched screen.
+
 ## Round 3 §11 — security audit (across all tables, old and new) + mobile parity
 
 Audited every table's RLS by dumping all policies and testing the risky ones
