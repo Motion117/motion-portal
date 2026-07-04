@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Motion — языковой центр: английский по уровням A1–C1, подготовка к IELTS, личный портал студента с AI-проверкой эссе.">
+<meta property="og:title" content="Motion — языковой центр">
+<meta property="og:description" content="Английский, который двигает вас вперёд. Уровни A1–C1, IELTS, личный портал студента.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#060606">
+<title>Motion — языковой центр · English that moves you forward</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23060606'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='white' text-anchor='middle'%3Em%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── Design tokens — the logo IS the palette: black, white, one arrow ── */
+:root{
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Inter',-apple-system,sans-serif;
+  --text-hero:clamp(2.9rem,1rem + 8.5vw,7.5rem);
+  --text-h2:clamp(1.9rem,1rem + 3.2vw,3.4rem);
+  --space-section:clamp(4.5rem,3rem + 6vw,9.5rem);
+  --maxw:1180px;
+}
+html[data-theme="dark"]{
+  --bg:#060606; --bg-soft:#0d0d0d; --bg-card:#111111;
+  --ink:#f4f1ea; --ink-2:#b9b5ab; --ink-3:#6f6c65;
+  --line:rgba(244,241,234,0.12); --line-soft:rgba(244,241,234,0.07);
+  --accent:#8b7cff; --paper-invert:#f4f1ea; --ink-invert:#0a0a0a;
+}
+html[data-theme="light"]{
+  --bg:#faf8f3; --bg-soft:#f1eee6; --bg-card:#ffffff;
+  --ink:#111110; --ink-2:#54524c; --ink-3:#8f8c84;
+  --line:rgba(17,17,16,0.14); --line-soft:rgba(17,17,16,0.07);
+  --accent:#5b4bd4; --paper-invert:#0a0a0a; --ink-invert:#f4f1ea;
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  transition:background 0.4s,color 0.4s;overflow-x:hidden;
+}
+::selection{background:var(--accent);color:#fff;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,4vw,44px);}
+h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.08;letter-spacing:-0.01em;}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;align-items:center;gap:14px;margin-bottom:22px;
+}
+.eyebrow::before{content:'';width:34px;height:1px;background:var(--ink-3);}
+
+/* ── Header ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;transition:border-color .3s,background .3s;
+}
+header.scrolled{border-bottom-color:var(--line-soft);background:color-mix(in srgb,var(--bg) 82%,transparent);}
+.header-in{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px;}
+.logo{display:flex;align-items:baseline;text-decoration:none;color:var(--ink);flex-shrink:0;}
+.logo svg{height:26px;width:auto;display:block;}
+.logo .logo-word{fill:var(--ink);transition:fill .4s;}
+.logo .logo-arrow{stroke:var(--ink);transition:stroke .4s;}
+nav.mainnav{display:flex;gap:26px;}
+nav.mainnav a{
+  font-size:13px;font-weight:500;color:var(--ink-2);text-decoration:none;
+  transition:color .2s;position:relative;padding:4px 0;
+}
+nav.mainnav a::after{
+  content:'';position:absolute;left:0;bottom:0;height:1px;width:0;
+  background:var(--ink);transition:width .3s var(--ease-out);
+}
+nav.mainnav a:hover{color:var(--ink);}
+nav.mainnav a:hover::after{width:100%;}
+.header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.lang-switch{display:flex;border:1px solid var(--line);border-radius:100px;overflow:hidden;}
+.lang-btn{
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.06em;
+  background:none;border:none;color:var(--ink-3);padding:7px 11px;cursor:pointer;
+  transition:all .2s;
+}
+.lang-btn:hover{color:var(--ink);}
+.lang-btn.active{background:var(--ink);color:var(--bg);}
+.theme-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--line);
+  background:none;color:var(--ink);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:15px;transition:all .2s;
+}
+.theme-btn:hover{border-color:var(--ink-2);transform:rotate(15deg);}
+.login-btn{
+  font-family:var(--sans);font-size:12.5px;font-weight:600;text-decoration:none;
+  color:var(--bg);background:var(--ink);border-radius:100px;padding:9px 18px;
+  display:inline-flex;align-items:center;gap:7px;transition:all .25s var(--ease-out);
+  position:relative;white-space:nowrap;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px color-mix(in srgb,var(--ink) 25%,transparent);}
+.beta-tag{
+  font-size:8.5px;font-weight:700;letter-spacing:0.08em;padding:2px 6px;
+  border-radius:20px;background:var(--accent);color:#fff;text-transform:uppercase;
+}
+
+/* ── Hero ── */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px;position:relative;}
+.hero h1{font-size:var(--text-hero);font-weight:500;max-width:11ch;}
+.hero h1 em{font-style:italic;font-weight:400;}
+.hero-arrow{display:inline-block;vertical-align:baseline;margin-left:0.05em;}
+.hero-arrow svg{width:clamp(60px,9vw,140px);height:auto;overflow:visible;}
+.hero-arrow path{
+  stroke:var(--ink);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:400;stroke-dashoffset:400;animation:draw 1.4s .7s var(--ease-out) forwards;
+}
+.hero-arrow polygon{fill:var(--ink);opacity:0;animation:fadein .4s 1.75s forwards;}
+@keyframes draw{to{stroke-dashoffset:0;}}
+@keyframes fadein{to{opacity:1;}}
+.hero-sub{
+  margin-top:34px;font-size:clamp(15px,1.5vw,19px);color:var(--ink-2);
+  max-width:46ch;line-height:1.7;
+}
+.hero-cta-row{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;
+  background:var(--ink);color:var(--bg);border:1px solid var(--ink);border-radius:100px;
+  padding:15px 32px;display:inline-flex;align-items:center;gap:10px;
+  transition:all .25s var(--ease-out);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px color-mix(in srgb,var(--ink) 22%,transparent);}
+.btn-primary .arr{transition:transform .25s var(--ease-out);}
+.btn-primary:hover .arr{transform:translate(3px,-3px);}
+.btn-ghost{
+  font-family:var(--sans);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;
+  background:none;color:var(--ink);border:1px solid var(--line);border-radius:100px;
+  padding:15px 32px;transition:all .25s;
+}
+.btn-ghost:hover{border-color:var(--ink-2);}
+.hero-meta{
+  display:flex;gap:clamp(24px,4vw,64px);margin-top:clamp(48px,7vh,90px);
+  padding-top:30px;border-top:1px solid var(--line-soft);flex-wrap:wrap;
+}
+.hero-meta div{min-width:120px;}
+.hero-meta .n{font-family:var(--serif);font-size:clamp(22px,2.6vw,32px);font-weight:600;}
+.hero-meta .l{font-size:12px;color:var(--ink-3);margin-top:4px;letter-spacing:0.04em;}
+
+/* ── Sections ── */
+section{padding:var(--space-section) 0;}
+.sec-head{margin-bottom:clamp(36px,5vw,64px);}
+.sec-head h2{font-size:var(--text-h2);max-width:22ch;}
+.sec-head h2 em{font-style:italic;font-weight:400;}
+
+/* About / why */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);}
+.why-card{background:var(--bg);padding:clamp(24px,3vw,40px);transition:background .3s;}
+.why-card:hover{background:var(--bg-soft);}
+.why-num{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-3);margin-bottom:18px;}
+.why-card h3{font-size:20px;margin-bottom:12px;}
+.why-card p{font-size:14px;color:var(--ink-2);line-height:1.7;}
+
+/* Programs */
+.prog-row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,44px);
+  align-items:center;padding:clamp(20px,2.6vw,30px) 8px;border-bottom:1px solid var(--line-soft);
+  text-decoration:none;color:var(--ink);transition:all .25s;position:relative;
+}
+.prog-row:first-child{border-top:1px solid var(--line-soft);}
+.prog-row:hover{padding-left:22px;background:var(--bg-soft);}
+.prog-lvl{
+  font-family:var(--serif);font-style:italic;font-size:clamp(17px,2vw,22px);
+  color:var(--ink-3);width:52px;
+}
+.prog-name{font-family:var(--serif);font-size:clamp(20px,2.6vw,30px);font-weight:500;}
+.prog-desc{font-size:13px;color:var(--ink-2);margin-top:5px;max-width:56ch;}
+.prog-arrow{font-size:20px;color:var(--ink-3);transition:transform .25s var(--ease-out),color .25s;}
+.prog-row:hover .prog-arrow{transform:translate(4px,-4px);color:var(--ink);}
+
+/* Portal showcase — inverted band */
+.portal-band{background:var(--paper-invert);color:var(--ink-invert);}
+.portal-band .eyebrow{color:color-mix(in srgb,var(--ink-invert) 55%,transparent);}
+.portal-band .eyebrow::before{background:color-mix(in srgb,var(--ink-invert) 55%,transparent);}
+.portal-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;}
+.portal-band h2{font-size:var(--text-h2);}
+.portal-band p.lead{font-size:15px;line-height:1.75;margin-top:20px;color:color-mix(in srgb,var(--ink-invert) 75%,transparent);max-width:48ch;}
+.portal-feats{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:13px;}
+.portal-feats li{display:flex;gap:12px;font-size:14.5px;align-items:baseline;}
+.portal-feats li::before{content:'↗';font-weight:700;flex-shrink:0;}
+.portal-shot{
+  border:1px solid color-mix(in srgb,var(--ink-invert) 14%,transparent);
+  border-radius:14px;overflow:hidden;background:#0c0c0c;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,0.45);
+  aspect-ratio:16/10.5;position:relative;
+}
+.portal-shot .fake-ui{position:absolute;inset:0;padding:9%;display:flex;flex-direction:column;gap:8%;}
+.fake-bar{height:7%;border-radius:6px;background:rgba(244,241,234,0.1);}
+.fake-bar.w60{width:60%;}
+.fake-bar.w80{width:80%;background:rgba(139,124,255,0.35);}
+.fake-bar.w45{width:45%;}
+.fake-cards{display:flex;gap:6%;height:34%;}
+.fake-cards div{flex:1;border-radius:8px;background:rgba(244,241,234,0.07);border:1px solid rgba(244,241,234,0.08);}
+
+/* Testimonials */
+.tst-note{
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);
+  border:1px dashed var(--line);border-radius:100px;display:inline-block;
+  padding:6px 14px;margin-bottom:34px;
+}
+.tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,2.5vw,30px);}
+.tst-card{border:1px solid var(--line-soft);border-radius:4px;padding:clamp(26px,3vw,38px);background:var(--bg-card);display:flex;flex-direction:column;gap:20px;}
+.tst-quote{font-family:var(--serif);font-size:clamp(17px,1.8vw,21px);font-style:italic;line-height:1.5;}
+.tst-quote::before{content:'« ';color:var(--ink-3);}
+.tst-quote::after{content:' »';color:var(--ink-3);}
+.tst-who{font-size:12.5px;color:var(--ink-3);margin-top:auto;}
+
+/* Enroll */
+.enroll{text-align:center;}
+.enroll h2{font-size:clamp(2.2rem,1rem + 5vw,4.6rem);max-width:18ch;margin:0 auto;}
+.enroll .hero-sub{margin-left:auto;margin-right:auto;text-align:center;}
+.contact-line{margin-top:44px;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap;font-size:14px;color:var(--ink-2);}
+.contact-line a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:2px;transition:border-color .2s;}
+.contact-line a:hover{border-color:var(--ink);}
+.placeholder-mark{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:3px;}
+
+/* Footer */
+footer{border-top:1px solid var(--line-soft);padding:44px 0 54px;}
+.foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+.foot-in .logo svg{height:20px;}
+.foot-note{font-size:12px;color:var(--ink-3);}
+.foot-links{display:flex;gap:20px;}
+.foot-links a{font-size:12.5px;color:var(--ink-2);text-decoration:none;transition:color .2s;}
+.foot-links a:hover{color:var(--ink);}
+
+/* Reveal on scroll */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);}
+.rv.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none;}
+  .hero-arrow path{animation:none;stroke-dashoffset:0;}
+  .hero-arrow polygon{animation:none;opacity:1;}
+  html{scroll-behavior:auto;}
+}
+
+/* Mobile */
+.burger{display:none;background:none;border:1px solid var(--line);border-radius:8px;width:38px;height:38px;color:var(--ink);font-size:17px;cursor:pointer;}
+/* The duplicate login link inside the nav menu: hidden everywhere except the
+   opened mobile menu (the header button hides ≤600px to keep the bar slim). */
+nav.mainnav .login-btn.in-menu{display:none;}
+nav.mainnav.open a.login-btn.in-menu{
+  display:inline-flex;align-self:flex-start;color:var(--bg);
+  background:var(--ink);font-size:13px;padding:11px 20px;
+}
+nav.mainnav.open a.login-btn.in-menu::after{display:none;}
+nav.mainnav.open .login-btn.in-menu .login-label{display:inline;}
+@media (max-width:900px){
+  nav.mainnav{display:none;}
+  nav.mainnav.open{
+    display:flex;position:fixed;top:64px;left:0;right:0;flex-direction:column;
+    background:var(--bg);border-bottom:1px solid var(--line);padding:18px clamp(20px,4vw,44px) 26px;gap:16px;z-index:49;
+  }
+  .burger{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .portal-grid{grid-template-columns:1fr;}
+  .prog-row{grid-template-columns:auto 1fr;}
+  .prog-arrow{display:none;}
+  .login-btn span.login-label{display:none;}
+  .login-btn{padding:9px 13px;}
+}
+@media (max-width:600px){
+  /* Slim header so every control stays inside a 320–400px viewport:
+     the header login button moves into the burger menu instead. */
+  .header-in{height:64px;gap:8px;}
+  .logo svg{height:19px;}
+  .lang-btn{padding:6px 8px;font-size:10px;}
+  .theme-btn{width:30px;height:30px;font-size:13px;}
+  .burger{width:34px;height:34px;}
+  .header-actions{gap:6px;}
+  .login-btn.in-header{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap header-in">
+    <a class="logo" href="#top" aria-label="Motion">
+      <svg viewBox="0 0 340 84" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="motion">
+        <text x="0" y="62" class="logo-word" font-family="'Playfair Display',Georgia,serif" font-size="64" font-weight="500">motion</text>
+        <g class="logo-arrow" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M252 66 L285 40 L299 50 L327 22"/>
+          <path d="M311 20 L329 20 L329 38"/>
+        </g>
+      </svg>
+    </a>
+    <nav class="mainnav" id="mainnav">
+      <a href="#about" data-i18n="nav_about"></a>
+      <a href="#programs" data-i18n="nav_programs"></a>
+      <a href="#portal" data-i18n="nav_portal"></a>
+      <a href="#reviews" data-i18n="nav_reviews"></a>
+      <a href="#enroll" data-i18n="nav_contact"></a>
+      <a class="login-btn in-menu" href="https://motion117.github.io/motion-portal/">
+        <span class="login-label" data-i18n="login_btn"></span>
+        <span class="beta-tag">beta</span>
+      </a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="lang-btn" data-lang="ru" onclick="setLang('ru')">RU</button>
+        <button type="button" class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button type="button" class="lang-btn" data-lang="uz" onclick="setLang('uz')">UZ</button>
+      </div>
+      <button type="button" class="theme-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+      <a class="login-btn in-header" href="https://motion117.github.io/motion-portal/" id="login-link">
+        <span class="login-label" data-i18n="login_btn"></span>
+        <span class="beta-tag">beta</span>
+      </a>
+      <button type="button" class="burger" onclick="document.getElementById('mainnav').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow rv" data-i18n="hero_eyebrow"></div>
+      <h1 class="rv">
+        <span data-i18n="hero_line1"></span><br>
+        <em data-i18n="hero_line2"></em><span class="hero-arrow"><svg viewBox="0 0 140 90"><path d="M6 80 L52 44 L74 60 L124 16"/><polygon points="112,8 134,6 132,28"/></svg></span>
+      </h1>
+      <p class="hero-sub rv" data-i18n="hero_sub"></p>
+      <div class="hero-cta-row rv">
+        <a class="btn-primary" href="#enroll"><span data-i18n="hero_cta"></span><span class="arr">↗</span></a>
+        <a class="btn-ghost" href="#programs" data-i18n="hero_cta2"></a>
+      </div>
+      <div class="hero-meta rv">
+        <div><div class="n">A1–C1</div><div class="l" data-i18n="meta_levels"></div></div>
+        <div><div class="n">IELTS</div><div class="l" data-i18n="meta_ielts"></div></div>
+        <div><div class="n">24/7</div><div class="l" data-i18n="meta_portal"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / WHY -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="why_eyebrow"></div>
+        <h2><span data-i18n="why_title1"></span> <em data-i18n="why_title2"></em></h2>
+      </div>
+      <div class="why-grid rv">
+        <div class="why-card">
+          <div class="why-num">01</div>
+          <h3 data-i18n="why1_t"></h3>
+          <p data-i18n="why1_p"></p>
+        </div>
+        <div class="why-card">
+          <div class="why-num">02</div>
+          <h3 data-i18n="why2_t"></h3>
+          <p data-i18n="why2_p"></p>
+        </div>
+        <div class="why-card">
+          <div class="why-num">03</div>
+          <h3 data-i18n="why3_t"></h3>
+          <p data-i18n="why3_p"></p>
+        </div>
+        <div class="why-card">
+          <div class="why-num">04</div>
+          <h3 data-i18n="why4_t"></h3>
+          <p data-i18n="why4_p"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section id="programs">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="prog_eyebrow"></div>
+        <h2><span data-i18n="prog_title1"></span> <em data-i18n="prog_title2"></em></h2>
+      </div>
+      <div class="rv">
+        <a class="prog-row" href="#enroll">
+          <div class="prog-lvl">A1</div>
+          <div><div class="prog-name" data-i18n="prog1_n"></div><div class="prog-desc" data-i18n="prog1_d"></div></div>
+          <div class="prog-arrow">↗</div>
+        </a>
+        <a class="prog-row" href="#enroll">
+          <div class="prog-lvl">A2</div>
+          <div><div class="prog-name" data-i18n="prog2_n"></div><div class="prog-desc" data-i18n="prog2_d"></div></div>
+          <div class="prog-arrow">↗</div>
+        </a>
+        <a class="prog-row" href="#enroll">
+          <div class="prog-lvl">B1</div>
+          <div><div class="prog-name" data-i18n="prog3_n"></div><div class="prog-desc" data-i18n="prog3_d"></div></div>
+          <div class="prog-arrow">↗</div>
+        </a>
+        <a class="prog-row" href="#enroll">
+          <div class="prog-lvl">B2</div>
+          <div><div class="prog-name" data-i18n="prog4_n"></div><div class="prog-desc" data-i18n="prog4_d"></div></div>
+          <div class="prog-arrow">↗</div>
+        </a>
+        <a class="prog-row" href="#enroll">
+          <div class="prog-lvl">C1</div>
+          <div><div class="prog-name" data-i18n="prog5_n"></div><div class="prog-desc" data-i18n="prog5_d"></div></div>
+          <div class="prog-arrow">↗</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTAL SHOWCASE -->
+  <section id="portal" class="portal-band">
+    <div class="wrap portal-grid">
+      <div class="rv">
+        <div class="eyebrow" data-i18n="portal_eyebrow"></div>
+        <h2><span data-i18n="portal_title1"></span> <em data-i18n="portal_title2"></em></h2>
+        <p class="lead" data-i18n="portal_lead"></p>
+        <ul class="portal-feats">
+          <li data-i18n="portal_f1"></li>
+          <li data-i18n="portal_f2"></li>
+          <li data-i18n="portal_f3"></li>
+          <li data-i18n="portal_f4"></li>
+          <li data-i18n="portal_f5"></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <div class="portal-shot" role="img" aria-label="Student portal preview">
+          <div class="fake-ui">
+            <div class="fake-bar w60"></div>
+            <div class="fake-bar w80"></div>
+            <div class="fake-cards"><div></div><div></div><div></div></div>
+            <div class="fake-bar w45"></div>
+            <div class="fake-bar w60"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="reviews">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="tst_eyebrow"></div>
+        <h2><span data-i18n="tst_title1"></span> <em data-i18n="tst_title2"></em></h2>
+      </div>
+      <div class="rv">
+        <span class="tst-note" data-i18n="tst_placeholder_note"></span>
+        <div class="tst-grid">
+          <div class="tst-card">
+            <div class="tst-quote" data-i18n="tst1_q"></div>
+            <div class="tst-who" data-i18n="tst1_w"></div>
+          </div>
+          <div class="tst-card">
+            <div class="tst-quote" data-i18n="tst2_q"></div>
+            <div class="tst-who" data-i18n="tst2_w"></div>
+          </div>
+          <div class="tst-card">
+            <div class="tst-quote" data-i18n="tst3_q"></div>
+            <div class="tst-who" data-i18n="tst3_w"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENROLL / CONTACT -->
+  <section id="enroll" class="enroll">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow" style="justify-content:center" data-i18n="enroll_eyebrow"></div>
+        <h2><span data-i18n="enroll_title1"></span> <em data-i18n="enroll_title2"></em></h2>
+        <p class="hero-sub" data-i18n="enroll_sub"></p>
+        <div class="hero-cta-row" style="justify-content:center">
+          <a class="btn-primary" href="https://motion117.github.io/motion-portal/"><span data-i18n="enroll_cta"></span><span class="arr">↗</span></a>
+        </div>
+        <div class="contact-line">
+          <div><a href="tel:+998000000000">+998 (00) 000-00-00</a><span class="placeholder-mark" data-i18n="ph_phone"></span></div>
+          <div><a href="mailto:motionlearnuz@gmail.com">motionlearnuz@gmail.com</a></div>
+          <div><span data-i18n="contact_city"></span><span class="placeholder-mark" data-i18n="ph_addr"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <a class="logo" href="#top" aria-label="Motion">
+      <svg viewBox="0 0 340 84" xmlns="http://www.w3.org/2000/svg"><text x="0" y="62" class="logo-word" font-family="'Playfair Display',Georgia,serif" font-size="64" font-weight="500">motion</text><g class="logo-arrow" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M252 66 L285 40 L299 50 L327 22"/><path d="M311 20 L329 20 L329 38"/></g></svg>
+    </a>
+    <div class="foot-links">
+      <a href="#programs" data-i18n="nav_programs"></a>
+      <a href="#enroll" data-i18n="nav_contact"></a>
+      <a href="https://motion117.github.io/motion-portal/" data-i18n="foot_portal"></a>
+    </div>
+    <div class="foot-note">© <span id="yr"></span> Motion. <span data-i18n="foot_rights"></span></div>
+  </div>
+</footer>
+
+<script>
+'use strict';
+// ─── i18n ────────────────────────────────────────────────────────────────────
+// One block per language — adding/correcting a translation is a one-block edit.
+// Russian is the default site language.
+const I18N = {
+  ru: {
+    nav_about: 'О центре', nav_programs: 'Программы', nav_portal: 'Портал', nav_reviews: 'Отзывы', nav_contact: 'Контакты',
+    login_btn: 'Войти как студент',
+    hero_eyebrow: 'Языковой центр · Ташкент',
+    hero_line1: 'Английский, который',
+    hero_line2: 'двигает вперёд',
+    hero_sub: 'Пять уровней — от первого «hello» до уверенного C1 и подготовки к IELTS. Живые занятия в небольших группах и личный цифровой портал для каждого студента.',
+    hero_cta: 'Записаться на курс', hero_cta2: 'Смотреть программы',
+    meta_levels: 'уровни обучения', meta_ielts: 'подготовка к экзамену', meta_portal: 'портал студента',
+    why_eyebrow: 'Почему Motion',
+    why_title1: 'Учёба, устроенная', why_title2: 'по-взрослому',
+    why1_t: 'Чёткая система уровней', why1_p: 'Пять ступеней от A1 до C1 — вы всегда знаете, где находитесь и что осваиваете дальше. Никаких «вечных элементарников».',
+    why2_t: 'Курс на IELTS', why2_p: 'Отдельная программа подготовки: стратегия каждой секции, тренировочные эссе с детальным разбором и оценкой по банду.',
+    why3_t: 'AI-проверка письма', why3_p: 'Каждое эссе проходит автоматический разбор: грамматика, стиль, структура — с объяснениями, а не просто исправлениями.',
+    why4_t: 'Прозрачный прогресс', why4_p: 'Оценки, посещаемость, домашние задания и динамика навыков — всё в личном портале, доступном и студенту, и родителям.',
+    prog_eyebrow: 'Программы',
+    prog_title1: 'От первого слова', prog_title2: 'до свободной речи',
+    prog1_n: 'Beginner', prog1_d: 'Первые слова и фразы, базовая грамматика, уверенное «представиться и рассказать о себе».',
+    prog2_n: 'Elementary', prog2_d: 'Повседневные темы: покупки, путешествия, планы. Простое прошедшее и будущее время.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Разговорная беглость, письмо, аудирование. Уровень, с которого английский начинает работать на вас.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Академическая лексика, сложная грамматика, знакомство с форматом экзамена.',
+    prog5_n: 'IELTS Prep', prog5_d: 'Полная подготовка к IELTS: стратегия секций, тренировочные тесты, эссе с оценкой по банду.',
+    portal_eyebrow: 'Портал студента',
+    portal_title1: 'Учёба не заканчивается', portal_title2: 'у двери класса',
+    portal_lead: 'Каждый студент Motion получает доступ к личному порталу — расписание, домашние задания, оценки и тренажёры в одном месте, с любого устройства.',
+    portal_f1: 'AI-проверка эссе с разбором ошибок и оценкой IELTS',
+    portal_f2: 'Тренажёры лексики и грамматики по темам уроков',
+    portal_f3: 'Диктанты с озвучкой и мгновенной проверкой',
+    portal_f4: 'Расписание, оценки и посещаемость в реальном времени',
+    portal_f5: 'Чат с преподавателем и доска объявлений',
+    tst_eyebrow: 'Отзывы',
+    tst_title1: 'Что говорят', tst_title2: 'студенты',
+    tst_placeholder_note: 'Примеры отзывов — будут заменены на настоящие',
+    tst1_q: 'За полгода прошёл путь от A2 до уверенного B1. Портал с тренажёрами — то, чего не хватало во всех прошлых курсах.',
+    tst1_w: '— Студент курса Pre-Intermediate',
+    tst2_q: 'Готовилась к IELTS три месяца. Разборы эссе с оценкой по банду — самое полезное, что я видела в подготовке.',
+    tst2_w: '— Студентка курса IELTS Prep',
+    tst3_q: 'Ребёнок сам садится за домашние задания — из-за рейтинга и стрика в портале. Прогресс видно по неделям.',
+    tst3_w: '— Родитель студента Beginner',
+    enroll_eyebrow: 'Запись',
+    enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
+    enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
+    enroll_cta: 'Открыть портал студента',
+    contact_city: 'Ташкент, Узбекистан',
+    ph_phone: 'номер уточняется', ph_addr: 'адрес уточняется',
+    foot_portal: 'Портал студента', foot_rights: 'Все права защищены.',
+  },
+  en: {
+    nav_about: 'About', nav_programs: 'Programs', nav_portal: 'Portal', nav_reviews: 'Reviews', nav_contact: 'Contact',
+    login_btn: 'Login as a Student',
+    hero_eyebrow: 'Language centre · Tashkent',
+    hero_line1: 'English that moves',
+    hero_line2: 'you forward',
+    hero_sub: 'Five levels — from your first “hello” to a confident C1 and IELTS preparation. Live small-group classes plus a personal digital portal for every student.',
+    hero_cta: 'Enroll now', hero_cta2: 'View programs',
+    meta_levels: 'course levels', meta_ielts: 'exam preparation', meta_portal: 'student portal',
+    why_eyebrow: 'Why Motion',
+    why_title1: 'Learning, organised', why_title2: 'properly',
+    why1_t: 'A clear level system', why1_p: 'Five stages from A1 to C1 — you always know exactly where you stand and what comes next. No “forever-elementary” students.',
+    why2_t: 'A path to IELTS', why2_p: 'A dedicated preparation track: strategy for every section, practice essays with detailed feedback and band scoring.',
+    why3_t: 'AI writing feedback', why3_p: 'Every essay gets an automatic breakdown — grammar, style, structure — with explanations, not just corrections.',
+    why4_t: 'Transparent progress', why4_p: 'Grades, attendance, homework and skill dynamics — all in a personal portal, visible to students and parents alike.',
+    prog_eyebrow: 'Programs',
+    prog_title1: 'From your first word', prog_title2: 'to fluent speech',
+    prog1_n: 'Beginner', prog1_d: 'First words and phrases, core grammar, confidently introducing yourself and talking about your life.',
+    prog2_n: 'Elementary', prog2_d: 'Everyday topics: shopping, travel, plans. Simple past and future tenses.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Conversational fluency, writing, listening. The level where English starts working for you.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Academic vocabulary, advanced grammar, and a first look at the exam format.',
+    prog5_n: 'IELTS Prep', prog5_d: 'Full IELTS preparation: section strategy, mock tests, band-scored essays.',
+    portal_eyebrow: 'Student portal',
+    portal_title1: 'Learning doesn’t stop', portal_title2: 'at the classroom door',
+    portal_lead: 'Every Motion student gets a personal portal — schedule, homework, grades and practice trainers in one place, on any device.',
+    portal_f1: 'AI essay checking with error breakdowns and IELTS band scores',
+    portal_f2: 'Vocabulary and grammar trainers matched to lesson topics',
+    portal_f3: 'Dictation practice with audio playback and instant scoring',
+    portal_f4: 'Schedule, grades and attendance in real time',
+    portal_f5: 'Teacher chat and an announcements board',
+    tst_eyebrow: 'Reviews',
+    tst_title1: 'What our students', tst_title2: 'say',
+    tst_placeholder_note: 'Sample reviews — to be replaced with real ones',
+    tst1_q: 'In six months I went from A2 to a confident B1. The portal with its trainers is what every previous course was missing.',
+    tst1_w: '— Pre-Intermediate student',
+    tst2_q: 'I prepared for IELTS in three months. The band-scored essay feedback is the most useful prep tool I have ever seen.',
+    tst2_w: '— IELTS Prep student',
+    tst3_q: 'My son does his homework without being asked — because of the portal leaderboard and streaks. You can see progress week by week.',
+    tst3_w: '— Parent of a Beginner student',
+    enroll_eyebrow: 'Enrollment',
+    enroll_title1: 'Ready to move', enroll_title2: 'forward?',
+    enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
+    enroll_cta: 'Open the student portal',
+    contact_city: 'Tashkent, Uzbekistan',
+    ph_phone: 'number to be confirmed', ph_addr: 'address to be confirmed',
+    foot_portal: 'Student portal', foot_rights: 'All rights reserved.',
+  },
+  uz: {
+    nav_about: 'Markaz haqida', nav_programs: 'Dasturlar', nav_portal: 'Portal', nav_reviews: 'Fikrlar', nav_contact: 'Aloqa',
+    login_btn: 'Talaba sifatida kirish',
+    hero_eyebrow: 'Til markazi · Toshkent',
+    hero_line1: 'Sizni olg‘a yetaklaydigan',
+    hero_line2: 'ingliz tili',
+    hero_sub: 'Besh daraja — ilk “hello”dan ishonchli C1 va IELTS tayyorgarligigacha. Kichik guruhlarda jonli darslar va har bir talaba uchun shaxsiy raqamli portal.',
+    hero_cta: 'Kursga yozilish', hero_cta2: 'Dasturlarni ko‘rish',
+    meta_levels: 'o‘quv darajalari', meta_ielts: 'imtihonga tayyorgarlik', meta_portal: 'talaba portali',
+    why_eyebrow: 'Nega Motion',
+    why_title1: 'To‘g‘ri tashkil etilgan', why_title2: 'ta’lim',
+    why1_t: 'Aniq darajalar tizimi', why1_p: 'A1 dan C1 gacha besh bosqich — qayerda turganingizni va keyin nimani o‘rganishingizni doim bilasiz.',
+    why2_t: 'IELTS sari yo‘l', why2_p: 'Alohida tayyorgarlik dasturi: har bir bo‘lim strategiyasi, batafsil tahlil va band bahosi bilan mashq insholari.',
+    why3_t: 'AI yozma tahlili', why3_p: 'Har bir insho avtomatik tahlildan o‘tadi — grammatika, uslub, tuzilma — shunchaki tuzatish emas, tushuntirish bilan.',
+    why4_t: 'Shaffof natijalar', why4_p: 'Baholar, davomat, uy vazifalari va ko‘nikmalar dinamikasi — barchasi talaba va ota-onalar ko‘ra oladigan shaxsiy portalda.',
+    prog_eyebrow: 'Dasturlar',
+    prog_title1: 'Ilk so‘zdan', prog_title2: 'erkin nutqqacha',
+    prog1_n: 'Beginner', prog1_d: 'Ilk so‘zlar va iboralar, asosiy grammatika, o‘zini tanishtirib, hayoti haqida bemalol gapirish.',
+    prog2_n: 'Elementary', prog2_d: 'Kundalik mavzular: xarid, sayohat, rejalar. O‘tgan va kelasi zamonning sodda shakllari.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Og‘zaki ravonlik, yozish, tinglab tushunish. Ingliz tili siz uchun ishlay boshlaydigan daraja.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Akademik lug‘at, murakkab grammatika va imtihon formati bilan ilk tanishuv.',
+    prog5_n: 'IELTS Prep', prog5_d: 'To‘liq IELTS tayyorgarligi: bo‘limlar strategiyasi, sinov testlari, band bahosi bilan insholar.',
+    portal_eyebrow: 'Talaba portali',
+    portal_title1: 'O‘qish sinf eshigida', portal_title2: 'tugamaydi',
+    portal_lead: 'Har bir Motion talabasi shaxsiy portalga ega bo‘ladi — dars jadvali, uy vazifalari, baholar va mashq trenajyorlari bir joyda, istalgan qurilmada.',
+    portal_f1: 'Xatolar tahlili va IELTS band bahosi bilan AI insho tekshiruvi',
+    portal_f2: 'Dars mavzulariga mos lug‘at va grammatika trenajyorlari',
+    portal_f3: 'Ovozli diktantlar va bir zumda baholash',
+    portal_f4: 'Dars jadvali, baholar va davomat real vaqtda',
+    portal_f5: 'O‘qituvchi bilan chat va e’lonlar taxtasi',
+    tst_eyebrow: 'Fikrlar',
+    tst_title1: 'Talabalarimiz', tst_title2: 'nima deydi',
+    tst_placeholder_note: 'Namuna fikrlar — haqiqiylari bilan almashtiriladi',
+    tst1_q: 'Olti oyda A2 dan ishonchli B1 gacha yetdim. Trenajyorli portal — oldingi barcha kurslarda yetishmagan narsa.',
+    tst1_w: '— Pre-Intermediate kursi talabasi',
+    tst2_q: 'IELTS ga uch oy tayyorlandim. Band bahosi bilan insho tahlili — tayyorgarlikda ko‘rgan eng foydali vositam.',
+    tst2_w: '— IELTS Prep kursi talabasi',
+    tst3_q: 'O‘g‘lim uy vazifasini o‘zi bajaradi — portaldagi reyting va “strik” tufayli. Har haftalik o‘sishni ko‘rish mumkin.',
+    tst3_w: '— Beginner talabasining ota-onasi',
+    enroll_eyebrow: 'Yozilish',
+    enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
+    enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',
+    enroll_cta: 'Talaba portalini ochish',
+    contact_city: 'Toshkent, O‘zbekiston',
+    ph_phone: 'raqam aniqlanmoqda', ph_addr: 'manzil aniqlanmoqda',
+    foot_portal: 'Talaba portali', foot_rights: 'Barcha huquqlar himoyalangan.',
+  },
+};
+
+const HTML_LANG = { ru: 'ru', en: 'en', uz: 'uz' };
+function setLang(lang){
+  if(!I18N[lang])lang='ru';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    const val=I18N[lang][key];
+    if(val!==undefined)el.textContent=val; // textContent — translations can never inject HTML
+  });
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  document.documentElement.lang=HTML_LANG[lang];
+  try{localStorage.setItem('motion-site-lang',lang);}catch(e){}
+}
+
+// ─── Theme (same mechanism as the portal: html[data-theme] + localStorage) ───
+function toggleTheme(){
+  const next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{localStorage.setItem('motion-site-theme',next);}catch(e){}
+}
+
+// ─── Scroll effects ──────────────────────────────────────────────────────────
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:0.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+window.addEventListener('scroll',()=>{
+  document.getElementById('hdr').classList.toggle('scrolled',window.scrollY>10);
+},{passive:true});
+document.querySelectorAll('#mainnav a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('mainnav').classList.remove('open');
+}));
+
+// ─── Init: Russian by default; restore saved prefs ───────────────────────────
+document.getElementById('yr').textContent=new Date().getFullYear();
+let savedLang='ru', savedTheme='dark';
+try{
+  savedLang=localStorage.getItem('motion-site-lang')||'ru';
+  savedTheme=localStorage.getItem('motion-site-theme')||'dark';
+}catch(e){}
+document.documentElement.setAttribute('data-theme',savedTheme);
+setLang(savedLang);
+</script>
+</body>
+</html>

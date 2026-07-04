@@ -1055,6 +1055,21 @@ html.no-icons .ti::before{content:"•";}
 /* ── ROLE VISIBILITY ── */
 body[data-role="student"] [data-role="teacher"]{display:none !important;}
 body[data-role="teacher"] [data-role="student"]{display:none !important;}
+body:not([data-role="admin"]) [data-role="admin"]{display:none !important;}
+body[data-role="admin"] [data-hide-admin]{display:none !important;}
+body[data-role="admin"] [data-role="teacher"]{display:none !important;}
+body[data-role="admin"] [data-role="student"]{display:none !important;}
+/* Admin user table rows collapse into stacked cards on phones */
+.adm-user-row{display:grid;grid-template-columns:1.4fr 1fr 0.7fr 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-bottom:0.5px solid var(--line2);font-size:12px;}
+.adm-user-row .adm-actions{display:flex;gap:6px;justify-content:flex-end;}
+@media (max-width:760px){
+  .adm-user-row{grid-template-columns:1fr auto;row-gap:4px;}
+  .adm-user-row .adm-col-hide{display:none;}
+}
+.adm-role-pill{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em;}
+.adm-role-pill.student{background:rgba(91,156,246,0.12);color:#5b9cf6;}
+.adm-role-pill.teacher{background:rgba(52,196,160,0.12);color:var(--teal);}
+.adm-role-pill.admin{background:rgba(201,168,76,0.15);color:var(--gold);}
 
 /* ── LOGIN OVERLAY ── */
 .login-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1000px 600px at 50% 0%,rgba(124,110,255,0.14),transparent 60%),var(--bg);}
@@ -1609,11 +1624,16 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="ni" data-role="teacher" data-id="progress" onclick="show('progress',this)"><i class="ti ti-chart-radar"></i>Progress Hub</div>
   <div class="ni" data-role="teacher" data-id="cms" onclick="show('cms',this)"><i class="ti ti-database"></i>Content (CMS)</div>
 
+  <!-- ADMIN NAV -->
+  <div class="ns" data-role="admin">Administration</div>
+  <div class="ni active" data-role="admin" data-id="admin" onclick="show('admin',this)"><i class="ti ti-shield-lock"></i>Admin Dashboard</div>
+  <div class="ni" data-role="admin" data-id="admin-audit" onclick="show('admin-audit',this)"><i class="ti ti-list-details"></i>Audit Log</div>
+
   <!-- SHARED -->
   <div class="ns">Centre</div>
   <div class="ni" data-id="materials" onclick="show('materials',this)"><i class="ti ti-folders"></i>Materials</div>
   <div class="ni" data-id="announce" onclick="show('announce',this)"><i class="ti ti-speakerphone"></i>Announcements</div>
-  <div class="ni" data-id="chat" onclick="show('chat',this)"><i class="ti ti-message-circle"></i>Chat</div>
+  <div class="ni" data-id="chat" data-hide-admin onclick="show('chat',this)"><i class="ti ti-message-circle"></i>Chat</div>
   <div class="ni" data-role="student" data-id="ai" onclick="show('ai',this)"><i class="ti ti-robot"></i>AI Assistant</div>
   <div class="ns">Account</div>
   <div class="ni" data-id="profile" onclick="show('profile',this)"><i class="ti ti-user"></i>Profile</div>
@@ -2362,6 +2382,56 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <div class="chip" onclick="setQ('Check this sentence: I have went to school yesterday')"><i class="ti ti-checkup-list"></i>Check a sentence</div>
     <div class="chip" onclick="setQ('Explain the difference between will and going to')"><i class="ti ti-arrow-right"></i>will vs going to</div>
     <div class="chip" onclick="setQ('How do I write a good essay in English?')"><i class="ti ti-edit"></i>Essay structure</div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="screen" id="screen-admin" data-role="admin">
+  <div class="ph"><div class="pt"><i class="ti ti-shield-lock" style="margin-right:8px;color:var(--gold);vertical-align:-2px"></i>Admin Dashboard</div><div class="ps">Accounts, activity and management across the whole centre</div></div>
+  <div id="admin-backend-warning" class="card glass" style="display:none;border-color:rgba(201,168,76,0.4)">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <i class="ti ti-alert-triangle" style="color:var(--gold);font-size:20px;margin-top:1px"></i>
+      <div style="font-size:12px;line-height:1.6">
+        <b>Admin backend not installed yet.</b><br>
+        Review and run <code style="background:var(--bg4);padding:1px 6px;border-radius:5px">supabase/admin_role.sql</code> in the Supabase SQL Editor (set your admin password inside it first). All management features on this page activate automatically once it's applied.
+      </div>
+    </div>
+  </div>
+  <div class="sg" id="admin-stats">
+    <div class="sc"><div class="sv" style="color:var(--accent2)" id="adm-stat-students">—</div><div class="sl">Students</div></div>
+    <div class="sc"><div class="sv" style="color:var(--teal)" id="adm-stat-teachers">—</div><div class="sl">Teachers</div></div>
+    <div class="sc"><div class="sv" style="color:var(--gold)" id="adm-stat-essays">—</div><div class="sl">Essays checked</div></div>
+  </div>
+  <div class="card glass">
+    <div class="sec" style="margin-top:0"><i class="ti ti-user-plus" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Create Account</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <input class="ai-in" id="adm-new-email" placeholder="Email (login)" style="margin:0" autocomplete="off">
+      <input class="ai-in" id="adm-new-pass" placeholder="Password (min 6 chars)" style="margin:0" autocomplete="off">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+      <input class="ai-in" id="adm-new-name" placeholder="Full name" style="margin:0">
+      <select class="ai-in" id="adm-new-role" style="margin:0">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
+      <select class="ai-in" id="adm-new-group" style="margin:0"></select>
+    </div>
+    <button type="button" class="hw-btn" id="adm-create-btn" style="margin-top:0" onclick="adminCreateUser()"><i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Create account</button>
+  </div>
+  <div class="card glass" style="padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px">
+      <div class="sec" style="margin:0"><i class="ti ti-users" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>All Accounts</div>
+      <button type="button" class="mini-btn" onclick="renderAdminDashboard(true)"><i class="ti ti-refresh" style="vertical-align:-1px"></i> Refresh</button>
+    </div>
+    <div id="adm-user-list"><div style="text-align:center;padding:28px"><span class="spinner lg"></span></div></div>
+  </div>
+</div>
+
+<!-- ADMIN AUDIT LOG -->
+<div class="screen" id="screen-admin-audit" data-role="admin">
+  <div class="ph"><div class="pt"><i class="ti ti-list-details" style="margin-right:8px;color:var(--gold);vertical-align:-2px"></i>Audit Log</div><div class="ps">Every privileged admin action, newest first</div></div>
+  <div class="card glass" style="padding:0;overflow:hidden">
+    <div id="adm-audit-list"><div style="text-align:center;padding:28px"><span class="spinner lg"></span></div></div>
   </div>
 </div>
 
@@ -4750,10 +4820,135 @@ function restoreLastScreen(){
   if(!session)return;
   restoreEssayDrafts();
   const stored=loadStore();
-  const dest=stored.lastScreen||(session.role==='teacher'?'tdash':'home');
+  let dest=stored.lastScreen||(session.role==='admin'?'admin':session.role==='teacher'?'tdash':'home');
+  // Never restore a screen the current role can't use (e.g. admin logging in
+  // on a tab whose last screen was the student home).
+  const roleHome={admin:'admin',teacher:'tdash',student:'home'};
+  const screenEl=document.getElementById('screen-'+dest);
+  const screenRole=screenEl?.getAttribute('data-role');
+  if(screenRole&&screenRole!==session.role)dest=roleHome[session.role]||'home';
+  if(session.role==='admin'&&!['admin','admin-audit','materials','announce','profile'].includes(dest))dest='admin';
   show(dest,document.querySelector(`[data-id="${dest}"]`));
 }
 function initialsOf(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+// ─── ADMIN ROLE (Round 3, §6) ────────────────────────────────────────────────
+// All privileged operations live in SECURITY DEFINER Postgres functions
+// (see supabase/admin_role.sql) called via authenticated RPC. The functions
+// re-verify the caller's admin claim server-side — the UI below is
+// convenience, not the security boundary. Until that SQL file is applied,
+// this screen shows an "install the backend" notice and read-only stats.
+let _admUsers=[];
+async function renderAdminDashboard(forceRefresh){
+  if(session?.role!=='admin')return;
+  const listEl=document.getElementById('adm-user-list');
+  const warnEl=document.getElementById('admin-backend-warning');
+  const gsel=document.getElementById('adm-new-group');
+  if(gsel&&!gsel.dataset.filled){gsel.innerHTML=GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');gsel.dataset.filled='1';}
+  listEl.innerHTML='<div style="text-align:center;padding:28px"><span class="spinner lg"></span></div>';
+  const{data,error}=await _sb.rpc('admin_list_users');
+  if(error){
+    // Function missing (backend not installed) or caller not admin
+    if(warnEl)warnEl.style.display='block';
+    const{data:profs}=await _sb.from('profiles').select('id,full_name,role,group_name').order('created_at');
+    _admUsers=[];
+    if(profs){
+      document.getElementById('adm-stat-students').textContent=profs.filter(p=>p.role==='student').length;
+      document.getElementById('adm-stat-teachers').textContent=profs.filter(p=>p.role==='teacher').length;
+      listEl.innerHTML=profs.map(p=>`
+        <div class="adm-user-row">
+          <div><b>${escHtml(p.full_name||'—')}</b></div>
+          <div class="adm-col-hide" style="color:var(--txt3)">login hidden until backend installed</div>
+          <div><span class="adm-role-pill ${escHtml(p.role||'student')}">${escHtml(p.role||'student')}</span></div>
+          <div class="adm-col-hide" style="color:var(--txt2)">${escHtml(p.group_name||'—')}</div>
+          <div class="adm-actions"><span style="font-size:10px;color:var(--txt3)">read-only</span></div>
+        </div>`).join('');
+    }else{
+      listEl.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">Could not load accounts.</div>';
+    }
+    return;
+  }
+  if(warnEl)warnEl.style.display='none';
+  _admUsers=data||[];
+  document.getElementById('adm-stat-students').textContent=_admUsers.filter(u=>u.role==='student').length;
+  document.getElementById('adm-stat-teachers').textContent=_admUsers.filter(u=>u.role==='teacher').length;
+  try{
+    const{count}=await _sb.from('essay_history').select('id',{count:'exact',head:true});
+    document.getElementById('adm-stat-essays').textContent=count??'—';
+  }catch(e){}
+  listEl.innerHTML=_admUsers.map(u=>`
+    <div class="adm-user-row">
+      <div style="min-width:0"><b>${escHtml(u.full_name||'—')}</b><div style="font-size:10px;color:var(--txt3);overflow:hidden;text-overflow:ellipsis">${escHtml(u.email||'')}</div></div>
+      <div class="adm-col-hide" style="color:var(--txt3);font-size:11px">${u.last_sign_in_at?'last seen '+new Date(u.last_sign_in_at).toLocaleDateString('en-GB'):'never signed in'}</div>
+      <div><span class="adm-role-pill ${escHtml(u.role)}">${escHtml(u.role)}</span></div>
+      <div class="adm-col-hide" style="color:var(--txt2)">${escHtml(u.group_name||'—')}</div>
+      <div class="adm-actions">
+        ${u.role==='admin'?'<span style="font-size:10px;color:var(--txt3)">protected</span>':`
+        <button type="button" class="mini-btn" title="Change login/password" onclick="adminResetCreds('${u.id}')"><i class="ti ti-key" style="vertical-align:-1px"></i></button>
+        <button type="button" class="eh-del-btn" title="Delete account" onclick="adminDeleteUser('${u.id}')"><i class="ti ti-trash"></i></button>`}
+      </div>
+    </div>`).join('');
+}
+async function adminCreateUser(){
+  const email=(document.getElementById('adm-new-email').value||'').trim();
+  const pass=document.getElementById('adm-new-pass').value||'';
+  const name=(document.getElementById('adm-new-name').value||'').trim();
+  const role=document.getElementById('adm-new-role').value;
+  const group=document.getElementById('adm-new-group').value;
+  if(!email||!pass||!name){showToast('Email, password and name are required');return;}
+  const btn=document.getElementById('adm-create-btn');
+  btn.disabled=true;
+  const{error}=await _sb.rpc('admin_create_user',{p_email:email,p_password:pass,p_role:role,p_name:name,p_group:group});
+  btn.disabled=false;
+  if(error){showToast(error.message.includes('function')?'Admin backend not installed yet':'Could not create: '+error.message);return;}
+  ['adm-new-email','adm-new-pass','adm-new-name'].forEach(i=>{document.getElementById(i).value='';});
+  showToast('Account created ✅');
+  renderAdminDashboard(true);
+}
+let _admArmedDelete=null;
+async function adminDeleteUser(id){
+  if(_admArmedDelete!==id){
+    _admArmedDelete=id;
+    showToast('⚠ Tap delete again to permanently remove this account');
+    setTimeout(()=>{if(_admArmedDelete===id)_admArmedDelete=null;},4000);
+    return;
+  }
+  _admArmedDelete=null;
+  const{error}=await _sb.rpc('admin_delete_user',{p_user_id:id});
+  if(error){showToast('Could not delete: '+error.message);return;}
+  showToast('Account deleted');
+  renderAdminDashboard(true);
+}
+async function adminResetCreds(id){
+  const u=_admUsers.find(x=>x.id===id);
+  const newEmail=prompt('New login email for '+(u?.full_name||'user')+' (leave empty to keep current):',u?.email||'');
+  if(newEmail===null)return;
+  const newPass=prompt('New password (leave empty to keep current):','');
+  if(newPass===null)return;
+  if(!newEmail&&!newPass){showToast('Nothing to change');return;}
+  const{error}=await _sb.rpc('admin_update_credentials',{p_user_id:id,p_new_email:newEmail||null,p_new_password:newPass||null});
+  if(error){showToast('Could not update: '+error.message);return;}
+  showToast('Credentials updated 🔑');
+  renderAdminDashboard(true);
+}
+async function renderAdminAudit(){
+  if(session?.role!=='admin')return;
+  const el=document.getElementById('adm-audit-list');
+  el.innerHTML='<div style="text-align:center;padding:28px"><span class="spinner lg"></span></div>';
+  const{data,error}=await _sb.from('admin_audit_log').select('*').order('created_at',{ascending:false}).limit(100);
+  if(error){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">Audit log unavailable — install the admin backend first (supabase/admin_role.sql).</div>';return;}
+  if(!data.length){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">No admin actions recorded yet.</div>';return;}
+  const label={create_user:'Created account',delete_user:'Deleted account',update_credentials:'Changed credentials'};
+  el.innerHTML=data.map(r=>`
+    <div style="padding:11px 14px;border-bottom:0.5px solid var(--line2);font-size:12px">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <b>${escHtml(label[r.action]||r.action)}</b>
+        <span style="color:var(--txt3);font-size:11px">${escHtml(new Date(r.created_at).toLocaleString('en-GB'))}</span>
+      </div>
+      <div style="color:var(--txt2);margin-top:3px">${escHtml(r.actor_email||r.actor_id)} → ${escHtml(r.target_email||r.target_user_id||'')}</div>
+      ${r.details?`<div style="color:var(--txt3);font-size:11px;margin-top:2px">${escHtml(JSON.stringify(r.details))}</div>`:''}
+    </div>`).join('');
+}
 
 // ─── WEEKLY SCHEDULE (Round 3, 5d — teacher-managed, students see own group) ──
 const SCHED_DAYS={1:'Monday',2:'Tuesday',3:'Wednesday',4:'Thursday',5:'Friday',6:'Saturday',7:'Sunday'};
@@ -6099,6 +6294,8 @@ function show(id,el){
   if(id==='lesson')renderLessonScreen();
   if(id==='chat'){renderChat();if(session&&session.role==='teacher')initTeacherChat();else startChatPolling();}
   if(id==='tdash'){renderTeacherDash();cmsLoadLessonDropdown();}
+  if(id==='admin')renderAdminDashboard();
+  if(id==='admin-audit')renderAdminAudit();
   if(id==='cms'){cmsLoadLessonDropdown();if(!document.getElementById('cms-vocab-staging').children.length)cmsAddWordBlock();}
   if(id==='progress'){renderProgressHub();}
   if(id==='materials'){if(session?.role==='teacher')renderTeacherMaterials();else renderStudentMaterials();}
