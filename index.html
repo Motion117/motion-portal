@@ -13,6 +13,8 @@
 <title>Motion · Student Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://ubiafzrwrbnytbptnrcf.supabase.co">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" onerror="document.documentElement.classList.add('no-icons')">
 <style>
@@ -551,12 +553,16 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--
 .chat-messages{height:calc(75vh - 200px);min-height:240px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;}
 .chat-msg{display:flex;gap:10px;align-items:flex-end;animation:msgIn 0.3s cubic-bezier(0.16,1,0.3,1);}
 .chat-msg.mine{flex-direction:row-reverse;}
-/* min-width:0 breaks the classic flexbox trap: without it, this auto-sized flex item
-   can't shrink below its content's intrinsic width, so .chat-bubble's max-width:75%
-   (which is relative to THIS box, not the row) computes against an unexpectedly wide
-   box and a long message wraps character-by-character into a tall narrow sliver
-   instead of a normal paragraph. */
-.chat-msg-body{min-width:0;}
+/* ONE shared sizing model for every chat surface (student chat, teacher chat,
+   AI assistant) — Round 3 unification after the bubble-sizing bug appeared a
+   second time in the teacher pane only. The old model let the bubble's
+   max-width:80% resolve against an auto-sized (content-driven) wrapper — a
+   circular reference that happened to look right in wide panes and collapsed
+   long/short messages into a character-wide sliver in narrower ones. flex:1
+   gives the wrapper a definite width (rest of the row after the avatar), so
+   the 80% cap is stable no matter which pane hosts the chat. */
+.chat-msg-body{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;}
+.chat-msg.mine .chat-msg-body{align-items:flex-end;}
 .chat-ava{
   width:28px;height:28px;border-radius:9px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;
@@ -829,6 +835,12 @@ body{background:var(--bg);}
 /* ── ESSAY HIGHLIGHT ── */
 
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+/* Proper circular spinner — replaces the segmented ti-loader-2 glyph, which
+   rendered as a faceted "almost a circle" shape when rotated (Round 3, 4b). */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(124,110,255,0.25);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:-3px;flex-shrink:0;}
+.spinner.sm{width:12px;height:12px;border-width:2px;vertical-align:-2px;}
+.spinner.lg{width:28px;height:28px;border-width:3px;}
+.spinner.on-accent{border-color:rgba(255,255,255,0.35);border-top-color:#fff;}
 
 /* ── CUSTOM CURSOR & TRAIL ── */
 .cursor-dot,.cursor-ring,.cursor-trail{
@@ -1377,6 +1389,9 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
 /* ─── PDF / PRINT ─── */
 .download-report-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;background:var(--bg3);border:0.5px solid var(--line2);font-size:13px;font-weight:600;color:var(--txt1);cursor:pointer;transition:background .15s;}
 .download-report-btn:hover{background:var(--bg4);}
+.eh-del-btn{background:none;border:0.5px solid transparent;border-radius:8px;padding:4px 8px;font-size:13px;color:var(--txt3);cursor:pointer;transition:all .15s;font-family:inherit;}
+.eh-del-btn:hover{color:var(--red);background:rgba(240,96,96,0.08);border-color:rgba(240,96,96,0.25);}
+.eh-del-btn.armed{color:var(--red);background:rgba(240,96,96,0.12);border-color:rgba(240,96,96,0.4);font-size:11px;font-weight:600;}
 .print-only{display:none;}
 @media print{
   .topbar,.sidebar,.sidebar-backdrop,.login-overlay,
@@ -2661,7 +2676,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       <button type="button" class="modal-close" onclick="closeStudentAnalytics()"><i class="ti ti-x"></i></button>
     </div>
     <div id="sa-modal-body" style="padding:0 20px 20px">
-      <div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>
+      <div style="text-align:center;padding:40px 0;color:var(--txt3)"><span class="spinner lg"></span></div>
     </div>
   </div>
 </div>
@@ -2717,7 +2732,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       <button type="button" class="modal-close" onclick="closeHwGradeModal()"><i class="ti ti-x"></i></button>
     </div>
     <div id="hw-grade-modal-body" style="padding:0 20px 20px">
-      <div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>
+      <div style="text-align:center;padding:40px 0;color:var(--txt3)"><span class="spinner lg"></span></div>
     </div>
   </div>
 </div>
@@ -3302,7 +3317,7 @@ async function portalCheckEssay() {
 
   const btn = document.getElementById('portal-essay-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Analysing…';
+  btn.innerHTML = '<span class="spinner sm on-accent"></span> Analysing…';
   const sbtn=document.getElementById('portal-submit-btn');
   if(sbtn){sbtn.disabled=false;sbtn.innerHTML='<i class="ti ti-send"></i> Submit to Teacher';}
   const svbtn=document.getElementById('portal-save-btn');
@@ -3374,7 +3389,7 @@ async function portalGetBandScore() {
 
   const btn = document.getElementById('portal-band-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Scoring…';
+  btn.innerHTML = '<span class="spinner sm on-accent"></span> Scoring…';
 
   try {
     const res  = await fetch(ESSAY_ENDPOINT.replace(/\/$/, '') + '/api/band-score', {
@@ -4479,7 +4494,7 @@ async function doLogin(){
   if(_sb){
     const email=loginVal.includes('@')?loginVal:loginVal+'@motion.edu';
     const btn=document.querySelector('.login-btn.primary');
-    if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Signing in…';}
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Signing in…';}
 
     let sbData=null, sbError=null;
     try{
@@ -4576,7 +4591,7 @@ async function doSignup(){
   if(!_sb){showLoginError('Cannot create an account right now — check your connection and reload the page');return;}
   const avatar=_initialsFromName(name);
   const btn=document.querySelector('#signup-form .login-btn.primary');
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Creating…';}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Creating…';}
   try{
     const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{role:'student',name,group,avatar}}});
     if(error){showLoginError(error.message);return;}
@@ -4726,7 +4741,7 @@ async function renderTeacherDash(){
   if(lsel&&lsel.value!==activeLesson)lsel.value=activeLesson;
 
   const rEl0=document.getElementById('td-roster');
-  if(rEl0)rEl0.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.3rem"></i></div>';
+  if(rEl0)rEl0.innerHTML='<div style="text-align:center;padding:16px;color:var(--txt3)"><span class="spinner"></span></div>';
   const roster=await fetchGroupRoster(tGroup);
   const d=teacherData();
   const attKey=tGroup+'|'+activeLesson;
@@ -4793,7 +4808,7 @@ async function renderTeacherDash(){
   renderEssayOverview();
   // ── Homework list with real submission tracking ──
   const hl=document.getElementById('td-hw-list');
-  if(hl)hl.innerHTML='<div style="text-align:center;padding:12px;color:var(--txt3)"><i class="ti ti-loader-2"></i></div>';
+  if(hl)hl.innerHTML='<div style="text-align:center;padding:12px;color:var(--txt3)"><span class="spinner"></span></div>';
   let hwList=[],subsByHw={};
   if(_sb){
     const{data:hwRows}=await _sb.from('homework').select('*').eq('group_name',tGroup).order('created_at',{ascending:false});
@@ -5061,7 +5076,7 @@ async function openHwGradeModal(subId,studentName){
   const body=document.getElementById('hw-grade-modal-body');
   if(!ov||!body)return;
   if(titleEl)titleEl.textContent=studentName+' — Homework';
-  body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>';
+  body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--txt3)"><span class="spinner lg"></span></div>';
   ov.classList.add('open');
   trapFocus(ov.querySelector('.modal-box'));
   if(!_sb){body.innerHTML='<div style="color:var(--txt3);padding:20px">No database connection.</div>';return;}
@@ -5157,7 +5172,7 @@ async function saveEssayToHistory(){
   if(!text){showToast('No essay to save');return;}
   if(!session?.uid){showToast('Please log in to save essays');return;}
   if(!_sb){showToast('Cloud sync unavailable — check your connection and reload the page');return;}
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Saving…';}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Saving…';}
   const checkType=_portalBandData?'band':(_portalErrors&&_portalErrors.length?'grammar':'general');
   try{
     await saveEssayHistory(checkType,text,_portalBandData||{errors:_portalErrors||[]});
@@ -5181,7 +5196,7 @@ async function submitEssayToTeacher(){
     return;
   }
   if(!_sb||!session?.uid){showToast('Cannot submit right now — check your connection');return;}
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Submitting…';}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Submitting…';}
   const wc=text.split(/\s+/).filter(Boolean).length;
   const topic=_getEssayTopic();
   const{error}=await _sb.from('essay_submissions').insert({
@@ -5212,7 +5227,7 @@ async function showStudentAnalytics(sid,name){
   const body=document.getElementById('sa-modal-body');
   if(!ov||!body)return;
   if(titleEl)titleEl.textContent=name+' — Analytics';
-  body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:2rem"></i></div>';
+  body.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--txt3)"><span class="spinner lg"></span></div>';
   ov.classList.add('open');
   trapFocus(ov.querySelector('.modal-box'));
 
@@ -5387,11 +5402,33 @@ async function loadEssayHistory() {
     return `<div class="card" style="padding:16px 20px;cursor:pointer;transition:background .15s" onclick="openOwnEssayHistory('${row.id}')" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:0.75rem;color:var(--muted,#888)">${modeTag}${d} · ${row.word_count} words</span>
-        <span style="font-size:0.82rem;font-weight:700;color:var(--accent,#5b9cf6)">${tag}</span>
+        <span style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:0.82rem;font-weight:700;color:var(--accent,#5b9cf6)">${tag}</span>
+          <button type="button" class="eh-del-btn" onclick="event.stopPropagation();deleteEssayHistory('${row.id}')" aria-label="Delete this essay"><i class="ti ti-trash"></i></button>
+        </span>
       </div>
       <p style="font-size:0.85rem;color:var(--fg);margin:0;line-height:1.45;opacity:0.85">${preview}</p>${sumEl}
     </div>`;
   }).join('');
+}
+
+// Two-tap confirmation: first tap arms the button ("Sure?"), second tap within
+// 3s actually deletes. Blocks accidental single-click deletion without a modal.
+let _ehArmedDelete=null;
+async function deleteEssayHistory(id){
+  const btn=event.currentTarget;
+  if(_ehArmedDelete!==id){
+    _ehArmedDelete=id;
+    if(btn){btn.classList.add('armed');btn.innerHTML='<i class="ti ti-alert-triangle"></i> Sure?';}
+    setTimeout(()=>{if(_ehArmedDelete===id){_ehArmedDelete=null;if(btn&&document.body.contains(btn)){btn.classList.remove('armed');btn.innerHTML='<i class="ti ti-trash"></i>';}}},3000);
+    return;
+  }
+  _ehArmedDelete=null;
+  if(!_sb||!session?.uid)return;
+  const{error}=await _sb.from('essay_history').delete().eq('id',id).eq('user_id',session.uid);
+  if(error){showToast('Could not delete — please try again');console.error('[EssayHistory] delete failed:',error.message);return;}
+  showToast('Essay deleted');
+  loadEssayHistory(); // re-fetch from the server — never trust an optimistic removal
 }
 
 // ─── CMS: FETCH DB LESSONS ───────────────────────────
@@ -5588,7 +5625,7 @@ async function cmsSaveVocab(){
     });
   }
   const btn=document.getElementById('cms-vocab-btn');
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="margin-right:5px;vertical-align:-1px"></i>Saving…';}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm" style="margin-right:5px"></span>Saving…';}
   const {error}=await _sb.from('vocabulary').insert(rows);
   if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase';}
   if(error){showToast('Error: '+error.message);return;}
@@ -5651,7 +5688,7 @@ async function cmsAutoGenerateVocab(idx){
   const existingExample=(document.getElementById('cms-vocab-ex-'+idx)?.value||'').trim();
   const btn=event.currentTarget;
   const origHTML=btn.innerHTML;
-  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="margin-right:4px;vertical-align:-1px"></i>…';
+  btn.disabled=true;btn.innerHTML='<span class="spinner sm" style="margin-right:4px"></span>…';
   try{
     const base=(typeof ESSAY_ENDPOINT!=='undefined'?ESSAY_ENDPOINT:'').replace(/\/$/,'');
     const res=await fetch(base+'/api/vocab-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({word,mode:'fill',existingExample:existingExample||undefined})});
@@ -5673,7 +5710,7 @@ async function cmsAISuggestWord(){
   }).filter(Boolean);
   const btn=event.currentTarget;
   const origHTML=btn.innerHTML;
-  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="margin-right:4px;vertical-align:-1px"></i>Suggesting…';
+  btn.disabled=true;btn.innerHTML='<span class="spinner sm" style="margin-right:4px"></span>Suggesting…';
   try{
     const base=(typeof ESSAY_ENDPOINT!=='undefined'?ESSAY_ENDPOINT:'').replace(/\/$/,'');
     const res=await fetch(base+'/api/vocab-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lessonTitle,targetLevel,existingWords,mode:'suggest'})});
@@ -5732,7 +5769,7 @@ async function generateGrammarDrills() {
   const count       = parseInt(document.getElementById('drill-count')?.value || '5');
   const btn = document.getElementById('drill-gen-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Generating…';
+  btn.innerHTML = '<span class="spinner sm on-accent"></span> Generating…';
   const preview = document.getElementById('drill-preview');
   if (preview) preview.style.display = 'none';
 
@@ -5770,7 +5807,7 @@ async function saveDrillsToSupabase() {
   if (!_sb || !session || session.role !== 'teacher') { showToast('Teachers only'); return; }
   const btn = document.getElementById('drill-save-btn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Saving…';
+  btn.innerHTML = '<span class="spinner sm on-accent"></span> Saving…';
   const rows = _pendingDrills.drills.map(d => ({
     topic:      _pendingDrills.topic,
     level:      _pendingDrills.level,
@@ -5797,7 +5834,7 @@ async function renderProgressHub() {
     list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txt3);font-size:13px"><i class="ti ti-users" style="font-size:1.5rem;display:block;margin-bottom:8px"></i>Select a group to view students</div>';
     return;
   }
-  list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.5rem"></i></div>';
+  list.innerHTML = '<div style="padding:32px;text-align:center;color:var(--txt3)"><span class="spinner lg"></span></div>';
   const roster = await fetchGroupRoster(group);
   if (!roster.length) {
     list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--txt3);font-size:13px">No students found for this group.</div>';
@@ -5857,7 +5894,7 @@ function show(id,el){
   if(id==='tdash'){renderTeacherDash();cmsLoadLessonDropdown();}
   if(id==='cms'){cmsLoadLessonDropdown();if(!document.getElementById('cms-vocab-staging').children.length)cmsAddWordBlock();}
   if(id==='progress'){renderProgressHub();}
-  if(id==='materials'){renderTeacherMaterials();renderStudentMaterials();}
+  if(id==='materials'){if(session?.role==='teacher')renderTeacherMaterials();else renderStudentMaterials();}
   if(id==='home'){
     buildPlan();
     setTimeout(()=>{
@@ -5944,7 +5981,7 @@ document.addEventListener('click',function(e){
 async function buildHw(){
   const el=document.getElementById('hw-card');if(!el)return;
   if(!session||!session.group||!_sb){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)">Homework unavailable — check your connection and reload.</div>';return;}
-  el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)"><i class="ti ti-loader-2" style="font-size:1.5rem"></i></div>';
+  el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)"><span class="spinner lg"></span></div>';
   const{data:hwRows,error:hwErr}=await _sb.from('homework').select('*').eq('group_name',session.group).order('due_date',{ascending:true});
   if(hwErr||!hwRows){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--txt3)">Unable to load homework.</div>';return;}
   const{data:subRows}=await _sb.from('homework_submissions').select('*').eq('student_id',session.uid);
@@ -6767,7 +6804,13 @@ async function pollTeacherReplies(){
 }
 async function startChatPolling(){
   if(_chatPollTimer)clearInterval(_chatPollTimer);
-  await loadChatHistory();
+  // Full 300-row history fetch only when we don't already have it in memory
+  // (first open after load/login — chatLog is reset at logout). On same-session
+  // revisits the in-memory log is current up to _chatPollLastTs and the poll
+  // below picks up anything newer, so skipping the refetch saves the single
+  // biggest query on the most-visited screen (Round 3, 4d).
+  if(!chatLog.length||!_chatPollLastTs)await loadChatHistory();
+  else{renderChat();pollTeacherReplies();}
   _chatPollTimer=setInterval(pollTeacherReplies,8000);
 }
 document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
@@ -7077,7 +7120,7 @@ async function saveMaterial(){
   const groups=Array.from(document.querySelectorAll('#mat-group-checks input:checked')).map(cb=>cb.value);
   if(!groups.length){showToast('Select at least one target group');return;}
   const btn=document.getElementById('mat-publish-btn');
-  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite"></i> Publishing…';}
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Publishing…';}
   try{
     const{data:matRow,error:matErr}=await _sb.from('materials').insert({title,type,link:link||null,groups,author:session.name}).select('id').single();
     if(matErr)throw matErr;
@@ -7569,7 +7612,7 @@ const PAY_PROVIDER_URLS={click:'https://my.click.uz/',payme:'https://payme.uz/',
 function confirmPayment(){
   const btn=document.getElementById('pay-confirm-btn');
   btn.disabled=true;
-  btn.innerHTML='<i class="ti ti-loader-2" style="margin-right:5px;vertical-align:-1px;animation:spin 1s linear infinite"></i>Opening '+payMethodNames[payState.method]+'...';
+  btn.innerHTML='<span class="spinner sm on-accent" style="margin-right:5px"></span>Opening '+payMethodNames[payState.method]+'...';
   // In a real integration: POST amount to backend -> get provider checkout URL -> redirect.
   // Demo: simulate the round-trip from the provider's secure page.
   setTimeout(()=>{
@@ -7783,7 +7826,12 @@ function updateStreakTracker(){
 // ─── PDF / PRINT REPORT ─────────────────────────────────────────────────────
 function downloadEssayReport(){
   if(!_portalErrors)return;
-  const essay=(document.getElementById('portal-essay-ta')||{}).value||'';
+  // Mode-aware: portal-essay-ta only exists for the general/grammar mode.
+  // Task 1/Task 2 essays live in their own textareas behind _getEssayText(),
+  // which is why the report's "Essay text" section came out empty for IELTS
+  // modes after the multi-mode refactor.
+  const essay=typeof _getEssayText==='function'?_getEssayText():((document.getElementById('portal-essay-ta')||{}).value||'');
+  const topic=typeof _getEssayTopic==='function'?(_getEssayTopic()||''):'';
   const scoreEl=document.getElementById('portal-score-num');
   const score=scoreEl?scoreEl.textContent:'—';
   const gradeEl=document.getElementById('portal-score-grade');
@@ -7849,7 +7897,7 @@ ${weakItems ? `<b>Areas for Improvement:</b><ul style="margin:4px 0 0 16px">${we
   <div style="font-size:11px;color:#888;margin-top:4px">${escHtml(detail)}</div>
 </div>
 <h2>Essay Text</h2>
-<div class="essay-box">${escHtml(essay)}</div>
+<div class="essay-box">${topic?`<div style="font-weight:700;margin-bottom:10px">${escHtml(topic)}</div>`:''}${escHtml(essay)}</div>
 <h2>IELTS Band Score Feedback</h2>
 <div class="band-section">${bandHtml}</div>
 <h2>Detailed Error Analysis (${_portalErrors.length} issue${_portalErrors.length!==1?'s':''})</h2>

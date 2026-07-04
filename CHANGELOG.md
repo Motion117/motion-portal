@@ -3,6 +3,52 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Round 3, P1 contained fixes (4a–4d) — all verified live
+
+**4a — teacher chat bubble sizing, root cause + unification.** The teacher
+pane already shared `.chat-msg`/`.chat-bubble` markup with student chat, so
+"patch it in a second place" wasn't the issue — the shared CSS itself was
+wrong in a width-dependent way: `.chat-bubble{max-width:80%}` resolved
+against `.chat-msg-body`, an auto-(content-)sized flex item — a circular
+reference that looked fine in the wide student pane and collapsed messages
+into character-wide slivers in the narrower teacher pane (screenshot from
+2026-07-03 shows "Hello" wrapping as "He/llo"). Fixed by giving the body a
+definite width (`flex:1` = rest of the row) and aligning bubbles inside it
+(`align-items:flex-start/flex-end`). One rule set now governs every chat
+surface. *Verified live*: long message in teacher pane wraps at 546px wide
+in a 748px pane (80% cap working), short message renders one line, student
+pane unchanged, AI assistant unchanged.
+
+**4b — spinner.** The "almost a circle" was Tabler's `ti-loader-2` glyph —
+a segmented circle by design, so rotating it looks broken; several loading
+placeholders weren't even animated. Added a proper `.spinner` class
+(border-circle with accent top edge, `border-radius:50%`, spin keyframes)
+and replaced all 21 loader-glyph usages across the app (buttons, list
+placeholders, download/report states).
+
+**4c — essay report + delete.** Report's empty "Essay text": the template
+read `portal-essay-ta` directly — the general-mode textarea only — while
+Task 1/Task 2 essays live in separate textareas behind `_getEssayText()`
+(the multi-mode refactor updated every caller except this one). Now uses
+`_getEssayText()`/`_getEssayTopic()`; topic renders bold above the full
+essay text. Delete: trash button on each Essay History card, two-tap
+confirmation (arms to "Sure?" for 3s, second tap deletes), deletes the
+`essay_history` row via a new `users_delete_own` RLS policy (delete-own
+didn't exist), then *re-fetches from the server* rather than trusting an
+optimistic UI removal. *Verified live*: armed state blocks single-click,
+delete drops server-side count 6→5.
+
+**4d — slowness.** Findings and fixes: (1) `cdn.jsdelivr.net` had no
+preconnect despite serving two parse/render-blocking resources (Tabler CSS
++ Supabase JS) — added preconnects for it and the Supabase API origin,
+cutting connection setup off the critical path on first load. (2)
+`show('materials')` ran BOTH role renderers on every visit — now gated to
+the active role. (3) Student chat refetched its full 300-row history on
+every screen visit — now only on first open per session; revisits render
+from the in-memory log and let the 8s poll pick up anything newer. The
+teacher-side chat, roster, and materials fetches were already cached/
+parallelized from Round 2 (verified, left alone).
+
 ## Round 3, P0 — Vocabulary RLS fix + structural end to the demo-identity bug class
 
 **Section 2 (vocabulary saves blocked by RLS) — root cause found, fixed,
