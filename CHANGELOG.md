@@ -3,6 +3,64 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Round 3 §11 — security audit (across all tables, old and new) + mobile parity
+
+Audited every table's RLS by dumping all policies and testing the risky ones
+from a real low-privilege student session (not just reading definitions).
+**Two genuine holes found in pre-existing tables and fixed:**
+- **`messages` had `ALL / true / true` for every authenticated user** — any
+  student could read *every* group's private teacher↔student threads and
+  UPDATE/DELETE anyone's messages. Replaced with scoped policies: students
+  read their own + their group's teacher messages; teachers read all; insert
+  only as yourself with a matching role (a student can't post as a teacher);
+  no client UPDATE/DELETE (chat history is immutable). *Verified*: student
+  reading another group → 0 rows; impersonating teacher on insert → 403;
+  editing a teacher message → 0 rows affected.
+- **`homework_submissions` let a student UPDATE their own row unrestricted**
+  — including `grade`/`graded_by`, i.e. self-grading via direct REST. Split
+  into student-update-only-while-ungraded (can't touch grade columns) and
+  teacher-full-update. *Verified*: student PATCH setting `grade:5` → 0 rows.
+
+Everything else checked out: profiles/lessons/vocabulary/grammar/materials/
+schedule/announcements/dictation/speaking all had correct read-open /
+teacher-or-owner-write policies; `student_vocab_*` is strictly own-rows-only
+(verified a student can't read another's My Words). RLS is ON for every
+public table.
+
+**Secrets:** grepped all shipped files — the only key present is the
+Supabase *anon* key (confirmed `role:anon` in the JWT payload), which is
+designed to be public. No service-role key, no AI keys anywhere client-side
+(all AI still routes through the Render proxy). The admin service operations
+use SECURITY DEFINER Postgres functions — no privileged key exists in any
+environment, not even the server.
+
+**XSS:** scanned every `${…}` interpolation into `innerHTML` for
+user-typed fields. Two real sinks fixed (DB-lesson breadcrumb title and
+vocab-preview chips — teacher-typed content rendered raw); hardened
+leaderboard/classroom name interpolations too. Everything else already used
+`escHtml`/`_pEscHtml`. The marketing site's i18n uses `textContent`, so
+translations can never inject markup.
+
+**Error handling:** 19 user-facing toasts were leaking raw
+`error.message`/stack detail — rewritten to a generic "… — please try
+again" for the user with the real detail sent to `console.error`. (The
+admin RPC validation messages are kept verbatim — they're intentional,
+actionable guidance for the admin, not internal leakage.)
+
+**Payments:** confirmed the payment flow stores only a numeric paid-amount
+status (`payState.paid`) in localStorage — no card numbers, CVV, or any
+sensitive payment data is collected or stored anywhere. Safe as-is.
+
+**Dependencies:** Supabase-JS 2.74.0 and Tabler Icons 2.47.0 (both current,
+non-deprecated). No new runtime dependencies added this round.
+
+**Mobile parity (§8):** measured horizontal overflow at 375px on every
+new/touched screen — dictation, speaking, vocab, My Words, schedule, chat
+(both roles), teacher dashboard, essay history, and the full marketing site
+— **all zero overflow**. Fixed one real issue found along the way: the
+marketing header overflowed on phones (burger pushed off-screen); slimmed it
+and moved the login button into the burger menu ≤600px.
+
 ## Round 3, P1 feature work (5a–5d) — all verified live
 
 **5a — Listen & Type: real speed control + explicit difficulty choice.**

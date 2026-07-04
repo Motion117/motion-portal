@@ -3487,7 +3487,7 @@ async function portalCheckEssay() {
     saveEssayHistory('grammar', text, data);
   } catch(err) {
     console.error('Essay check failed:', err);
-    showToast('Check failed: ' + err.message);
+    console.error('[Motion] Check failed:', err.message),showToast('Check failed — please try again');
   }
 
   btn.disabled = false;
@@ -3555,7 +3555,7 @@ async function portalGetBandScore() {
     saveEssayHistory('band', text, data);
   } catch(err) {
     console.error('Band score failed:', err);
-    showToast('Band score failed: ' + err.message);
+    console.error('[Motion] Band score failed:', err.message),showToast('Band score failed — please try again');
   }
 
   btn.disabled = false;
@@ -5424,7 +5424,7 @@ async function setGradeT(sid,val){
   const lsel=document.getElementById('lesson-select');
   const label=lsel&&lsel.options[lsel.selectedIndex]?lsel.options[lsel.selectedIndex].text:activeLesson;
   const{error}=await _sb.from('grade_events').insert({student_id:sid,skill,value:Number(val),label,source:'manual',created_by:session.uid});
-  if(error){showToast('Grade saved, but failed to record in history: '+error.message);return;}
+  if(error){console.error('[Motion] Grade saved, but failed to record in history:', error.message),showToast('Grade saved, but failed to record in history — please try again');return;}
   showToast('Grade '+val+' saved for '+studentName+' ✅');
 }
 function toggleNoteRow(init){
@@ -5455,7 +5455,7 @@ async function addHomeworkT(){
   if(!t){showToast('Enter a homework title');return;}
   if(!_sb||!session?.uid){showToast('Cannot add homework right now — check your connection');return;}
   const{error}=await _sb.from('homework').insert({group_name:tGroup,title:t,instructions,skill:skill||null,due_date:due||null,created_by:session.uid});
-  if(error){showToast('Failed to add homework: '+error.message);return;}
+  if(error){console.error('[Motion] Failed to add homework:', error.message),showToast('Failed to add homework — please try again');return;}
   document.getElementById('td-hw-title').value='';
   if(document.getElementById('td-hw-instructions'))document.getElementById('td-hw-instructions').value='';
   if(document.getElementById('td-hw-skill'))document.getElementById('td-hw-skill').value='';
@@ -5466,7 +5466,7 @@ async function addHomeworkT(){
 async function delHomeworkT(hwId){
   if(!_sb)return;
   const{error}=await _sb.from('homework').delete().eq('id',hwId);
-  if(error){showToast('Delete failed: '+error.message);return;}
+  if(error){console.error('[Motion] Delete failed:', error.message),showToast('Delete failed — please try again');return;}
   renderTeacherDash();
 }
 async function openHwGradeModal(subId,studentName){
@@ -5509,7 +5509,7 @@ async function saveHwGrade(subId){
   const feedback=(document.getElementById('hw-feedback-in').value||'').trim();
   if(!_sb||!session?.uid)return;
   const{error}=await _sb.from('homework_submissions').update({status:'graded',grade:grade||null,feedback_text:feedback||null,graded_at:new Date().toISOString(),graded_by:session.uid}).eq('id',subId);
-  if(error){showToast('Save failed: '+error.message);return;}
+  if(error){console.error('[Motion] Save failed:', error.message),showToast('Save failed — please try again');return;}
   if(grade){
     const{data:sub}=await _sb.from('homework_submissions').select('student_id, homework:homework_id(skill,title)').eq('id',subId).maybeSingle();
     const hw=sub?.homework;
@@ -5578,7 +5578,7 @@ async function saveEssayToHistory(){
     showToast('Saved to your Essay History ✅');
     if(btn){btn.innerHTML='<i class="ti ti-check"></i> Saved ✅';setTimeout(()=>{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Save to History';}},3000);}
   }catch(e){
-    showToast('Save failed: '+e.message);
+    console.error('[Motion] Save failed:', e.message),showToast('Save failed — please try again');
     if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Save to History';}
   }
 }
@@ -5610,7 +5610,7 @@ async function submitEssayToTeacher(){
     band_json:_portalBandData||null
   });
   if(error){
-    showToast('Submit failed: '+error.message);
+    console.error('[Motion] Submit failed:', error.message),showToast('Submit failed — please try again');
     if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Submit to Teacher';}
     return;
   }
@@ -5920,7 +5920,7 @@ async function cmsSaveLesson(){
   if(btn)btn.disabled=true;
   const {data:savedRows,error}=await _sb.from('lessons').insert({level,title,icon,description:desc}).select('id');
   if(btn)btn.disabled=false;
-  if(error){showToast('Error: '+error.message);return;}
+  if(error){console.error('[Motion] Error:', error.message),showToast('Error — please try again');return;}
   _dbLessons={};
   showToast('Lesson saved! ✨ Enhancing with AI…');
   document.getElementById('cms-lesson-title').value='';
@@ -6029,7 +6029,7 @@ async function cmsSaveVocab(){
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm" style="margin-right:5px"></span>Saving…';}
   const {error}=await _sb.from('vocabulary').insert(rows);
   if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-cloud-upload" style="margin-right:5px;vertical-align:-1px"></i>Save All to Supabase';}
-  if(error){showToast('Error: '+error.message);return;}
+  if(error){console.error('[Motion] Error:', error.message),showToast('Error — please try again');return;}
   _dbVocab={};
   showToast(rows.length+' word'+(rows.length>1?'s':'')+' saved!');
   const staging=document.getElementById('cms-vocab-staging');
@@ -6099,7 +6099,7 @@ async function cmsAutoGenerateVocab(idx){
     if(json.definition){const el=document.getElementById('cms-vocab-def-'+idx);if(el)el.value=json.definition;}
     if(json.example){const el=document.getElementById('cms-vocab-ex-'+idx);if(el)el.value=json.example;}
     showToast('AI filled in the details ✨');
-  }catch(e){showToast('Network error: '+e.message);}
+  }catch(e){console.error('[Motion] Network error:', e.message),showToast('Network error — please try again');}
   finally{btn.disabled=false;btn.innerHTML=origHTML;}
 }
 async function cmsAISuggestWord(){
@@ -6131,7 +6131,7 @@ async function cmsAISuggestWord(){
       cmsAddWordBlock({word:json.word,phonetic:json.phonetic,definition:json.definition,example:json.example});
     }
     showToast('AI suggested: '+(json.word||'')+' ✨');
-  }catch(e){showToast('Network error: '+e.message);}
+  }catch(e){console.error('[Motion] Network error:', e.message),showToast('Network error — please try again');}
   finally{btn.disabled=false;btn.innerHTML=origHTML;}
 }
 function cmsLoadLessonDropdown(){
@@ -6196,7 +6196,7 @@ async function generateGrammarDrills() {
     if (preview) preview.style.display = 'block';
     showToast(`Generated ${(data.drills||[]).length} drills ✅`);
   } catch(err) {
-    showToast('Generation failed: ' + err.message);
+    console.error('[Motion] Generation failed:', err.message),showToast('Generation failed — please try again');
   }
 
   btn.disabled = false;
@@ -6220,7 +6220,7 @@ async function saveDrillsToSupabase() {
     explanation:d.explanation
   }));
   const { error } = await _sb.from('grammar_drills').insert(rows);
-  if (error) { showToast('Save failed: ' + error.message); }
+  if (error) { console.error('[Motion] Save failed:', error.message),showToast('Save failed — please try again'); }
   else { showToast(`Saved ${rows.length} drills to Supabase ✅`); _pendingDrills = null; document.getElementById('drill-preview').style.display='none'; draftClear('drill-topic'); }
   btn.disabled = false;
   btn.innerHTML = '<i class="ti ti-cloud-upload" style="margin-right:4px;vertical-align:-1px"></i>Save to Supabase';
@@ -6464,7 +6464,7 @@ async function submitHw(hwId,e){
   if(!_sb||!session?.uid){showToast('Cannot submit right now — check your connection');return;}
   const text=ta.value.trim();
   const{error}=await _sb.from('homework_submissions').insert({homework_id:hwId,student_id:session.uid,submitted_text:text});
-  if(error){showToast('Submit failed: '+error.message);return;}
+  if(error){console.error('[Motion] Submit failed:', error.message),showToast('Submit failed — please try again');return;}
   draftClear('hw-text-'+hwId);
   showToast('Submitted! Your teacher will check it soon ✅');
   buildHw();
@@ -6587,7 +6587,7 @@ function buildLB(){
       <div class="lb-zone ${zone}" title="${zone==='promo'?'Promotion zone':zone==='drop'?'Relegation zone':'Safe'}"></div>
       <div class="lb-pos${s.pos<=3?' top':''}">${s.pos}</div>
       <div class="lb-ava ${s.me?'me':'ot'}">${s.init}</div>
-      <div class="lb-name">${s.name}${s.me?'<span class="lb-ytag">You</span>':''}</div>
+      <div class="lb-name">${escHtml(s.name)}${s.me?'<span class="lb-ytag">You</span>':''}</div>
       <div class="lb-bw"><div class="lb-bf${s.me?' me':''}" style="width:0%" data-w="${Math.round(s.pts/520*100)}%"></div></div>
       <div class="lb-pts">${s.pts}</div>
     </div>`;}).join('');
@@ -6723,8 +6723,8 @@ function renderLessonScreen(){
   if(subEl)subEl.textContent=(ld.levelName?(ld.levelName+' ('+ld.levelAbbr+') · '):'')+ld.title;
   if(vcEl)vcEl.textContent=ld.vocabLen+' words';
   if(gcEl)gcEl.textContent=ld.grammarLen+' questions';
-  if(breadEl)breadEl.innerHTML=`<span onclick="show('levels')" style="cursor:pointer;color:var(--acc)">Levels</span>`+(ld.levelName?` › <span onclick="goBackToLessons()" style="cursor:pointer;color:var(--acc)">${ld.levelName}</span>`:'')+` › ${ld.title}`;
-  if(prevEl)prevEl.innerHTML=ld.vocabPreview.map(v=>`<div class="lesson-vocab-chip"><b>${v.word}</b> <span>${v.tr}</span></div>`).join('');
+  if(breadEl)breadEl.innerHTML=`<span onclick="show('levels')" style="cursor:pointer;color:var(--acc)">Levels</span>`+(ld.levelName?` › <span onclick="goBackToLessons()" style="cursor:pointer;color:var(--acc)">${ld.levelName}</span>`:'')+` › ${escHtml(ld.title)}`;
+  if(prevEl)prevEl.innerHTML=ld.vocabPreview.map(v=>`<div class="lesson-vocab-chip"><b>${escHtml(v.word)}</b> <span>${escHtml(v.tr)}</span></div>`).join('');
 }
 function startLessonVocab(){
   vocabIndex=0;vocabFlipped=false;
@@ -7481,7 +7481,7 @@ async function askAI(){
   }catch(err){
     const t=document.getElementById('ai-thinking');if(t)t.remove();
     aiLoading=false;btn.disabled=false;
-    showToast('AI unavailable: '+err.message);
+    console.error('[Motion] AI unavailable:', err.message),showToast('AI unavailable — please try again');
   }
 }
 
@@ -7644,7 +7644,7 @@ async function sendTeacherMsg(){
     target_group:activeTChatStudent.group,
     text:msg
   });
-  if(error){showToast('Send failed: '+error.message);return;}
+  if(error){console.error('[Motion] Send failed:', error.message),showToast('Send failed — please try again');return;}
   await fetchGroupMessages(activeTChatStudent.group);
   renderTChatMessages();
   renderTChatStudentList();
@@ -7738,7 +7738,7 @@ async function saveMaterial(){
     await renderStudentMaterials();
     showToast('Material published 📂');
   }catch(e){
-    showToast('Publish failed: '+e.message);
+    console.error('[Motion] Publish failed:', e.message),showToast('Publish failed — please try again');
   }
   if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Publish';}
 }
@@ -7749,7 +7749,7 @@ async function deleteMaterial(id){
   const paths=(mat?.material_files||[]).map(f=>f.file_path);
   if(paths.length)await _sb.storage.from(MATERIALS_BUCKET).remove(paths);
   const{error}=await _sb.from('materials').delete().eq('id',id);
-  if(error){showToast('Delete failed: '+error.message);return;}
+  if(error){console.error('[Motion] Delete failed:', error.message),showToast('Delete failed — please try again');return;}
   await loadMaterials(true);
   await renderTeacherMaterials();
   await renderStudentMaterials();
@@ -8091,7 +8091,7 @@ function buildClassroom(){
         <div class="cls-ava" style="background:${s.color};color:${s.tc}">${s.init}</div>
         <div class="cls-status ${s.online?'online':'offline'}"></div>
       </div>
-      <div class="cls-name">${s.name}${s.me?' (you)':''}</div>
+      <div class="cls-name">${escHtml(s.name)}${s.me?' (you)':''}</div>
       <div class="cls-streak">${s.streak>0?`🔥 ${s.streak} days`:'no streak'}</div>
       ${!s.me?`<div class="cls-online-lbl">${s.online?'<span style="color:var(--green)">● online</span>':'offline'}</div>`:''}
     </div>`).join('');
