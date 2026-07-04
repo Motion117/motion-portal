@@ -3,6 +3,45 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Post-Round-2 — "Chat with teacher" restyled to match the AI Assistant widget
+
+User-requested visual change, not a bug fix. The student's "Chat with teacher"
+screen used to be a plain `.card` with an inline-styled header — visually
+inconsistent with the AI Assistant screen's dedicated widget treatment
+(gradient card, banded header with a glowing gradient avatar, bottom input
+bar with a border-top separator).
+
+- Replaced the ad-hoc inline-styled header with dedicated classes
+  (`.chat-header`, `.chat-header-ava`, `.chat-header-name`,
+  `.chat-header-status`, `.chat-status-dot`) mirroring `.ai-header`'s
+  structure exactly, including the same `float-anim` idle animation on the
+  avatar.
+- `.chat-wrap` now uses the same gradient background / rounded-18px /
+  drop-shadow treatment as `.ai-wrap`, instead of the generic `.card` class.
+- `.chat-input-area` (a single bordered pill containing both input and
+  button) was replaced with `.chat-input-row`, matching `.ai-input-row`'s
+  bottom-bar-with-border-top layout.
+- Bubble colors now follow the same semantic pattern as the AI widget: the
+  "other party" (teacher, from a student's view) gets a gradient avatar and
+  a plain bordered bubble — same as the AI bot; "me" gets a plain avatar and
+  a solid accent→purple gradient bubble with white text — same as the AI
+  widget's user bubble. Rescoped the existing light-theme text-color
+  override (`.chat-bubble` → `.chat-msg.other .chat-bubble`) so it doesn't
+  force dark text onto the new white-on-gradient "mine" bubble in light mode.
+- `.chat-ava`, `.chat-bubble`, `.chat-in`, and `.chat-send` are shared
+  classes also used by the teacher's own per-student chat view (`tchat-*`
+  layout) — confirmed via live testing that the teacher's message bubbles,
+  avatars, and input picked up the same visual language automatically, with
+  no changes needed to the teacher's sidebar/layout markup itself (that
+  multi-conversation "inbox" structure is intentionally different from the
+  single-contact AI widget and wasn't part of this change).
+
+*Verified live* with Playwright: screenshotted the restyled Chat screen
+side-by-side with the AI Assistant screen (visually near-identical treatment
+now), and separately confirmed the teacher's Student Messages view still
+renders correctly — sent/received bubbles, avatars, and the input bar all
+match the new look with no console errors.
+
 ## Round 2 — Final QA pass and wrap-up report
 
 All 12 in-scope sections (P0 through P3) are DONE and verified live. Ran a
