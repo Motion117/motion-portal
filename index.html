@@ -1557,29 +1557,34 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   --ld-ease-out:cubic-bezier(0.16,1,0.3,1);
   --ld-serif:'Playfair Display',Georgia,serif;
   --ld-sans:'Inter',-apple-system,sans-serif;
-  --ld-text-hero:clamp(2.9rem,1rem + 8.5vw,7.5rem);
-  --ld-text-h2:clamp(1.9rem,1rem + 3.2vw,3.4rem);
-  --ld-space-section:clamp(4.5rem,3rem + 6vw,9.5rem);
+  --ld-text-hero:clamp(3rem,1rem + 9vw,8.2rem);
+  --ld-text-h2:clamp(2rem,1rem + 3.4vw,3.6rem);
+  --ld-space-section:clamp(4.5rem,3rem + 6vw,10rem);
   --ld-maxw:1180px;
   position:fixed;inset:0;z-index:4000;display:none;
-  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
   background:var(--ld-bg);color:var(--ld-ink);font-family:var(--ld-sans);
   font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 #landing-page.open{display:block;}
+/* Palette discipline: the brand mark is pure ink on paper (black/white serif
+   wordmark + arrow). The landing commits to exactly that — no accent color
+   imported from the app's purple UI palette. Emphasis is carried by the serif
+   italics and the ink itself. */
 html[data-theme="light"] #landing-page{
-  --ld-bg:#faf8f3; --ld-bg-soft:#f1eee6; --ld-bg-card:#ffffff;
-  --ld-ink:#111110; --ld-ink-2:#54524c; --ld-ink-3:#8f8c84;
-  --ld-line:rgba(17,17,16,0.14); --ld-line-soft:rgba(17,17,16,0.07);
-  --ld-accent:#5b4bd4; --ld-paper-invert:#0a0a0a; --ld-ink-invert:#f4f1ea;
+  --ld-bg:#f7f4ed; --ld-bg-soft:#efebe1; --ld-bg-card:#fffdf8;
+  --ld-ink:#101010; --ld-ink-2:#4e4c47; --ld-ink-3:#8c897f;
+  --ld-line:rgba(16,16,16,0.16); --ld-line-soft:rgba(16,16,16,0.08);
+  --ld-paper-invert:#0a0a0a; --ld-ink-invert:#f4f1ea;
 }
 html:not([data-theme="light"]) #landing-page{
-  --ld-bg:#060606; --ld-bg-soft:#0d0d0d; --ld-bg-card:#111111;
-  --ld-ink:#f4f1ea; --ld-ink-2:#b9b5ab; --ld-ink-3:#6f6c65;
-  --ld-line:rgba(244,241,234,0.12); --ld-line-soft:rgba(244,241,234,0.07);
-  --ld-accent:#8b7cff; --ld-paper-invert:#f4f1ea; --ld-ink-invert:#0a0a0a;
+  --ld-bg:#070707; --ld-bg-soft:#0e0e0d; --ld-bg-card:#121211;
+  --ld-ink:#f4f1ea; --ld-ink-2:#bab6ac; --ld-ink-3:#726f67;
+  --ld-line:rgba(244,241,234,0.14); --ld-line-soft:rgba(244,241,234,0.07);
+  --ld-paper-invert:#f4f1ea; --ld-ink-invert:#0d0d0c;
 }
-#landing-page ::selection{background:var(--ld-accent);color:#fff;}
+#landing-page ::selection{background:var(--ld-ink);color:var(--ld-bg);}
+#landing-page a:focus-visible,#landing-page button:focus-visible{outline:2px solid var(--ld-ink);outline-offset:3px;}
 #landing-page .wrap{max-width:var(--ld-maxw);margin:0 auto;padding:0 clamp(20px,4vw,44px);}
 #landing-page h1,#landing-page h2,#landing-page h3{font-family:var(--ld-serif);font-weight:500;line-height:1.08;letter-spacing:-0.01em;}
 #landing-page .eyebrow{
@@ -1633,17 +1638,13 @@ html:not([data-theme="light"]) #landing-page{
   position:relative;white-space:nowrap;cursor:pointer;
 }
 #landing-page .ld-login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px color-mix(in srgb,var(--ld-ink) 25%,transparent);}
-#landing-page .ld-beta-tag{
-  font-size:8.5px;font-weight:700;letter-spacing:0.08em;padding:2px 6px;
-  border-radius:20px;background:var(--ld-accent);color:#fff;text-transform:uppercase;
-}
 
 /* Hero */
-#landing-page .ld-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px;position:relative;}
-#landing-page .ld-hero h1{font-size:var(--ld-text-hero);font-weight:500;max-width:11ch;}
+#landing-page .ld-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:96px;position:relative;}
+#landing-page .ld-hero h1{font-size:var(--ld-text-hero);font-weight:500;max-width:12ch;letter-spacing:-0.02em;}
 #landing-page .ld-hero h1 em{font-style:italic;font-weight:400;}
-#landing-page .ld-hero-arrow{display:inline-block;vertical-align:baseline;margin-left:0.05em;}
-#landing-page .ld-hero-arrow svg{width:clamp(60px,9vw,140px);height:auto;overflow:visible;}
+#landing-page .ld-hero-arrow{display:inline-block;vertical-align:baseline;margin-left:0.06em;animation:ldFloat 7s ease-in-out 2.6s infinite;}
+#landing-page .ld-hero-arrow svg{width:clamp(60px,9vw,150px);height:auto;overflow:visible;}
 #landing-page .ld-hero-arrow path{
   stroke:var(--ld-ink);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:400;stroke-dashoffset:400;animation:ldDraw 1.4s .7s var(--ld-ease-out) forwards;
@@ -1651,6 +1652,7 @@ html:not([data-theme="light"]) #landing-page{
 #landing-page .ld-hero-arrow polygon{fill:var(--ld-ink);opacity:0;animation:ldFadein .4s 1.75s forwards;}
 @keyframes ldDraw{to{stroke-dashoffset:0;}}
 @keyframes ldFadein{to{opacity:1;}}
+@keyframes ldFloat{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-7px) rotate(1.4deg);}}
 #landing-page .ld-hero-sub{margin-top:34px;font-size:clamp(15px,1.5vw,19px);color:var(--ld-ink-2);max-width:46ch;line-height:1.7;}
 #landing-page .ld-hero-cta-row{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;align-items:center;}
 #landing-page .ld-btn-primary{
@@ -1684,13 +1686,31 @@ html:not([data-theme="light"]) #landing-page{
 
 /* About / why */
 #landing-page .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--ld-line-soft);border:1px solid var(--ld-line-soft);}
-#landing-page .why-card{background:var(--ld-bg);padding:clamp(24px,3vw,40px);transition:background .3s;}
+#landing-page .why-card{background:var(--ld-bg);padding:clamp(26px,3vw,42px);transition:background .3s;}
 #landing-page .why-card:hover{background:var(--ld-bg-soft);}
-#landing-page .why-num{font-family:var(--ld-serif);font-style:italic;font-size:15px;color:var(--ld-ink-3);margin-bottom:18px;}
-#landing-page .why-card h3{font-size:20px;margin-bottom:12px;}
-#landing-page .why-card p{font-size:14px;color:var(--ld-ink-2);line-height:1.7;}
+#landing-page .why-num{font-family:var(--ld-serif);font-style:italic;font-size:15px;color:var(--ld-ink-3);margin-bottom:20px;}
+#landing-page .why-card h3{font-size:22px;margin-bottom:12px;}
+#landing-page .why-card p{font-size:14.5px;color:var(--ld-ink-2);line-height:1.7;}
 
-/* Programs */
+/* Programs — the "ascent" chart: the brand arrow extended into the actual
+   course journey, drawn on scroll. This is the page's signature moment. */
+#landing-page .prog-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;}
+#landing-page .prog-chart{width:min(340px,30vw);flex-shrink:0;overflow:visible;margin-bottom:6px;}
+#landing-page .prog-chart .pc-line{
+  stroke:var(--ld-ink);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:920;stroke-dashoffset:920;transition:stroke-dashoffset 1.7s var(--ld-ease-out) .2s;
+}
+#landing-page .prog-chart .pc-head{fill:var(--ld-ink);opacity:0;transition:opacity .4s ease 1.7s;}
+#landing-page .prog-chart circle{fill:var(--ld-bg);stroke:var(--ld-ink);stroke-width:3;opacity:0;transition:opacity .45s ease;}
+#landing-page .prog-chart text{font-family:var(--ld-serif);font-style:italic;font-size:17px;fill:var(--ld-ink-3);opacity:0;transition:opacity .45s ease;}
+#landing-page .prog-chart circle:nth-of-type(1),#landing-page .prog-chart text:nth-of-type(1){transition-delay:.35s;}
+#landing-page .prog-chart circle:nth-of-type(2),#landing-page .prog-chart text:nth-of-type(2){transition-delay:.62s;}
+#landing-page .prog-chart circle:nth-of-type(3),#landing-page .prog-chart text:nth-of-type(3){transition-delay:.9s;}
+#landing-page .prog-chart circle:nth-of-type(4),#landing-page .prog-chart text:nth-of-type(4){transition-delay:1.18s;}
+#landing-page .prog-chart circle:nth-of-type(5),#landing-page .prog-chart text:nth-of-type(5){transition-delay:1.45s;}
+#landing-page .rv.in .pc-line{stroke-dashoffset:0;}
+#landing-page .rv.in .pc-head{opacity:1;}
+#landing-page .rv.in .prog-chart circle,#landing-page .rv.in .prog-chart text{opacity:1;}
 #landing-page .prog-row{
   display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,44px);
   align-items:center;padding:clamp(20px,2.6vw,30px) 8px;border-bottom:1px solid var(--ld-line-soft);
@@ -1714,18 +1734,36 @@ html:not([data-theme="light"]) #landing-page{
 #landing-page .portal-feats{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:13px;}
 #landing-page .portal-feats li{display:flex;gap:12px;font-size:14.5px;align-items:baseline;}
 #landing-page .portal-feats li::before{content:'↗';font-weight:700;flex-shrink:0;}
-#landing-page .portal-shot{
-  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 14%,transparent);
-  border-radius:14px;overflow:hidden;background:#0c0c0c;
-  box-shadow:0 30px 80px -20px rgba(0,0,0,0.45);aspect-ratio:16/10.5;position:relative;
+/* Essay-check mock — a stylised card showing the portal's signature feature
+   (AI essay feedback with an IELTS band). Monochrome on purpose: it lives on
+   the inverted band and stays inside the ink/paper palette. */
+#landing-page .essay-mock{
+  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 16%,transparent);
+  border-radius:10px;padding:clamp(22px,2.6vw,34px);
+  background:color-mix(in srgb,var(--ld-ink-invert) 5%,transparent);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,0.4);
 }
-#landing-page .portal-shot .fake-ui{position:absolute;inset:0;padding:9%;display:flex;flex-direction:column;gap:8%;}
-#landing-page .fake-bar{height:7%;border-radius:6px;background:rgba(244,241,234,0.1);}
-#landing-page .fake-bar.w60{width:60%;}
-#landing-page .fake-bar.w80{width:80%;background:rgba(139,124,255,0.35);}
-#landing-page .fake-bar.w45{width:45%;}
-#landing-page .fake-cards{display:flex;gap:6%;height:34%;}
-#landing-page .fake-cards div{flex:1;border-radius:8px;background:rgba(244,241,234,0.07);border:1px solid rgba(244,241,234,0.08);}
+#landing-page .em-head{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+#landing-page .em-chip{
+  font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 30%,transparent);
+  border-radius:100px;padding:5px 12px;
+}
+#landing-page .em-chip.solid{background:var(--ld-ink-invert);color:var(--ld-paper-invert);border-color:var(--ld-ink-invert);}
+#landing-page .em-text{font-family:var(--ld-serif);font-size:clamp(16px,1.6vw,19px);line-height:1.65;}
+#landing-page .em-text s{opacity:0.42;text-decoration-thickness:2px;}
+#landing-page .em-fix{font-style:italic;border-bottom:2px solid var(--ld-ink-invert);padding-bottom:1px;}
+#landing-page .em-band{display:flex;align-items:baseline;gap:14px;margin-top:26px;}
+#landing-page .em-band-num{font-family:var(--ld-serif);font-size:clamp(42px,4.6vw,58px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums;}
+#landing-page .em-band-lbl{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:color-mix(in srgb,var(--ld-ink-invert) 55%,transparent);}
+#landing-page .em-band svg{width:34px;height:auto;overflow:visible;align-self:center;}
+#landing-page .em-band svg path{stroke:var(--ld-ink-invert);stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+#landing-page .em-bars{margin-top:24px;display:flex;flex-direction:column;gap:13px;}
+#landing-page .em-bar{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;}
+#landing-page .em-bar span{font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:color-mix(in srgb,var(--ld-ink-invert) 60%,transparent);}
+#landing-page .em-bar .tr{height:3px;background:color-mix(in srgb,var(--ld-ink-invert) 14%,transparent);border-radius:2px;overflow:hidden;}
+#landing-page .em-bar .tr i{display:block;height:100%;width:0;background:var(--ld-ink-invert);transition:width 1.1s var(--ld-ease-out) .45s;}
+#landing-page .rv.in .em-bar .tr i{width:var(--w);}
 
 /* Testimonials */
 #landing-page .tst-note{
@@ -1743,6 +1781,20 @@ html:not([data-theme="light"]) #landing-page{
 #landing-page .ld-enroll{text-align:center;}
 #landing-page .ld-enroll h2{font-size:clamp(2.2rem,1rem + 5vw,4.6rem);max-width:18ch;margin:0 auto;}
 #landing-page .ld-enroll .ld-hero-sub{margin-left:auto;margin-right:auto;text-align:center;}
+#landing-page .enr-em{position:relative;display:inline-block;font-style:italic;}
+#landing-page .enr-line{position:absolute;left:-2%;bottom:-0.16em;width:104%;height:auto;overflow:visible;pointer-events:none;}
+#landing-page .enr-line path{
+  stroke:var(--ld-ink);stroke-width:4;fill:none;stroke-linecap:round;
+  stroke-dasharray:620;stroke-dashoffset:620;transition:stroke-dashoffset 1.1s var(--ld-ease-out) .4s;
+}
+#landing-page .rv.in .enr-line path{stroke-dashoffset:0;}
+#landing-page .enr-steps{display:flex;justify-content:center;gap:clamp(20px,4vw,56px);margin-top:48px;flex-wrap:wrap;text-align:left;}
+#landing-page .enr-step{display:flex;gap:12px;align-items:baseline;max-width:240px;font-size:13.5px;color:var(--ld-ink-2);line-height:1.6;}
+#landing-page .es-n{font-family:var(--ld-serif);font-style:italic;color:var(--ld-ink-3);font-size:15px;flex-shrink:0;}
+#landing-page .enr-price{margin-top:46px;}
+#landing-page .price-num{font-family:var(--ld-serif);font-size:clamp(30px,4vw,46px);font-weight:600;letter-spacing:0.01em;}
+#landing-page .price-cur{font-size:14px;color:var(--ld-ink-2);margin-left:10px;}
+#landing-page .price-note{display:block;font-size:11.5px;color:var(--ld-ink-3);margin-top:8px;letter-spacing:0.04em;}
 #landing-page .contact-line{margin-top:44px;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap;font-size:14px;color:var(--ld-ink-2);}
 #landing-page .contact-line a{color:var(--ld-ink);text-decoration:none;border-bottom:1px solid var(--ld-line);padding-bottom:2px;transition:border-color .2s;}
 #landing-page .contact-line a:hover{border-color:var(--ld-ink);}
@@ -1757,13 +1809,18 @@ html:not([data-theme="light"]) #landing-page{
 #landing-page .foot-links a,#landing-page .foot-links button{font-size:12.5px;color:var(--ld-ink-2);text-decoration:none;transition:color .2s;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
 #landing-page .foot-links a:hover,#landing-page .foot-links button:hover{color:var(--ld-ink);}
 
-/* Reveal on scroll */
-#landing-page .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ld-ease-out),transform .8s var(--ld-ease-out);}
+/* Reveal on scroll (--rvd = per-element stagger delay) */
+#landing-page .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ld-ease-out) var(--rvd,0s),transform .8s var(--ld-ease-out) var(--rvd,0s);}
 #landing-page .rv.in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){
   #landing-page .rv{opacity:1;transform:none;transition:none;}
+  #landing-page .ld-hero-arrow{animation:none;}
   #landing-page .ld-hero-arrow path{animation:none;stroke-dashoffset:0;}
   #landing-page .ld-hero-arrow polygon{animation:none;opacity:1;}
+  #landing-page .prog-chart .pc-line{transition:none;stroke-dashoffset:0;}
+  #landing-page .prog-chart .pc-head,#landing-page .prog-chart circle,#landing-page .prog-chart text{transition:none;opacity:1;}
+  #landing-page .enr-line path{transition:none;stroke-dashoffset:0;}
+  #landing-page .em-bar .tr i{transition:none;width:var(--w);}
 }
 
 /* Mobile */
@@ -1783,8 +1840,9 @@ html:not([data-theme="light"]) #landing-page{
   #landing-page .portal-grid{grid-template-columns:1fr;}
   #landing-page .prog-row{grid-template-columns:auto 1fr;}
   #landing-page .prog-arrow{display:none;}
-  #landing-page .ld-login-btn span.login-label{display:none;}
-  #landing-page .ld-login-btn{padding:9px 13px;}
+  #landing-page .prog-chart{display:none;}
+  #landing-page .ld-hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  #landing-page .ld-hero-meta div{min-width:0;}
 }
 @media (max-width:600px){
   #landing-page .header-in{height:64px;gap:8px;}
@@ -1810,15 +1868,14 @@ html:not([data-theme="light"]) #landing-page{
         </g>
       </svg>
     </button>
-    <nav class="ld-mainnav" id="ld-mainnav">
-      <a href="#ld-about" data-i18n="nav_about"></a>
-      <a href="#ld-programs" data-i18n="nav_programs"></a>
-      <a href="#ld-portal" data-i18n="nav_portal"></a>
-      <a href="#ld-reviews" data-i18n="nav_reviews"></a>
-      <a href="#ld-enroll" data-i18n="nav_contact"></a>
+    <nav class="ld-mainnav" id="ld-mainnav" aria-label="Main navigation">
+      <a href="#ld-about" data-i18n="nav_about">О центре</a>
+      <a href="#ld-programs" data-i18n="nav_programs">Программы</a>
+      <a href="#ld-portal" data-i18n="nav_portal">Портал</a>
+      <a href="#ld-reviews" data-i18n="nav_reviews">Отзывы</a>
+      <a href="#ld-enroll" data-i18n="nav_contact">Контакты</a>
       <a class="ld-login-btn in-menu" href="#" onclick="showLogin();return false;">
-        <span class="login-label" data-i18n="login_btn"></span>
-        <span class="ld-beta-tag">beta</span>
+        <span class="login-label" data-i18n="login_btn">Войти</span>
       </a>
     </nav>
     <div class="header-actions">
@@ -1827,12 +1884,11 @@ html:not([data-theme="light"]) #landing-page{
         <button type="button" class="ld-lang-btn" data-lang="en" onclick="ldSetLang('en')">EN</button>
         <button type="button" class="ld-lang-btn" data-lang="uz" onclick="ldSetLang('uz')">UZ</button>
       </div>
-      <div class="icon-btn ld-theme-btn" onclick="toggleTheme()" aria-label="Toggle theme"><i class="ti ti-moon"></i></div>
+      <button type="button" class="icon-btn ld-theme-btn" onclick="toggleTheme()" aria-label="Toggle theme"><i class="ti ti-moon"></i></button>
       <a class="ld-login-btn in-header" href="#" id="ld-login-link" onclick="showLogin();return false;">
-        <span class="login-label" data-i18n="login_btn"></span>
-        <span class="ld-beta-tag">beta</span>
+        <span class="login-label" data-i18n="login_btn">Войти</span>
       </a>
-      <button type="button" class="ld-burger" onclick="document.getElementById('ld-mainnav').classList.toggle('open')" aria-label="Menu">☰</button>
+      <button type="button" class="ld-burger" aria-expanded="false" onclick="const n=document.getElementById('ld-mainnav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))" aria-label="Menu">☰</button>
     </div>
   </div>
 </header>
@@ -1840,20 +1896,20 @@ html:not([data-theme="light"]) #landing-page{
 <main id="ld-top">
   <section class="ld-hero">
     <div class="wrap">
-      <div class="eyebrow rv" data-i18n="hero_eyebrow"></div>
-      <h1 class="rv">
-        <span data-i18n="hero_line1"></span><br>
-        <em data-i18n="hero_line2"></em><span class="ld-hero-arrow"><svg viewBox="0 0 140 90"><path d="M6 80 L52 44 L74 60 L124 16"/><polygon points="112,8 134,6 132,28"/></svg></span>
+      <div class="eyebrow rv" data-i18n="hero_eyebrow">Языковой центр · Ташкент</div>
+      <h1 class="rv" style="--rvd:.08s">
+        <span data-i18n="hero_line1">Английский, который</span><br>
+        <em data-i18n="hero_line2">двигает вперёд</em><span class="ld-hero-arrow" aria-hidden="true"><svg viewBox="0 0 140 90"><path d="M6 80 L52 44 L74 60 L124 16"/><polygon points="112,8 134,6 132,28"/></svg></span>
       </h1>
-      <p class="ld-hero-sub rv" data-i18n="hero_sub"></p>
-      <div class="ld-hero-cta-row rv">
-        <a class="ld-btn-primary" href="#ld-enroll"><span data-i18n="hero_cta"></span><span class="arr">↗</span></a>
-        <a class="ld-btn-ghost" href="#ld-programs" data-i18n="hero_cta2"></a>
+      <p class="ld-hero-sub rv" style="--rvd:.18s" data-i18n="hero_sub">Пять уровней — от первого «hello» до уверенного C1 и подготовки к IELTS. Живые занятия в небольших группах и личный цифровой портал для каждого студента.</p>
+      <div class="ld-hero-cta-row rv" style="--rvd:.28s">
+        <a class="ld-btn-primary" href="#ld-enroll"><span data-i18n="hero_cta">Записаться на курс</span><span class="arr">↗</span></a>
+        <a class="ld-btn-ghost" href="#ld-programs" data-i18n="hero_cta2">Смотреть программы</a>
       </div>
-      <div class="ld-hero-meta rv">
-        <div><div class="n">A1–C1</div><div class="l" data-i18n="meta_levels"></div></div>
-        <div><div class="n">IELTS</div><div class="l" data-i18n="meta_ielts"></div></div>
-        <div><div class="n">24/7</div><div class="l" data-i18n="meta_portal"></div></div>
+      <div class="ld-hero-meta rv" style="--rvd:.4s">
+        <div><div class="n">A1–C1</div><div class="l" data-i18n="meta_levels">уровни обучения</div></div>
+        <div><div class="n">IELTS</div><div class="l" data-i18n="meta_ielts">подготовка к экзамену</div></div>
+        <div><div class="n">24/7</div><div class="l" data-i18n="meta_portal">портал студента</div></div>
       </div>
     </div>
   </section>
@@ -1861,30 +1917,46 @@ html:not([data-theme="light"]) #landing-page{
   <section id="ld-about">
     <div class="wrap">
       <div class="sec-head rv">
-        <div class="eyebrow" data-i18n="why_eyebrow"></div>
-        <h2><span data-i18n="why_title1"></span> <em data-i18n="why_title2"></em></h2>
+        <div class="eyebrow" data-i18n="why_eyebrow">Почему Motion</div>
+        <h2><span data-i18n="why_title1">Учёба, устроенная</span> <em data-i18n="why_title2">по-взрослому</em></h2>
       </div>
       <div class="why-grid rv">
-        <div class="why-card"><div class="why-num">01</div><h3 data-i18n="why1_t"></h3><p data-i18n="why1_p"></p></div>
-        <div class="why-card"><div class="why-num">02</div><h3 data-i18n="why2_t"></h3><p data-i18n="why2_p"></p></div>
-        <div class="why-card"><div class="why-num">03</div><h3 data-i18n="why3_t"></h3><p data-i18n="why3_p"></p></div>
-        <div class="why-card"><div class="why-num">04</div><h3 data-i18n="why4_t"></h3><p data-i18n="why4_p"></p></div>
+        <div class="why-card"><div class="why-num">01</div><h3 data-i18n="why1_t">Чёткая система уровней</h3><p data-i18n="why1_p">Пять ступеней от A1 до C1 — вы всегда знаете, где находитесь и что осваиваете дальше. Никаких «вечных элементарников».</p></div>
+        <div class="why-card"><div class="why-num">02</div><h3 data-i18n="why2_t">Курс на IELTS</h3><p data-i18n="why2_p">Отдельная программа подготовки: стратегия каждой секции, тренировочные эссе с детальным разбором и оценкой по банду.</p></div>
+        <div class="why-card"><div class="why-num">03</div><h3 data-i18n="why3_t">AI-проверка письма</h3><p data-i18n="why3_p">Каждое эссе проходит автоматический разбор: грамматика, стиль, структура — с объяснениями, а не просто исправлениями.</p></div>
+        <div class="why-card"><div class="why-num">04</div><h3 data-i18n="why4_t">Прозрачный прогресс</h3><p data-i18n="why4_p">Оценки, посещаемость, домашние задания и динамика навыков — всё в личном портале, доступном и студенту, и родителям.</p></div>
       </div>
     </div>
   </section>
 
   <section id="ld-programs">
     <div class="wrap">
-      <div class="sec-head rv">
-        <div class="eyebrow" data-i18n="prog_eyebrow"></div>
-        <h2><span data-i18n="prog_title1"></span> <em data-i18n="prog_title2"></em></h2>
+      <div class="sec-head prog-head rv">
+        <div>
+          <div class="eyebrow" data-i18n="prog_eyebrow">Программы</div>
+          <h2><span data-i18n="prog_title1">От первого слова</span> <em data-i18n="prog_title2">до свободной речи</em></h2>
+        </div>
+        <svg class="prog-chart" viewBox="0 0 340 250" aria-hidden="true">
+          <path class="pc-line" d="M12 232 L76 196 L100 210 L164 148 L188 162 L252 92 L276 106 L322 42"/>
+          <polygon class="pc-head" points="308,34 328,36 324,56"/>
+          <circle cx="12" cy="232" r="4"/>
+          <circle cx="100" cy="210" r="4"/>
+          <circle cx="164" cy="148" r="4"/>
+          <circle cx="252" cy="92" r="4"/>
+          <circle cx="322" cy="42" r="4"/>
+          <text x="22" y="246">A1</text>
+          <text x="106" y="228">A2</text>
+          <text x="170" y="166">B1</text>
+          <text x="258" y="110">B2</text>
+          <text x="296" y="30">C1</text>
+        </svg>
       </div>
       <div class="rv">
-        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">A1</div><div><div class="prog-name" data-i18n="prog1_n"></div><div class="prog-desc" data-i18n="prog1_d"></div></div><div class="prog-arrow">↗</div></button>
-        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">A2</div><div><div class="prog-name" data-i18n="prog2_n"></div><div class="prog-desc" data-i18n="prog2_d"></div></div><div class="prog-arrow">↗</div></button>
-        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">B1</div><div><div class="prog-name" data-i18n="prog3_n"></div><div class="prog-desc" data-i18n="prog3_d"></div></div><div class="prog-arrow">↗</div></button>
-        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">B2</div><div><div class="prog-name" data-i18n="prog4_n"></div><div class="prog-desc" data-i18n="prog4_d"></div></div><div class="prog-arrow">↗</div></button>
-        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">C1</div><div><div class="prog-name" data-i18n="prog5_n"></div><div class="prog-desc" data-i18n="prog5_d"></div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">A1</div><div><div class="prog-name" data-i18n="prog1_n">Beginner</div><div class="prog-desc" data-i18n="prog1_d">Первые слова и фразы, базовая грамматика, уверенное «представиться и рассказать о себе».</div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">A2</div><div><div class="prog-name" data-i18n="prog2_n">Elementary</div><div class="prog-desc" data-i18n="prog2_d">Повседневные темы: покупки, путешествия, планы. Простое прошедшее и будущее время.</div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">B1</div><div><div class="prog-name" data-i18n="prog3_n">Pre-Intermediate</div><div class="prog-desc" data-i18n="prog3_d">Разговорная беглость, письмо, аудирование. Уровень, с которого английский начинает работать на вас.</div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">B2</div><div><div class="prog-name" data-i18n="prog4_n">Pre-IELTS</div><div class="prog-desc" data-i18n="prog4_d">Академическая лексика, сложная грамматика, знакомство с форматом экзамена.</div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">C1</div><div><div class="prog-name" data-i18n="prog5_n">IELTS Prep</div><div class="prog-desc" data-i18n="prog5_d">Полная подготовка к IELTS: стратегия секций, тренировочные тесты, эссе с оценкой по банду.</div></div><div class="prog-arrow">↗</div></button>
       </div>
     </div>
   </section>
@@ -1892,20 +1964,34 @@ html:not([data-theme="light"]) #landing-page{
   <section id="ld-portal" class="portal-band">
     <div class="wrap portal-grid">
       <div class="rv">
-        <div class="eyebrow" data-i18n="portal_eyebrow"></div>
-        <h2><span data-i18n="portal_title1"></span> <em data-i18n="portal_title2"></em></h2>
-        <p class="lead" data-i18n="portal_lead"></p>
+        <div class="eyebrow" data-i18n="portal_eyebrow">Портал студента</div>
+        <h2><span data-i18n="portal_title1">Учёба не заканчивается</span> <em data-i18n="portal_title2">у двери класса</em></h2>
+        <p class="lead" data-i18n="portal_lead">Каждый студент Motion получает доступ к личному порталу — расписание, домашние задания, оценки и тренажёры в одном месте, с любого устройства.</p>
         <ul class="portal-feats">
-          <li data-i18n="portal_f1"></li><li data-i18n="portal_f2"></li><li data-i18n="portal_f3"></li>
-          <li data-i18n="portal_f4"></li><li data-i18n="portal_f5"></li>
+          <li data-i18n="portal_f1">AI-проверка эссе с разбором ошибок и оценкой IELTS</li>
+          <li data-i18n="portal_f2">Тренажёры лексики и грамматики по темам уроков</li>
+          <li data-i18n="portal_f3">Диктанты с озвучкой и мгновенной проверкой</li>
+          <li data-i18n="portal_f4">Расписание, оценки и посещаемость в реальном времени</li>
+          <li data-i18n="portal_f5">Чат с преподавателем и доска объявлений</li>
         </ul>
       </div>
       <div class="rv">
-        <div class="portal-shot" role="img" aria-label="Student portal preview">
-          <div class="fake-ui">
-            <div class="fake-bar w60"></div><div class="fake-bar w80"></div>
-            <div class="fake-cards"><div></div><div></div><div></div></div>
-            <div class="fake-bar w45"></div><div class="fake-bar w60"></div>
+        <!-- Stylised mock of the portal's AI essay feedback — illustrative, not a live screenshot -->
+        <div class="essay-mock" aria-hidden="true">
+          <div class="em-head">
+            <span class="em-chip solid">AI essay check</span>
+            <span class="em-chip">IELTS · Task 2</span>
+          </div>
+          <p class="em-text">Some people <s>believes</s> <span class="em-fix">believe</span> that success depends on luck, while others argue it is earned through daily discipline…</p>
+          <div class="em-band">
+            <div class="em-band-num" id="ld-band-num">6.5</div>
+            <svg viewBox="0 0 40 24"><path d="M3 20 L18 8 L26 14 L37 3"/></svg>
+            <div class="em-band-lbl">estimated band</div>
+          </div>
+          <div class="em-bars">
+            <div class="em-bar"><span>Grammar</span><div class="tr"><i style="--w:78%"></i></div></div>
+            <div class="em-bar"><span>Coherence</span><div class="tr"><i style="--w:64%"></i></div></div>
+            <div class="em-bar"><span>Lexical range</span><div class="tr"><i style="--w:71%"></i></div></div>
           </div>
         </div>
       </div>
@@ -1915,15 +2001,15 @@ html:not([data-theme="light"]) #landing-page{
   <section id="ld-reviews">
     <div class="wrap">
       <div class="sec-head rv">
-        <div class="eyebrow" data-i18n="tst_eyebrow"></div>
-        <h2><span data-i18n="tst_title1"></span> <em data-i18n="tst_title2"></em></h2>
+        <div class="eyebrow" data-i18n="tst_eyebrow">Отзывы</div>
+        <h2><span data-i18n="tst_title1">Что говорят</span> <em data-i18n="tst_title2">студенты</em></h2>
       </div>
       <div class="rv">
-        <span class="tst-note" data-i18n="tst_placeholder_note"></span>
+        <span class="tst-note" data-i18n="tst_placeholder_note">Примеры отзывов — будут заменены на настоящие</span>
         <div class="tst-grid">
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst1_q"></div><div class="tst-who" data-i18n="tst1_w"></div></div>
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst2_q"></div><div class="tst-who" data-i18n="tst2_w"></div></div>
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst3_q"></div><div class="tst-who" data-i18n="tst3_w"></div></div>
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst1_q">За полгода прошёл путь от A2 до уверенного B1. Портал с тренажёрами — то, чего не хватало во всех прошлых курсах.</div><div class="tst-who" data-i18n="tst1_w">— Студент курса Pre-Intermediate</div></div>
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst2_q">Готовилась к IELTS три месяца. Разборы эссе с оценкой по банду — самое полезное, что я видела в подготовке.</div><div class="tst-who" data-i18n="tst2_w">— Студентка курса IELTS Prep</div></div>
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst3_q">Ребёнок сам садится за домашние задания — из-за рейтинга и стрика в портале. Прогресс видно по неделям.</div><div class="tst-who" data-i18n="tst3_w">— Родитель студента Beginner</div></div>
         </div>
       </div>
     </div>
@@ -1932,16 +2018,25 @@ html:not([data-theme="light"]) #landing-page{
   <section id="ld-enroll" class="ld-enroll">
     <div class="wrap">
       <div class="rv">
-        <div class="eyebrow" style="justify-content:center" data-i18n="enroll_eyebrow"></div>
-        <h2><span data-i18n="enroll_title1"></span> <em data-i18n="enroll_title2"></em></h2>
-        <p class="ld-hero-sub" data-i18n="enroll_sub"></p>
+        <div class="eyebrow" style="justify-content:center" data-i18n="enroll_eyebrow">Запись</div>
+        <h2><span data-i18n="enroll_title1">Готовы двигаться</span> <span class="enr-em"><em data-i18n="enroll_title2">вперёд?</em><svg class="enr-line" viewBox="0 0 400 34" aria-hidden="true"><path d="M6 28 C 110 32, 250 22, 394 6"/></svg></span></h2>
+        <p class="ld-hero-sub" data-i18n="enroll_sub">Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.</p>
+        <div class="enr-steps">
+          <div class="enr-step"><span class="es-n">01</span><span data-i18n="step1">Пробное занятие и определение уровня</span></div>
+          <div class="enr-step"><span class="es-n">02</span><span data-i18n="step2">Подбор группы и удобного расписания</span></div>
+          <div class="enr-step"><span class="es-n">03</span><span data-i18n="step3">Учёба — с личным порталом с первого дня</span></div>
+        </div>
+        <div class="enr-price">
+          <span class="price-num">600 000</span><span class="price-cur" data-i18n="price_cur">сум / месяц</span>
+          <span class="price-note" data-i18n="price_note">актуальную стоимость подтвердим при записи</span>
+        </div>
         <div class="ld-hero-cta-row" style="justify-content:center">
-          <a class="ld-btn-primary" href="#" onclick="showLogin();return false;"><span data-i18n="enroll_cta"></span><span class="arr">↗</span></a>
+          <a class="ld-btn-primary" href="mailto:motionlearnuz@gmail.com"><span data-i18n="enroll_cta">Написать нам</span><span class="arr">↗</span></a>
+          <a class="ld-btn-ghost" href="#" onclick="showLogin();return false;" data-i18n="enroll_cta2">Войти в портал</a>
         </div>
         <div class="contact-line">
-          <div><a href="tel:+998000000000">+998 (00) 000-00-00</a><span class="placeholder-mark" data-i18n="ph_phone"></span></div>
           <div><a href="mailto:motionlearnuz@gmail.com">motionlearnuz@gmail.com</a></div>
-          <div><span data-i18n="contact_city"></span><span class="placeholder-mark" data-i18n="ph_addr"></span></div>
+          <div><span data-i18n="contact_city">Ташкент, Узбекистан</span><span class="placeholder-mark" data-i18n="ph_addr">адрес уточняется</span></div>
         </div>
       </div>
     </div>
@@ -1954,11 +2049,11 @@ html:not([data-theme="light"]) #landing-page{
       <svg viewBox="0 0 340 84" xmlns="http://www.w3.org/2000/svg"><text x="0" y="62" class="logo-word" font-family="'Playfair Display',Georgia,serif" font-size="64" font-weight="500">motion</text><g class="logo-arrow" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M252 66 L285 40 L299 50 L327 22"/><path d="M311 20 L329 20 L329 38"/></g></svg>
     </button>
     <div class="foot-links">
-      <a href="#ld-programs" data-i18n="nav_programs"></a>
-      <a href="#ld-enroll" data-i18n="nav_contact"></a>
-      <button type="button" onclick="showLogin()" data-i18n="foot_portal"></button>
+      <a href="#ld-programs" data-i18n="nav_programs">Программы</a>
+      <a href="#ld-enroll" data-i18n="nav_contact">Контакты</a>
+      <button type="button" onclick="showLogin()" data-i18n="foot_portal">Портал студента</button>
     </div>
-    <div class="foot-note">© <span id="ld-yr"></span> Motion. <span data-i18n="foot_rights"></span></div>
+    <div class="foot-note">© <span id="ld-yr">2026</span> Motion. <span data-i18n="foot_rights">Все права защищены.</span></div>
   </div>
 </footer>
 
@@ -2014,9 +2109,13 @@ const LD_I18N = {
     enroll_eyebrow: 'Запись',
     enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
     enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
-    enroll_cta: 'Открыть портал студента',
+    enroll_cta: 'Написать нам', enroll_cta2: 'Войти в портал',
+    step1: 'Пробное занятие и определение уровня',
+    step2: 'Подбор группы и удобного расписания',
+    step3: 'Учёба — с личным порталом с первого дня',
+    price_cur: 'сум / месяц', price_note: 'актуальную стоимость подтвердим при записи',
     contact_city: 'Ташкент, Узбекистан',
-    ph_phone: 'номер уточняется', ph_addr: 'адрес уточняется',
+    ph_addr: 'адрес уточняется',
     foot_portal: 'Портал студента', foot_rights: 'Все права защищены.',
   },
   en: {
@@ -2061,9 +2160,13 @@ const LD_I18N = {
     enroll_eyebrow: 'Enrollment',
     enroll_title1: 'Ready to move', enroll_title2: 'forward?',
     enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
-    enroll_cta: 'Open the student portal',
+    enroll_cta: 'Write to us', enroll_cta2: 'Portal login',
+    step1: 'A trial lesson and a level assessment',
+    step2: 'We match you to a group and schedule',
+    step3: 'Study — with your personal portal from day one',
+    price_cur: 'UZS / month', price_note: 'we’ll confirm the current price when you enroll',
     contact_city: 'Tashkent, Uzbekistan',
-    ph_phone: 'number to be confirmed', ph_addr: 'address to be confirmed',
+    ph_addr: 'address to be confirmed',
     foot_portal: 'Student portal', foot_rights: 'All rights reserved.',
   },
   uz: {
@@ -2108,9 +2211,13 @@ const LD_I18N = {
     enroll_eyebrow: 'Yozilish',
     enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
     enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',
-    enroll_cta: 'Talaba portalini ochish',
+    enroll_cta: 'Bizga yozing', enroll_cta2: 'Portalga kirish',
+    step1: 'Sinov darsi va darajani aniqlash',
+    step2: 'Guruh va qulay jadvalni tanlaymiz',
+    step3: 'O‘qish — birinchi kundan shaxsiy portal bilan',
+    price_cur: 'so‘m / oy', price_note: 'joriy narxni yozilishda tasdiqlaymiz',
     contact_city: 'Toshkent, O‘zbekiston',
-    ph_phone: 'raqam aniqlanmoqda', ph_addr: 'manzil aniqlanmoqda',
+    ph_addr: 'manzil aniqlanmoqda',
     foot_portal: 'Talaba portali', foot_rights: 'Barcha huquqlar himoyalangan.',
   },
 };
@@ -2141,6 +2248,22 @@ document.getElementById('ld-yr').textContent=new Date().getFullYear();
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
   },{threshold:0.12});
   document.querySelectorAll('#landing-page .rv').forEach(el=>io.observe(el));
+  // Essay-mock band score ticks up 6.5 → 7.0 when it scrolls into view — the
+  // one number animation on the page, tied to the product's core promise.
+  const bandEl=document.getElementById('ld-band-num');
+  if(bandEl){
+    const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bandIo=new IntersectionObserver(es=>{
+      es.forEach(e=>{
+        if(!e.isIntersecting)return;
+        bandIo.disconnect();
+        if(reduce){bandEl.textContent='7.0';return;}
+        const seq=['6.5','6.6','6.7','6.8','6.9','7.0'];let i=0;
+        const t=setInterval(()=>{bandEl.textContent=seq[i++];if(i>=seq.length)clearInterval(t);},190);
+      });
+    },{threshold:0.6});
+    bandIo.observe(bandEl);
+  }
   const landingEl=document.getElementById('landing-page');
   if(landingEl){
     landingEl.addEventListener('scroll',()=>{
@@ -2150,6 +2273,8 @@ document.getElementById('ld-yr').textContent=new Date().getFullYear();
   }
   document.querySelectorAll('#landing-page #ld-mainnav a').forEach(a=>a.addEventListener('click',()=>{
     document.getElementById('ld-mainnav').classList.remove('open');
+    const burger=document.querySelector('#landing-page .ld-burger');
+    if(burger)burger.setAttribute('aria-expanded','false');
   }));
 })();
 </script>

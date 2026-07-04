@@ -1,9 +1,24 @@
 const { chromium } = require('playwright');
+const fs = require('fs');
+const path = require('path');
 
 (async () => {
   const browser = await chromium.launch();
   const results = [];
   const check = (name, cond, extra) => { results.push({ name, ok: !!cond, extra }); console.log((cond ? 'PASS' : 'FAIL') + ' - ' + name + (extra ? ' :: ' + extra : '')); };
+
+  // ── 0. Crawlability: landing copy must exist STATICALLY in the raw HTML ──
+  // (Redesign addendum §1: nav links/testimonials/year were once empty until
+  // JS i18n ran, so crawlers and text extraction saw a blank page.)
+  {
+    const raw = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+    const landing = raw.slice(raw.indexOf('id="landing-page"'), raw.indexOf('<canvas class="bg-orbs"'));
+    const mustContain = ['О центре', 'Программы', 'Английский, который', 'Что говорят', '600 000', 'Ташкент'];
+    check('raw HTML: landing copy is crawlable (no empty i18n slots)', mustContain.every(m => landing.includes(m)));
+    check('raw HTML: static footer year present', /©\s*<span id="ld-yr">\d{4}<\/span>/.test(landing));
+    check('raw HTML: fake placeholder phone removed', !landing.includes('000-00-00'));
+    check('raw HTML: no beta badge on landing', !landing.includes('ld-beta-tag'));
+  }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──
   {

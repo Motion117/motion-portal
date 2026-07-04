@@ -3,6 +3,56 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page redesign (critique + rebuild addendum)
+
+Screenshot-audited the live landing first (desktop/mobile × light/dark ×
+ru/en/uz), then fixed every §1 bug and did the redesign pass. All §1 bugs
+traced to one root cause: **every piece of landing copy lived only in the JS
+i18n dictionary**, so the raw HTML crawlers see had empty nav links, bare
+numbers and stray dashes.
+
+**§1 bug fixes:**
+- All landing copy is now baked into the HTML statically in Russian (the
+  default language) — nav links, headlines, program descriptions,
+  testimonials, footer. JS i18n still swaps languages exactly as before;
+  crawlers and text extraction now see a complete page. Guarded by 4 new
+  permanent checks in `qa/test_landing.js`.
+- Footer year is static (`© 2026`) with JS keeping it current.
+- Fake placeholder phone (`+998 (00) 000-00-00`) removed — a dead number
+  is worse than none. Email + city remain. **Add the real number to the
+  enroll section when you have it** (and consider a custom-domain email
+  later; the Gmail address is a small credibility cost).
+- "Beta" badges removed from the landing header entirely (they also fixed
+  the double-render; a marketing page shouldn't call the product beta).
+- Theme toggle became a real `<button>` (was an unfocusable div); burger
+  now reports `aria-expanded`; visible focus-visible outlines added.
+
+**Redesign decisions (before → after):**
+- **Color**: dropped the purple accent inherited from the app UI — the
+  landing now commits fully to the brand mark's ink-on-paper identity.
+  Emphasis is carried by serif italics and the ink itself, both themes.
+- **Signature motion** ("earn the name"): the hero arrow draws itself then
+  floats gently forever; the Programs section gained an **ascent chart** —
+  the brand arrow extended into the actual A1→C1 course journey, drawing
+  itself on scroll with level markers appearing along the climb; the essay
+  mock's band score ticks 6.5 → 7.0 on scroll; the enroll headline gets a
+  drawn underline. All respect `prefers-reduced-motion`.
+- **Portal mock**: replaced the generic gray bars with a stylised AI
+  essay-feedback card (correction strike-through, band score, skill bars) —
+  the product's actual killer feature, monochrome, clearly illustrative.
+- **Conversion**: program rows now scroll to enrollment (they used to open
+  the *login form* — a dead end for prospects); enroll section gained a
+  3-step "how to start", an honest price line (600 000 UZS/month, editable
+  copy, "confirm on enrollment" note), and a primary "Write to us" mailto
+  CTA with "Portal login" demoted to secondary.
+- **Typography**: hero scaled up and tightened (−0.02em), card titles
+  22px serif, mobile hero-meta now a clean 3-column row.
+
+Verified: full-page screenshots re-taken in all 6 matrix combinations;
+`qa/test_landing.js` grew to 31 checks (all passing); admin-nav, password
+reveal, groups, payments suites all passing; full 22-login regression suite
+passing — the session-aware landing↔portal routing is intact.
+
 ## ⚠ Live secret found in working tree — not committed, needs your action
 
 While working through this round I found `supabase/admin_role.sql` currently
