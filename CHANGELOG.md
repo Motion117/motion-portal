@@ -3,6 +3,32 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — design elevation pass (round 2)
+
+Feedback after the first redesign: the improvement wasn't visible enough,
+especially on the first screen. This pass changes the page's immediate
+impression while keeping the ink-on-paper brand discipline:
+
+- **Hero at architectural scale** — headline up to 9rem, and a huge, faint
+  "ghost" brand arrow drawn slowly behind the hero (the same line the
+  student is being asked to climb, at atmosphere scale).
+- **Paper grain** — a barely-there film-grain texture over the whole page
+  (~3% dark / ~5.5% light) so large empty areas read as printed stock, not
+  flat pixels.
+- **Level ticker** — an infinite, slow marquee strip right under the hero:
+  the whole curriculum (A1 → … → C1) in literal motion between hairlines.
+- **Scroll ascent line** — a thin line on the right edge that fills bottom-up
+  as you read, with a small ↗ climbing it: your progress through the page,
+  in the shape of the brand. Desktop only.
+- **Bolder ascent chart** in Programs; larger italic level letters in rows.
+- **Floating fact chips** ("Streak · 7 days", "+0.5 band") drifting gently
+  over the essay-feedback mock, in page colors against the inverted band.
+- **Testimonial cards** get an oversized ghost « quote mark instead of
+  inline guillemets.
+
+All new motion is covered by `prefers-reduced-motion`. All suites re-run
+green (31 landing checks, full 22-login regression).
+
 ## Landing page redesign (critique + rebuild addendum)
 
 Screenshot-audited the live landing first (desktop/mobile × light/dark ×
