@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="Motion — a language-centre student portal: schedule, homework, grades, attendance, trainers, leaderboard and course payment.">
+<!-- The default/root state for a visitor with no session is now the public
+     marketing page (see #landing-page), so title/description/OG here
+     describe Motion the language centre — matching what a crawler or link
+     preview actually sees at the bare URL — not the internal app screens,
+     which a logged-out crawler never reaches anyway (client-rendered SPA). -->
+<meta name="description" content="Motion — языковой центр: английский по уровням A1–C1, подготовка к IELTS, личный портал студента с AI-проверкой эссе.">
 <meta name="theme-color" content="#080808">
 <meta name="color-scheme" content="dark">
-<meta property="og:title" content="Motion · Student Portal">
-<meta property="og:description" content="Student portal of the Motion language centre.">
+<meta property="og:title" content="Motion — языковой центр">
+<meta property="og:description" content="Английский, который двигает вас вперёд. Уровни A1–C1, IELTS, личный портал студента.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c6eff'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='18' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
-<title>Motion · Student Portal</title>
+<title>Motion — языковой центр · English that moves you forward</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://ubiafzrwrbnytbptnrcf.supabase.co">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" onerror="document.documentElement.classList.add('no-icons')">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -905,22 +911,6 @@ body{background:var(--bg);}
 .reaction-count{font-size:11px;color:var(--txt2);}
 .reaction.active .reaction-count{color:var(--accent2);}
 
-/* ── CLASSROOM ── */
-.classroom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.cls-card{
-  background:var(--bg2);border:0.5px solid var(--line2);border-radius:14px;
-  padding:16px;text-align:center;transition:all 0.25s;position:relative;
-}
-.cls-card:hover{border-color:var(--line3);transform:translateY(-2px);}
-.cls-card.me{border-color:rgba(124,110,255,0.3);background:rgba(124,110,255,0.05);}
-.cls-ava-wrap{position:relative;width:48px;height:48px;margin:0 auto 9px;}
-.cls-ava{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;}
-.cls-status{position:absolute;bottom:-2px;right:-2px;width:13px;height:13px;border-radius:50%;border:2px solid var(--bg2);}
-.cls-status.online{background:var(--green);box-shadow:0 0 6px rgba(61,220,132,0.6);}
-.cls-status.offline{background:var(--txt3);}
-.cls-name{font-size:12px;font-weight:500;}
-.cls-streak{font-size:10px;color:var(--gold);margin-top:4px;}
-
 /* ── AI STUDY PLAN ── */
 .plan-day{
   background:var(--bg2);border:0.5px solid var(--line2);border-radius:14px;
@@ -1073,10 +1063,15 @@ body[data-role="admin"] [data-role="student"]{display:none !important;}
 .adm-user-row.frozen{opacity:0.55;}
 .adm-user-row.frozen b{text-decoration:line-through;text-decoration-color:var(--txt3);}
 .adm-status-badge.frozen{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:20px;background:rgba(91,156,246,0.16);color:#5b9cf6;margin-left:6px;vertical-align:1px;}
+.adm-status-badge.paid{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:20px;background:rgba(61,220,132,0.16);color:var(--green);margin-left:6px;vertical-align:1px;}
+.adm-status-badge.partial{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:20px;background:rgba(201,168,76,0.18);color:var(--gold);margin-left:6px;vertical-align:1px;}
+.adm-status-badge.unpaid{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:20px;background:rgba(240,96,96,0.16);color:var(--red);margin-left:6px;vertical-align:1px;}
 
 /* ── LOGIN OVERLAY ── */
-.login-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1000px 600px at 50% 0%,rgba(124,110,255,0.14),transparent 60%),var(--bg);}
-.login-card{width:100%;max-width:380px;background:var(--bg2);border:0.5px solid var(--line2);border-radius:20px;padding:30px 26px;box-shadow:0 30px 80px rgba(0,0,0,0.45);}
+.login-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1000px 600px at 50% 0%,rgba(124,110,255,0.14),transparent 60%),var(--bg);}
+.login-card{width:100%;max-width:380px;background:var(--bg2);border:0.5px solid var(--line2);border-radius:20px;padding:30px 26px;box-shadow:0 30px 80px rgba(0,0,0,0.45);position:relative;}
+.login-back-btn{position:absolute;top:16px;left:16px;background:none;border:none;color:var(--txt3);font-size:12px;display:flex;align-items:center;gap:4px;cursor:pointer;padding:4px 6px;border-radius:8px;transition:color .2s,background .2s;}
+.login-back-btn:hover{color:var(--txt);background:var(--bg3);}
 .login-mark{width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg,#5b3fc8 0%,#7c6eff 50%,#a78bfa 100%);background-size:200% 200%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 0 0 0 rgba(124,110,255,0.5),0 8px 30px rgba(0,0,0,0.4);animation:loginMarkBreath 2.5s ease-in-out infinite,splashGradient 4s ease infinite;}
 @keyframes loginMarkBreath{0%,100%{box-shadow:0 0 0 0 rgba(124,110,255,0.5),0 8px 30px rgba(0,0,0,0.4);}50%{box-shadow:0 0 0 10px rgba(124,110,255,0),0 8px 40px rgba(124,110,255,0.35);}}
 .login-title{font-size:21px;font-weight:700;letter-spacing:-0.02em;}
@@ -1324,7 +1319,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
 /* ── RESPONSIVE: TABLET ── */
 @media (max-width: 980px){
   .sg{grid-template-columns:repeat(3,1fr);}
-  .lb-podium,.p2g,.classroom-grid{gap:8px;}
+  .lb-podium,.p2g{gap:8px;}
   .top-center{display:none;}
 }
 
@@ -1358,7 +1353,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important;}
   .lb-podium{grid-template-columns:1fr 1fr 1fr;}
   .p2g{grid-template-columns:1fr;}
-  .classroom-grid{grid-template-columns:1fr 1fr !important;}
   .att-grid{grid-template-columns:repeat(5,1fr);}
   .notif-panel{right:10px;left:10px;width:auto;}
   .modal-box{width:calc(100vw - 24px);max-width:none;}
@@ -1468,7 +1462,8 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
 <!-- LOGIN OVERLAY v9 -->
 <div class="login-overlay" id="login-overlay">
   <div class="login-card">
-    <div class="login-mark">
+    <button type="button" class="login-back-btn" onclick="hideLogin()" aria-label="Back to Motion home"><i class="ti ti-arrow-left"></i> Back</button>
+    <div class="login-mark" onclick="hideLogin()" role="button" tabindex="0" aria-label="Back to Motion home" onkeydown="if(event.key==='Enter'||event.key===' ')hideLogin()" style="cursor:pointer">
       <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M5 32 L5 8 L20 23 L35 8 L35 32" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.97"/>
         <path d="M5 8 L20 23 L35 8" stroke="rgba(220,200,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -1512,6 +1507,9 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       <label class="login-lbl" for="signup-name">Full name</label>
       <input class="login-in" id="signup-name" placeholder="Your full name">
 
+      <label class="login-lbl" for="signup-level">Level</label>
+      <select class="login-in" id="signup-level" onchange="_signupLevelChanged()"></select>
+
       <label class="login-lbl" for="signup-group">Group</label>
       <select class="login-in" id="signup-group"></select>
 
@@ -1542,6 +1540,619 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="splash-title">motion</div>
   <div class="splash-sub">language centre portal</div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     PUBLIC MARKETING / LANDING PAGE
+     Shown when there is no active session (fresh visitor, logged-out,
+     expired session). Fully scoped under #landing-page — every selector
+     below is namespaced and every custom property uses a --ld- prefix so
+     nothing here can collide with (or be overridden by) the portal app's
+     own design tokens, which share several plain names (--bg, --accent,
+     --line, etc). Reuses the portal's existing theme mechanism
+     (html[data-theme] + toggleTheme()) rather than defining a second one.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<style id="landing-style">
+#landing-page,#landing-page *{box-sizing:border-box;}
+#landing-page{
+  --ld-ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ld-serif:'Playfair Display',Georgia,serif;
+  --ld-sans:'Inter',-apple-system,sans-serif;
+  --ld-text-hero:clamp(2.9rem,1rem + 8.5vw,7.5rem);
+  --ld-text-h2:clamp(1.9rem,1rem + 3.2vw,3.4rem);
+  --ld-space-section:clamp(4.5rem,3rem + 6vw,9.5rem);
+  --ld-maxw:1180px;
+  position:fixed;inset:0;z-index:4000;display:none;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:var(--ld-bg);color:var(--ld-ink);font-family:var(--ld-sans);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+#landing-page.open{display:block;}
+html[data-theme="light"] #landing-page{
+  --ld-bg:#faf8f3; --ld-bg-soft:#f1eee6; --ld-bg-card:#ffffff;
+  --ld-ink:#111110; --ld-ink-2:#54524c; --ld-ink-3:#8f8c84;
+  --ld-line:rgba(17,17,16,0.14); --ld-line-soft:rgba(17,17,16,0.07);
+  --ld-accent:#5b4bd4; --ld-paper-invert:#0a0a0a; --ld-ink-invert:#f4f1ea;
+}
+html:not([data-theme="light"]) #landing-page{
+  --ld-bg:#060606; --ld-bg-soft:#0d0d0d; --ld-bg-card:#111111;
+  --ld-ink:#f4f1ea; --ld-ink-2:#b9b5ab; --ld-ink-3:#6f6c65;
+  --ld-line:rgba(244,241,234,0.12); --ld-line-soft:rgba(244,241,234,0.07);
+  --ld-accent:#8b7cff; --ld-paper-invert:#f4f1ea; --ld-ink-invert:#0a0a0a;
+}
+#landing-page ::selection{background:var(--ld-accent);color:#fff;}
+#landing-page .wrap{max-width:var(--ld-maxw);margin:0 auto;padding:0 clamp(20px,4vw,44px);}
+#landing-page h1,#landing-page h2,#landing-page h3{font-family:var(--ld-serif);font-weight:500;line-height:1.08;letter-spacing:-0.01em;}
+#landing-page .eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--ld-ink-3);display:flex;align-items:center;gap:14px;margin-bottom:22px;
+}
+#landing-page .eyebrow::before{content:'';width:34px;height:1px;background:var(--ld-ink-3);}
+
+/* Header */
+#landing-page .ld-header{
+  position:sticky;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid transparent;transition:border-color .3s,background .3s;
+}
+#landing-page .ld-header.scrolled{border-bottom-color:var(--ld-line-soft);background:color-mix(in srgb,var(--ld-bg) 82%,transparent);}
+#landing-page .header-in{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px;}
+#landing-page .ld-logo{display:flex;align-items:baseline;text-decoration:none;color:var(--ld-ink);flex-shrink:0;background:none;border:none;cursor:pointer;padding:0;}
+#landing-page .ld-logo svg{height:26px;width:auto;display:block;}
+#landing-page .ld-logo .logo-word{fill:var(--ld-ink);transition:fill .4s;}
+#landing-page .ld-logo .logo-arrow{stroke:var(--ld-ink);transition:stroke .4s;}
+#landing-page nav.ld-mainnav{display:flex;gap:26px;}
+#landing-page nav.ld-mainnav a{
+  font-size:13px;font-weight:500;color:var(--ld-ink-2);text-decoration:none;
+  transition:color .2s;position:relative;padding:4px 0;
+}
+#landing-page nav.ld-mainnav a::after{
+  content:'';position:absolute;left:0;bottom:0;height:1px;width:0;
+  background:var(--ld-ink);transition:width .3s var(--ld-ease-out);
+}
+#landing-page nav.ld-mainnav a:hover{color:var(--ld-ink);}
+#landing-page nav.ld-mainnav a:hover::after{width:100%;}
+#landing-page .header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+#landing-page .lang-switch{display:flex;border:1px solid var(--ld-line);border-radius:100px;overflow:hidden;}
+#landing-page .ld-lang-btn{
+  font-family:var(--ld-sans);font-size:11px;font-weight:600;letter-spacing:0.06em;
+  background:none;border:none;color:var(--ld-ink-3);padding:7px 11px;cursor:pointer;
+  transition:all .2s;
+}
+#landing-page .ld-lang-btn:hover{color:var(--ld-ink);}
+#landing-page .ld-lang-btn.active{background:var(--ld-ink);color:var(--ld-bg);}
+#landing-page .ld-theme-btn{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--ld-line);
+  background:none;color:var(--ld-ink);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:15px;transition:all .2s;
+}
+#landing-page .ld-theme-btn:hover{border-color:var(--ld-ink-2);transform:rotate(15deg);}
+#landing-page .ld-login-btn{
+  font-family:var(--ld-sans);font-size:12.5px;font-weight:600;text-decoration:none;
+  color:var(--ld-bg);background:var(--ld-ink);border:none;border-radius:100px;padding:9px 18px;
+  display:inline-flex;align-items:center;gap:7px;transition:all .25s var(--ld-ease-out);
+  position:relative;white-space:nowrap;cursor:pointer;
+}
+#landing-page .ld-login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px color-mix(in srgb,var(--ld-ink) 25%,transparent);}
+#landing-page .ld-beta-tag{
+  font-size:8.5px;font-weight:700;letter-spacing:0.08em;padding:2px 6px;
+  border-radius:20px;background:var(--ld-accent);color:#fff;text-transform:uppercase;
+}
+
+/* Hero */
+#landing-page .ld-hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px;position:relative;}
+#landing-page .ld-hero h1{font-size:var(--ld-text-hero);font-weight:500;max-width:11ch;}
+#landing-page .ld-hero h1 em{font-style:italic;font-weight:400;}
+#landing-page .ld-hero-arrow{display:inline-block;vertical-align:baseline;margin-left:0.05em;}
+#landing-page .ld-hero-arrow svg{width:clamp(60px,9vw,140px);height:auto;overflow:visible;}
+#landing-page .ld-hero-arrow path{
+  stroke:var(--ld-ink);stroke-width:7;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:400;stroke-dashoffset:400;animation:ldDraw 1.4s .7s var(--ld-ease-out) forwards;
+}
+#landing-page .ld-hero-arrow polygon{fill:var(--ld-ink);opacity:0;animation:ldFadein .4s 1.75s forwards;}
+@keyframes ldDraw{to{stroke-dashoffset:0;}}
+@keyframes ldFadein{to{opacity:1;}}
+#landing-page .ld-hero-sub{margin-top:34px;font-size:clamp(15px,1.5vw,19px);color:var(--ld-ink-2);max-width:46ch;line-height:1.7;}
+#landing-page .ld-hero-cta-row{display:flex;gap:14px;margin-top:42px;flex-wrap:wrap;align-items:center;}
+#landing-page .ld-btn-primary{
+  font-family:var(--ld-sans);font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;
+  background:var(--ld-ink);color:var(--ld-bg);border:1px solid var(--ld-ink);border-radius:100px;
+  padding:15px 32px;display:inline-flex;align-items:center;gap:10px;
+  transition:all .25s var(--ld-ease-out);
+}
+#landing-page .ld-btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px color-mix(in srgb,var(--ld-ink) 22%,transparent);}
+#landing-page .ld-btn-primary .arr{transition:transform .25s var(--ld-ease-out);}
+#landing-page .ld-btn-primary:hover .arr{transform:translate(3px,-3px);}
+#landing-page .ld-btn-ghost{
+  font-family:var(--ld-sans);font-size:14px;font-weight:500;text-decoration:none;cursor:pointer;
+  background:none;color:var(--ld-ink);border:1px solid var(--ld-line);border-radius:100px;
+  padding:15px 32px;transition:all .25s;
+}
+#landing-page .ld-btn-ghost:hover{border-color:var(--ld-ink-2);}
+#landing-page .ld-hero-meta{
+  display:flex;gap:clamp(24px,4vw,64px);margin-top:clamp(48px,7vh,90px);
+  padding-top:30px;border-top:1px solid var(--ld-line-soft);flex-wrap:wrap;
+}
+#landing-page .ld-hero-meta div{min-width:120px;}
+#landing-page .ld-hero-meta .n{font-family:var(--ld-serif);font-size:clamp(22px,2.6vw,32px);font-weight:600;}
+#landing-page .ld-hero-meta .l{font-size:12px;color:var(--ld-ink-3);margin-top:4px;letter-spacing:0.04em;}
+
+/* Sections */
+#landing-page section{padding:var(--ld-space-section) 0;}
+#landing-page .sec-head{margin-bottom:clamp(36px,5vw,64px);}
+#landing-page .sec-head h2{font-size:var(--ld-text-h2);max-width:22ch;}
+#landing-page .sec-head h2 em{font-style:italic;font-weight:400;}
+
+/* About / why */
+#landing-page .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--ld-line-soft);border:1px solid var(--ld-line-soft);}
+#landing-page .why-card{background:var(--ld-bg);padding:clamp(24px,3vw,40px);transition:background .3s;}
+#landing-page .why-card:hover{background:var(--ld-bg-soft);}
+#landing-page .why-num{font-family:var(--ld-serif);font-style:italic;font-size:15px;color:var(--ld-ink-3);margin-bottom:18px;}
+#landing-page .why-card h3{font-size:20px;margin-bottom:12px;}
+#landing-page .why-card p{font-size:14px;color:var(--ld-ink-2);line-height:1.7;}
+
+/* Programs */
+#landing-page .prog-row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,44px);
+  align-items:center;padding:clamp(20px,2.6vw,30px) 8px;border-bottom:1px solid var(--ld-line-soft);
+  text-decoration:none;color:var(--ld-ink);transition:all .25s;position:relative;cursor:pointer;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;font:inherit;
+}
+#landing-page .prog-row:first-child{border-top:1px solid var(--ld-line-soft);}
+#landing-page .prog-row:hover{padding-left:22px;background:var(--ld-bg-soft);}
+#landing-page .prog-lvl{font-family:var(--ld-serif);font-style:italic;font-size:clamp(17px,2vw,22px);color:var(--ld-ink-3);width:52px;}
+#landing-page .prog-name{font-family:var(--ld-serif);font-size:clamp(20px,2.6vw,30px);font-weight:500;}
+#landing-page .prog-desc{font-size:13px;color:var(--ld-ink-2);margin-top:5px;max-width:56ch;}
+#landing-page .prog-arrow{font-size:20px;color:var(--ld-ink-3);transition:transform .25s var(--ld-ease-out),color .25s;}
+#landing-page .prog-row:hover .prog-arrow{transform:translate(4px,-4px);color:var(--ld-ink);}
+
+/* Portal showcase */
+#landing-page .portal-band{background:var(--ld-paper-invert);color:var(--ld-ink-invert);}
+#landing-page .portal-band .eyebrow{color:color-mix(in srgb,var(--ld-ink-invert) 55%,transparent);}
+#landing-page .portal-band .eyebrow::before{background:color-mix(in srgb,var(--ld-ink-invert) 55%,transparent);}
+#landing-page .portal-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center;}
+#landing-page .portal-band h2{font-size:var(--ld-text-h2);}
+#landing-page .portal-band p.lead{font-size:15px;line-height:1.75;margin-top:20px;color:color-mix(in srgb,var(--ld-ink-invert) 75%,transparent);max-width:48ch;}
+#landing-page .portal-feats{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:13px;}
+#landing-page .portal-feats li{display:flex;gap:12px;font-size:14.5px;align-items:baseline;}
+#landing-page .portal-feats li::before{content:'↗';font-weight:700;flex-shrink:0;}
+#landing-page .portal-shot{
+  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 14%,transparent);
+  border-radius:14px;overflow:hidden;background:#0c0c0c;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,0.45);aspect-ratio:16/10.5;position:relative;
+}
+#landing-page .portal-shot .fake-ui{position:absolute;inset:0;padding:9%;display:flex;flex-direction:column;gap:8%;}
+#landing-page .fake-bar{height:7%;border-radius:6px;background:rgba(244,241,234,0.1);}
+#landing-page .fake-bar.w60{width:60%;}
+#landing-page .fake-bar.w80{width:80%;background:rgba(139,124,255,0.35);}
+#landing-page .fake-bar.w45{width:45%;}
+#landing-page .fake-cards{display:flex;gap:6%;height:34%;}
+#landing-page .fake-cards div{flex:1;border-radius:8px;background:rgba(244,241,234,0.07);border:1px solid rgba(244,241,234,0.08);}
+
+/* Testimonials */
+#landing-page .tst-note{
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ld-ink-3);
+  border:1px dashed var(--ld-line);border-radius:100px;display:inline-block;padding:6px 14px;margin-bottom:34px;
+}
+#landing-page .tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,2.5vw,30px);}
+#landing-page .tst-card{border:1px solid var(--ld-line-soft);border-radius:4px;padding:clamp(26px,3vw,38px);background:var(--ld-bg-card);display:flex;flex-direction:column;gap:20px;}
+#landing-page .tst-quote{font-family:var(--ld-serif);font-size:clamp(17px,1.8vw,21px);font-style:italic;line-height:1.5;}
+#landing-page .tst-quote::before{content:'« ';color:var(--ld-ink-3);}
+#landing-page .tst-quote::after{content:' »';color:var(--ld-ink-3);}
+#landing-page .tst-who{font-size:12.5px;color:var(--ld-ink-3);margin-top:auto;}
+
+/* Enroll */
+#landing-page .ld-enroll{text-align:center;}
+#landing-page .ld-enroll h2{font-size:clamp(2.2rem,1rem + 5vw,4.6rem);max-width:18ch;margin:0 auto;}
+#landing-page .ld-enroll .ld-hero-sub{margin-left:auto;margin-right:auto;text-align:center;}
+#landing-page .contact-line{margin-top:44px;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap;font-size:14px;color:var(--ld-ink-2);}
+#landing-page .contact-line a{color:var(--ld-ink);text-decoration:none;border-bottom:1px solid var(--ld-line);padding-bottom:2px;transition:border-color .2s;}
+#landing-page .contact-line a:hover{border-color:var(--ld-ink);}
+#landing-page .placeholder-mark{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ld-ink-3);display:block;margin-top:3px;}
+
+/* Footer */
+#landing-page .ld-footer{border-top:1px solid var(--ld-line-soft);padding:44px 0 54px;}
+#landing-page .foot-in{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+#landing-page .foot-in .ld-logo svg{height:20px;}
+#landing-page .foot-note{font-size:12px;color:var(--ld-ink-3);}
+#landing-page .foot-links{display:flex;gap:20px;}
+#landing-page .foot-links a,#landing-page .foot-links button{font-size:12.5px;color:var(--ld-ink-2);text-decoration:none;transition:color .2s;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+#landing-page .foot-links a:hover,#landing-page .foot-links button:hover{color:var(--ld-ink);}
+
+/* Reveal on scroll */
+#landing-page .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ld-ease-out),transform .8s var(--ld-ease-out);}
+#landing-page .rv.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  #landing-page .rv{opacity:1;transform:none;transition:none;}
+  #landing-page .ld-hero-arrow path{animation:none;stroke-dashoffset:0;}
+  #landing-page .ld-hero-arrow polygon{animation:none;opacity:1;}
+}
+
+/* Mobile */
+#landing-page .ld-burger{display:none;background:none;border:1px solid var(--ld-line);border-radius:8px;width:38px;height:38px;color:var(--ld-ink);font-size:17px;cursor:pointer;}
+#landing-page nav.ld-mainnav .ld-login-btn.in-menu{display:none;}
+#landing-page nav.ld-mainnav.open .ld-login-btn.in-menu{
+  display:inline-flex;align-self:flex-start;color:var(--ld-bg);background:var(--ld-ink);font-size:13px;padding:11px 20px;
+}
+#landing-page nav.ld-mainnav.open .ld-login-btn.in-menu::after{display:none;}
+@media (max-width:900px){
+  #landing-page nav.ld-mainnav{display:none;}
+  #landing-page nav.ld-mainnav.open{
+    display:flex;position:fixed;top:64px;left:0;right:0;flex-direction:column;
+    background:var(--ld-bg);border-bottom:1px solid var(--ld-line);padding:18px clamp(20px,4vw,44px) 26px;gap:16px;z-index:49;
+  }
+  #landing-page .ld-burger{display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  #landing-page .portal-grid{grid-template-columns:1fr;}
+  #landing-page .prog-row{grid-template-columns:auto 1fr;}
+  #landing-page .prog-arrow{display:none;}
+  #landing-page .ld-login-btn span.login-label{display:none;}
+  #landing-page .ld-login-btn{padding:9px 13px;}
+}
+@media (max-width:600px){
+  #landing-page .header-in{height:64px;gap:8px;}
+  #landing-page .ld-logo svg{height:19px;}
+  #landing-page .ld-lang-btn{padding:6px 8px;font-size:10px;}
+  #landing-page .ld-theme-btn{width:30px;height:30px;font-size:13px;}
+  #landing-page .ld-burger{width:34px;height:34px;}
+  #landing-page .header-actions{gap:6px;}
+  #landing-page .ld-login-btn.in-header{display:none;}
+}
+</style>
+
+<div id="landing-page" role="region" aria-label="Motion — marketing home">
+
+<header class="ld-header" id="ld-hdr">
+  <div class="wrap header-in">
+    <button type="button" class="ld-logo" aria-label="Motion" onclick="document.getElementById('landing-page').scrollTo({top:0,behavior:'smooth'})">
+      <svg viewBox="0 0 340 84" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="motion">
+        <text x="0" y="62" class="logo-word" font-family="'Playfair Display',Georgia,serif" font-size="64" font-weight="500">motion</text>
+        <g class="logo-arrow" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M252 66 L285 40 L299 50 L327 22"/>
+          <path d="M311 20 L329 20 L329 38"/>
+        </g>
+      </svg>
+    </button>
+    <nav class="ld-mainnav" id="ld-mainnav">
+      <a href="#ld-about" data-i18n="nav_about"></a>
+      <a href="#ld-programs" data-i18n="nav_programs"></a>
+      <a href="#ld-portal" data-i18n="nav_portal"></a>
+      <a href="#ld-reviews" data-i18n="nav_reviews"></a>
+      <a href="#ld-enroll" data-i18n="nav_contact"></a>
+      <a class="ld-login-btn in-menu" href="#" onclick="showLogin();return false;">
+        <span class="login-label" data-i18n="login_btn"></span>
+        <span class="ld-beta-tag">beta</span>
+      </a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button type="button" class="ld-lang-btn" data-lang="ru" onclick="ldSetLang('ru')">RU</button>
+        <button type="button" class="ld-lang-btn" data-lang="en" onclick="ldSetLang('en')">EN</button>
+        <button type="button" class="ld-lang-btn" data-lang="uz" onclick="ldSetLang('uz')">UZ</button>
+      </div>
+      <div class="icon-btn ld-theme-btn" onclick="toggleTheme()" aria-label="Toggle theme"><i class="ti ti-moon"></i></div>
+      <a class="ld-login-btn in-header" href="#" id="ld-login-link" onclick="showLogin();return false;">
+        <span class="login-label" data-i18n="login_btn"></span>
+        <span class="ld-beta-tag">beta</span>
+      </a>
+      <button type="button" class="ld-burger" onclick="document.getElementById('ld-mainnav').classList.toggle('open')" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main id="ld-top">
+  <section class="ld-hero">
+    <div class="wrap">
+      <div class="eyebrow rv" data-i18n="hero_eyebrow"></div>
+      <h1 class="rv">
+        <span data-i18n="hero_line1"></span><br>
+        <em data-i18n="hero_line2"></em><span class="ld-hero-arrow"><svg viewBox="0 0 140 90"><path d="M6 80 L52 44 L74 60 L124 16"/><polygon points="112,8 134,6 132,28"/></svg></span>
+      </h1>
+      <p class="ld-hero-sub rv" data-i18n="hero_sub"></p>
+      <div class="ld-hero-cta-row rv">
+        <a class="ld-btn-primary" href="#ld-enroll"><span data-i18n="hero_cta"></span><span class="arr">↗</span></a>
+        <a class="ld-btn-ghost" href="#ld-programs" data-i18n="hero_cta2"></a>
+      </div>
+      <div class="ld-hero-meta rv">
+        <div><div class="n">A1–C1</div><div class="l" data-i18n="meta_levels"></div></div>
+        <div><div class="n">IELTS</div><div class="l" data-i18n="meta_ielts"></div></div>
+        <div><div class="n">24/7</div><div class="l" data-i18n="meta_portal"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ld-about">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="why_eyebrow"></div>
+        <h2><span data-i18n="why_title1"></span> <em data-i18n="why_title2"></em></h2>
+      </div>
+      <div class="why-grid rv">
+        <div class="why-card"><div class="why-num">01</div><h3 data-i18n="why1_t"></h3><p data-i18n="why1_p"></p></div>
+        <div class="why-card"><div class="why-num">02</div><h3 data-i18n="why2_t"></h3><p data-i18n="why2_p"></p></div>
+        <div class="why-card"><div class="why-num">03</div><h3 data-i18n="why3_t"></h3><p data-i18n="why3_p"></p></div>
+        <div class="why-card"><div class="why-num">04</div><h3 data-i18n="why4_t"></h3><p data-i18n="why4_p"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ld-programs">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="prog_eyebrow"></div>
+        <h2><span data-i18n="prog_title1"></span> <em data-i18n="prog_title2"></em></h2>
+      </div>
+      <div class="rv">
+        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">A1</div><div><div class="prog-name" data-i18n="prog1_n"></div><div class="prog-desc" data-i18n="prog1_d"></div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">A2</div><div><div class="prog-name" data-i18n="prog2_n"></div><div class="prog-desc" data-i18n="prog2_d"></div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">B1</div><div><div class="prog-name" data-i18n="prog3_n"></div><div class="prog-desc" data-i18n="prog3_d"></div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">B2</div><div><div class="prog-name" data-i18n="prog4_n"></div><div class="prog-desc" data-i18n="prog4_d"></div></div><div class="prog-arrow">↗</div></button>
+        <button type="button" class="prog-row" onclick="showLogin()"><div class="prog-lvl">C1</div><div><div class="prog-name" data-i18n="prog5_n"></div><div class="prog-desc" data-i18n="prog5_d"></div></div><div class="prog-arrow">↗</div></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="ld-portal" class="portal-band">
+    <div class="wrap portal-grid">
+      <div class="rv">
+        <div class="eyebrow" data-i18n="portal_eyebrow"></div>
+        <h2><span data-i18n="portal_title1"></span> <em data-i18n="portal_title2"></em></h2>
+        <p class="lead" data-i18n="portal_lead"></p>
+        <ul class="portal-feats">
+          <li data-i18n="portal_f1"></li><li data-i18n="portal_f2"></li><li data-i18n="portal_f3"></li>
+          <li data-i18n="portal_f4"></li><li data-i18n="portal_f5"></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <div class="portal-shot" role="img" aria-label="Student portal preview">
+          <div class="fake-ui">
+            <div class="fake-bar w60"></div><div class="fake-bar w80"></div>
+            <div class="fake-cards"><div></div><div></div><div></div></div>
+            <div class="fake-bar w45"></div><div class="fake-bar w60"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ld-reviews">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="tst_eyebrow"></div>
+        <h2><span data-i18n="tst_title1"></span> <em data-i18n="tst_title2"></em></h2>
+      </div>
+      <div class="rv">
+        <span class="tst-note" data-i18n="tst_placeholder_note"></span>
+        <div class="tst-grid">
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst1_q"></div><div class="tst-who" data-i18n="tst1_w"></div></div>
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst2_q"></div><div class="tst-who" data-i18n="tst2_w"></div></div>
+          <div class="tst-card"><div class="tst-quote" data-i18n="tst3_q"></div><div class="tst-who" data-i18n="tst3_w"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ld-enroll" class="ld-enroll">
+    <div class="wrap">
+      <div class="rv">
+        <div class="eyebrow" style="justify-content:center" data-i18n="enroll_eyebrow"></div>
+        <h2><span data-i18n="enroll_title1"></span> <em data-i18n="enroll_title2"></em></h2>
+        <p class="ld-hero-sub" data-i18n="enroll_sub"></p>
+        <div class="ld-hero-cta-row" style="justify-content:center">
+          <a class="ld-btn-primary" href="#" onclick="showLogin();return false;"><span data-i18n="enroll_cta"></span><span class="arr">↗</span></a>
+        </div>
+        <div class="contact-line">
+          <div><a href="tel:+998000000000">+998 (00) 000-00-00</a><span class="placeholder-mark" data-i18n="ph_phone"></span></div>
+          <div><a href="mailto:motionlearnuz@gmail.com">motionlearnuz@gmail.com</a></div>
+          <div><span data-i18n="contact_city"></span><span class="placeholder-mark" data-i18n="ph_addr"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ld-footer">
+  <div class="wrap foot-in">
+    <button type="button" class="ld-logo" aria-label="Motion" onclick="document.getElementById('landing-page').scrollTo({top:0,behavior:'smooth'})">
+      <svg viewBox="0 0 340 84" xmlns="http://www.w3.org/2000/svg"><text x="0" y="62" class="logo-word" font-family="'Playfair Display',Georgia,serif" font-size="64" font-weight="500">motion</text><g class="logo-arrow" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M252 66 L285 40 L299 50 L327 22"/><path d="M311 20 L329 20 L329 38"/></g></svg>
+    </button>
+    <div class="foot-links">
+      <a href="#ld-programs" data-i18n="nav_programs"></a>
+      <a href="#ld-enroll" data-i18n="nav_contact"></a>
+      <button type="button" onclick="showLogin()" data-i18n="foot_portal"></button>
+    </div>
+    <div class="foot-note">© <span id="ld-yr"></span> Motion. <span data-i18n="foot_rights"></span></div>
+  </div>
+</footer>
+
+</div>
+
+<script>
+'use strict';
+// ─── Landing page i18n — Russian is the default (Round 3 §7) ────────────────
+// Content ported from site/index.html (Round 3 marketing site build);
+// login_btn is reworded from role-specific "as a Student" copy since the
+// same button now routes admin/teacher/student alike via the existing
+// username+password form.
+const LD_I18N = {
+  ru: {
+    nav_about: 'О центре', nav_programs: 'Программы', nav_portal: 'Портал', nav_reviews: 'Отзывы', nav_contact: 'Контакты',
+    login_btn: 'Войти',
+    hero_eyebrow: 'Языковой центр · Ташкент',
+    hero_line1: 'Английский, который',
+    hero_line2: 'двигает вперёд',
+    hero_sub: 'Пять уровней — от первого «hello» до уверенного C1 и подготовки к IELTS. Живые занятия в небольших группах и личный цифровой портал для каждого студента.',
+    hero_cta: 'Записаться на курс', hero_cta2: 'Смотреть программы',
+    meta_levels: 'уровни обучения', meta_ielts: 'подготовка к экзамену', meta_portal: 'портал студента',
+    why_eyebrow: 'Почему Motion',
+    why_title1: 'Учёба, устроенная', why_title2: 'по-взрослому',
+    why1_t: 'Чёткая система уровней', why1_p: 'Пять ступеней от A1 до C1 — вы всегда знаете, где находитесь и что осваиваете дальше. Никаких «вечных элементарников».',
+    why2_t: 'Курс на IELTS', why2_p: 'Отдельная программа подготовки: стратегия каждой секции, тренировочные эссе с детальным разбором и оценкой по банду.',
+    why3_t: 'AI-проверка письма', why3_p: 'Каждое эссе проходит автоматический разбор: грамматика, стиль, структура — с объяснениями, а не просто исправлениями.',
+    why4_t: 'Прозрачный прогресс', why4_p: 'Оценки, посещаемость, домашние задания и динамика навыков — всё в личном портале, доступном и студенту, и родителям.',
+    prog_eyebrow: 'Программы',
+    prog_title1: 'От первого слова', prog_title2: 'до свободной речи',
+    prog1_n: 'Beginner', prog1_d: 'Первые слова и фразы, базовая грамматика, уверенное «представиться и рассказать о себе».',
+    prog2_n: 'Elementary', prog2_d: 'Повседневные темы: покупки, путешествия, планы. Простое прошедшее и будущее время.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Разговорная беглость, письмо, аудирование. Уровень, с которого английский начинает работать на вас.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Академическая лексика, сложная грамматика, знакомство с форматом экзамена.',
+    prog5_n: 'IELTS Prep', prog5_d: 'Полная подготовка к IELTS: стратегия секций, тренировочные тесты, эссе с оценкой по банду.',
+    portal_eyebrow: 'Портал студента',
+    portal_title1: 'Учёба не заканчивается', portal_title2: 'у двери класса',
+    portal_lead: 'Каждый студент Motion получает доступ к личному порталу — расписание, домашние задания, оценки и тренажёры в одном месте, с любого устройства.',
+    portal_f1: 'AI-проверка эссе с разбором ошибок и оценкой IELTS',
+    portal_f2: 'Тренажёры лексики и грамматики по темам уроков',
+    portal_f3: 'Диктанты с озвучкой и мгновенной проверкой',
+    portal_f4: 'Расписание, оценки и посещаемость в реальном времени',
+    portal_f5: 'Чат с преподавателем и доска объявлений',
+    tst_eyebrow: 'Отзывы',
+    tst_title1: 'Что говорят', tst_title2: 'студенты',
+    tst_placeholder_note: 'Примеры отзывов — будут заменены на настоящие',
+    tst1_q: 'За полгода прошёл путь от A2 до уверенного B1. Портал с тренажёрами — то, чего не хватало во всех прошлых курсах.',
+    tst1_w: '— Студент курса Pre-Intermediate',
+    tst2_q: 'Готовилась к IELTS три месяца. Разборы эссе с оценкой по банду — самое полезное, что я видела в подготовке.',
+    tst2_w: '— Студентка курса IELTS Prep',
+    tst3_q: 'Ребёнок сам садится за домашние задания — из-за рейтинга и стрика в портале. Прогресс видно по неделям.',
+    tst3_w: '— Родитель студента Beginner',
+    enroll_eyebrow: 'Запись',
+    enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
+    enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
+    enroll_cta: 'Открыть портал студента',
+    contact_city: 'Ташкент, Узбекистан',
+    ph_phone: 'номер уточняется', ph_addr: 'адрес уточняется',
+    foot_portal: 'Портал студента', foot_rights: 'Все права защищены.',
+  },
+  en: {
+    nav_about: 'About', nav_programs: 'Programs', nav_portal: 'Portal', nav_reviews: 'Reviews', nav_contact: 'Contact',
+    login_btn: 'Login',
+    hero_eyebrow: 'Language centre · Tashkent',
+    hero_line1: 'English that moves',
+    hero_line2: 'you forward',
+    hero_sub: 'Five levels — from your first “hello” to a confident C1 and IELTS preparation. Live small-group classes plus a personal digital portal for every student.',
+    hero_cta: 'Enroll now', hero_cta2: 'View programs',
+    meta_levels: 'course levels', meta_ielts: 'exam preparation', meta_portal: 'student portal',
+    why_eyebrow: 'Why Motion',
+    why_title1: 'Learning, organised', why_title2: 'properly',
+    why1_t: 'A clear level system', why1_p: 'Five stages from A1 to C1 — you always know exactly where you stand and what comes next. No “forever-elementary” students.',
+    why2_t: 'A path to IELTS', why2_p: 'A dedicated preparation track: strategy for every section, practice essays with detailed feedback and band scoring.',
+    why3_t: 'AI writing feedback', why3_p: 'Every essay gets an automatic breakdown — grammar, style, structure — with explanations, not just corrections.',
+    why4_t: 'Transparent progress', why4_p: 'Grades, attendance, homework and skill dynamics — all in a personal portal, visible to students and parents alike.',
+    prog_eyebrow: 'Programs',
+    prog_title1: 'From your first word', prog_title2: 'to fluent speech',
+    prog1_n: 'Beginner', prog1_d: 'First words and phrases, core grammar, confidently introducing yourself and talking about your life.',
+    prog2_n: 'Elementary', prog2_d: 'Everyday topics: shopping, travel, plans. Simple past and future tenses.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Conversational fluency, writing, listening. The level where English starts working for you.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Academic vocabulary, advanced grammar, and a first look at the exam format.',
+    prog5_n: 'IELTS Prep', prog5_d: 'Full IELTS preparation: section strategy, mock tests, band-scored essays.',
+    portal_eyebrow: 'Student portal',
+    portal_title1: 'Learning doesn’t stop', portal_title2: 'at the classroom door',
+    portal_lead: 'Every Motion student gets a personal portal — schedule, homework, grades and practice trainers in one place, on any device.',
+    portal_f1: 'AI essay checking with error breakdowns and IELTS band scores',
+    portal_f2: 'Vocabulary and grammar trainers matched to lesson topics',
+    portal_f3: 'Dictation practice with audio playback and instant scoring',
+    portal_f4: 'Schedule, grades and attendance in real time',
+    portal_f5: 'Teacher chat and an announcements board',
+    tst_eyebrow: 'Reviews',
+    tst_title1: 'What our students', tst_title2: 'say',
+    tst_placeholder_note: 'Sample reviews — to be replaced with real ones',
+    tst1_q: 'In six months I went from A2 to a confident B1. The portal with its trainers is what every previous course was missing.',
+    tst1_w: '— Pre-Intermediate student',
+    tst2_q: 'I prepared for IELTS in three months. The band-scored essay feedback is the most useful prep tool I have ever seen.',
+    tst2_w: '— IELTS Prep student',
+    tst3_q: 'My son does his homework without being asked — because of the portal leaderboard and streaks. You can see progress week by week.',
+    tst3_w: '— Parent of a Beginner student',
+    enroll_eyebrow: 'Enrollment',
+    enroll_title1: 'Ready to move', enroll_title2: 'forward?',
+    enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
+    enroll_cta: 'Open the student portal',
+    contact_city: 'Tashkent, Uzbekistan',
+    ph_phone: 'number to be confirmed', ph_addr: 'address to be confirmed',
+    foot_portal: 'Student portal', foot_rights: 'All rights reserved.',
+  },
+  uz: {
+    nav_about: 'Markaz haqida', nav_programs: 'Dasturlar', nav_portal: 'Portal', nav_reviews: 'Fikrlar', nav_contact: 'Aloqa',
+    login_btn: 'Kirish',
+    hero_eyebrow: 'Til markazi · Toshkent',
+    hero_line1: 'Sizni olg‘a yetaklaydigan',
+    hero_line2: 'ingliz tili',
+    hero_sub: 'Besh daraja — ilk “hello”dan ishonchli C1 va IELTS tayyorgarligigacha. Kichik guruhlarda jonli darslar va har bir talaba uchun shaxsiy raqamli portal.',
+    hero_cta: 'Kursga yozilish', hero_cta2: 'Dasturlarni ko‘rish',
+    meta_levels: 'o‘quv darajalari', meta_ielts: 'imtihonga tayyorgarlik', meta_portal: 'talaba portali',
+    why_eyebrow: 'Nega Motion',
+    why_title1: 'To‘g‘ri tashkil etilgan', why_title2: 'ta’lim',
+    why1_t: 'Aniq darajalar tizimi', why1_p: 'A1 dan C1 gacha besh bosqich — qayerda turganingizni va keyin nimani o‘rganishingizni doim bilasiz.',
+    why2_t: 'IELTS sari yo‘l', why2_p: 'Alohida tayyorgarlik dasturi: har bir bo‘lim strategiyasi, batafsil tahlil va band bahosi bilan mashq insholari.',
+    why3_t: 'AI yozma tahlili', why3_p: 'Har bir insho avtomatik tahlildan o‘tadi — grammatika, uslub, tuzilma — shunchaki tuzatish emas, tushuntirish bilan.',
+    why4_t: 'Shaffof natijalar', why4_p: 'Baholar, davomat, uy vazifalari va ko‘nikmalar dinamikasi — barchasi talaba va ota-onalar ko‘ra oladigan shaxsiy portalda.',
+    prog_eyebrow: 'Dasturlar',
+    prog_title1: 'Ilk so‘zdan', prog_title2: 'erkin nutqqacha',
+    prog1_n: 'Beginner', prog1_d: 'Ilk so‘zlar va iboralar, asosiy grammatika, o‘zini tanishtirib, hayoti haqida bemalol gapirish.',
+    prog2_n: 'Elementary', prog2_d: 'Kundalik mavzular: xarid, sayohat, rejalar. O‘tgan va kelasi zamonning sodda shakllari.',
+    prog3_n: 'Pre-Intermediate', prog3_d: 'Og‘zaki ravonlik, yozish, tinglab tushunish. Ingliz tili siz uchun ishlay boshlaydigan daraja.',
+    prog4_n: 'Pre-IELTS', prog4_d: 'Akademik lug‘at, murakkab grammatika va imtihon formati bilan ilk tanishuv.',
+    prog5_n: 'IELTS Prep', prog5_d: 'To‘liq IELTS tayyorgarligi: bo‘limlar strategiyasi, sinov testlari, band bahosi bilan insholar.',
+    portal_eyebrow: 'Talaba portali',
+    portal_title1: 'O‘qish sinf eshigida', portal_title2: 'tugamaydi',
+    portal_lead: 'Har bir Motion talabasi shaxsiy portalga ega bo‘ladi — dars jadvali, uy vazifalari, baholar va mashq trenajyorlari bir joyda, istalgan qurilmada.',
+    portal_f1: 'Xatolar tahlili va IELTS band bahosi bilan AI insho tekshiruvi',
+    portal_f2: 'Dars mavzulariga mos lug‘at va grammatika trenajyorlari',
+    portal_f3: 'Ovozli diktantlar va bir zumda baholash',
+    portal_f4: 'Dars jadvali, baholar va davomat real vaqtda',
+    portal_f5: 'O‘qituvchi bilan chat va e’lonlar taxtasi',
+    tst_eyebrow: 'Fikrlar',
+    tst_title1: 'Talabalarimiz', tst_title2: 'nima deydi',
+    tst_placeholder_note: 'Namuna fikrlar — haqiqiylari bilan almashtiriladi',
+    tst1_q: 'Olti oyda A2 dan ishonchli B1 gacha yetdim. Trenajyorli portal — oldingi barcha kurslarda yetishmagan narsa.',
+    tst1_w: '— Pre-Intermediate kursi talabasi',
+    tst2_q: 'IELTS ga uch oy tayyorlandim. Band bahosi bilan insho tahlili — tayyorgarlikda ko‘rgan eng foydali vositam.',
+    tst2_w: '— IELTS Prep kursi talabasi',
+    tst3_q: 'O‘g‘lim uy vazifasini o‘zi bajaradi — portaldagi reyting va “strik” tufayli. Har haftalik o‘sishni ko‘rish mumkin.',
+    tst3_w: '— Beginner talabasining ota-onasi',
+    enroll_eyebrow: 'Yozilish',
+    enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
+    enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',
+    enroll_cta: 'Talaba portalini ochish',
+    contact_city: 'Toshkent, O‘zbekiston',
+    ph_phone: 'raqam aniqlanmoqda', ph_addr: 'manzil aniqlanmoqda',
+    foot_portal: 'Talaba portali', foot_rights: 'Barcha huquqlar himoyalangan.',
+  },
+};
+const LD_HTML_LANG={ru:'ru',en:'en',uz:'uz'};
+function ldSetLang(lang){
+  if(!LD_I18N[lang])lang='ru';
+  document.querySelectorAll('#landing-page [data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    const val=LD_I18N[lang][key];
+    if(val!==undefined)el.textContent=val; // textContent — translations can never inject HTML
+  });
+  document.querySelectorAll('#landing-page .ld-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  document.documentElement.lang=LD_HTML_LANG[lang];
+  saveStore({lang});
+}
+function showLanding(){
+  const el=document.getElementById('landing-page');
+  if(el)el.classList.add('open');
+  ldSetLang(loadStore().lang||'ru');
+}
+function hideLanding(){
+  const el=document.getElementById('landing-page');
+  if(el)el.classList.remove('open');
+}
+document.getElementById('ld-yr').textContent=new Date().getFullYear();
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('#landing-page .rv').forEach(el=>io.observe(el));
+  const landingEl=document.getElementById('landing-page');
+  if(landingEl){
+    landingEl.addEventListener('scroll',()=>{
+      const h=document.getElementById('ld-hdr');
+      if(h)h.classList.toggle('scrolled',landingEl.scrollTop>10);
+    },{passive:true});
+  }
+  document.querySelectorAll('#landing-page #ld-mainnav a').forEach(a=>a.addEventListener('click',()=>{
+    document.getElementById('ld-mainnav').classList.remove('open');
+  }));
+})();
+</script>
 
 <canvas class="bg-orbs" id="bg-orbs"></canvas>
 
@@ -1623,7 +2234,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="ni" data-role="student" data-id="speaking" onclick="show('speaking',this)"><i class="ti ti-microphone"></i>Speaking</div>
   <div class="ni" data-role="student" data-id="streak" onclick="show('streak',this)"><i class="ti ti-flame"></i>Streak &amp; goals</div>
   <div class="ni" data-role="student" data-id="leaderboard" onclick="show('leaderboard',this)"><i class="ti ti-trophy"></i>Leaderboard</div>
-  <div class="ni" data-role="student" data-id="classroom" onclick="show('classroom',this)"><i class="ti ti-users"></i>Classmates</div>
 
   <!-- TEACHER NAV -->
   <div class="ns" data-role="teacher">Teaching</div>
@@ -1634,12 +2244,13 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <!-- ADMIN NAV -->
   <div class="ns" data-role="admin">Administration</div>
   <div class="ni active" data-role="admin" data-id="admin" onclick="show('admin',this)"><i class="ti ti-shield-lock"></i>Admin Dashboard</div>
+  <div class="ni" data-role="admin" data-id="admin-payments" onclick="show('admin-payments',this)"><i class="ti ti-currency-dollar"></i>Payments</div>
   <div class="ni" data-role="admin" data-id="admin-audit" onclick="show('admin-audit',this)"><i class="ti ti-list-details"></i>Audit Log</div>
 
   <!-- SHARED -->
   <div class="ns">Centre</div>
-  <div class="ni" data-id="materials" onclick="show('materials',this)"><i class="ti ti-folders"></i>Materials</div>
-  <div class="ni" data-id="announce" onclick="show('announce',this)"><i class="ti ti-speakerphone"></i>Announcements</div>
+  <div class="ni" data-id="materials" data-hide-admin onclick="show('materials',this)"><i class="ti ti-folders"></i>Materials</div>
+  <div class="ni" data-id="announce" data-hide-admin onclick="show('announce',this)"><i class="ti ti-speakerphone"></i>Announcements</div>
   <div class="ni" data-id="chat" data-hide-admin onclick="show('chat',this)"><i class="ti ti-message-circle"></i>Chat</div>
   <div class="ni" data-role="student" data-id="ai" onclick="show('ai',this)"><i class="ti ti-robot"></i>AI Assistant</div>
   <div class="ns">Account</div>
@@ -1888,11 +2499,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <div class="mat-lbl">Target groups</div>
     <div class="mat-group-checks" id="mat-group-checks">
       <label class="mat-group-check"><input type="checkbox" value="All Groups" checked> All Groups</label>
-      <label class="mat-group-check"><input type="checkbox" value="Beginner A1"> Beginner A1</label>
-      <label class="mat-group-check"><input type="checkbox" value="Elementary A2"> Elementary A2</label>
-      <label class="mat-group-check"><input type="checkbox" value="Pre-Intermediate B1"> Pre-Intermediate B1</label>
-      <label class="mat-group-check"><input type="checkbox" value="Pre-IELTS B2"> Pre-IELTS B2</label>
-      <label class="mat-group-check"><input type="checkbox" value="IELTS Prep C1"> IELTS Prep C1</label>
     </div>
     <div class="mat-actions">
       <button type="button" class="hw-btn" id="mat-publish-btn" style="flex:1" onclick="saveMaterial()"><i class="ti ti-check" style="margin-right:5px;vertical-align:-1px"></i>Publish</button>
@@ -2301,12 +2907,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div id="announce-list"></div>
 </div>
 
-<!-- CLASSROOM -->
-<div class="screen" id="screen-classroom">
-  <div class="ph"><div class="pt"><i class="ti ti-users" style="margin-right:8px;color:var(--accent);vertical-align:-2px"></i>Classmates</div><div class="ps" id="classroom-sub">Your study group</div></div>
-  <div class="classroom-grid" id="classroom-grid"></div>
-</div>
-
 <!-- CHAT — student view -->
 <div class="screen" id="screen-chat">
   <div data-role="student">
@@ -2415,15 +3015,31 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       <input class="ai-in" id="adm-new-username" placeholder="Username (login)" style="margin:0" autocomplete="off">
       <input class="ai-in" id="adm-new-pass" placeholder="Password (min 6 chars)" style="margin:0" autocomplete="off">
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <input class="ai-in" id="adm-new-name" placeholder="Full name" style="margin:0">
       <select class="ai-in" id="adm-new-role" style="margin:0">
         <option value="student">Student</option>
         <option value="teacher">Teacher</option>
       </select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+      <select class="ai-in" id="adm-new-level" style="margin:0" onchange="_admNewLevelChanged()"></select>
       <select class="ai-in" id="adm-new-group" style="margin:0"></select>
     </div>
     <button type="button" class="hw-btn" id="adm-create-btn" style="margin-top:0" onclick="adminCreateUser()"><i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Create account</button>
+  </div>
+  <div class="card glass" style="padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px">
+      <div class="sec" style="margin:0"><i class="ti ti-list-details" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Groups</div>
+    </div>
+    <div style="padding:0 14px 14px">
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:12px">
+        <select class="ai-in" id="adm-grp-new-level" style="margin:0"></select>
+        <input class="ai-in" id="adm-grp-new-name" placeholder="Group name (e.g. Morning)" style="margin:0">
+        <button type="button" class="mini-btn" onclick="adminCreateGroup()" title="Add group"><i class="ti ti-folder-plus"></i></button>
+      </div>
+      <div id="adm-groups-list"></div>
+    </div>
   </div>
   <div class="card glass" style="padding:0;overflow:hidden">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 14px 10px">
@@ -2439,6 +3055,31 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="ph"><div class="pt"><i class="ti ti-list-details" style="margin-right:8px;color:var(--gold);vertical-align:-2px"></i>Audit Log</div><div class="ps">Every privileged admin action, newest first</div></div>
   <div class="card glass" style="padding:0;overflow:hidden">
     <div id="adm-audit-list"><div style="text-align:center;padding:28px"><span class="spinner lg"></span></div></div>
+  </div>
+</div>
+
+<!-- ADMIN PAYMENTS -->
+<div class="screen" id="screen-admin-payments" data-role="admin">
+  <div class="ph"><div class="pt"><i class="ti ti-currency-dollar" style="margin-right:8px;color:var(--gold);vertical-align:-2px"></i>Payments</div><div class="ps">Monthly tuition record-keeping — this is not a payment processor, no card data is ever collected here</div></div>
+  <div class="card glass">
+    <div class="sec" style="margin-top:0">Monthly rate</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input class="ai-in" id="pay-rate-in" type="number" min="0" step="1000" style="margin:0;max-width:180px">
+      <span style="color:var(--txt3);font-size:12px">UZS / month</span>
+      <button type="button" class="mini-btn" onclick="adminSaveMonthlyRate()"><i class="ti ti-device-floppy" style="vertical-align:-1px"></i> Save</button>
+    </div>
+  </div>
+  <div class="card glass" style="padding:0;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:14px 14px 10px">
+      <div class="sec" style="margin:0">Status</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input class="ai-in" id="pay-period-in" type="month" style="margin:0" onchange="renderAdminPayments()">
+        <select class="ai-in" id="pay-group-filter" style="margin:0" onchange="_renderPaymentRows()">
+          <option value="">All groups</option>
+        </select>
+      </div>
+    </div>
+    <div id="pay-status-list"><div style="text-align:center;padding:28px"><span class="spinner lg"></span></div></div>
   </div>
 </div>
 
@@ -2667,11 +3308,6 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <i class="ti ti-users" style="font-size:1.3rem;color:var(--accent)"></i>
     <select id="progress-group-sel" class="ai-in" style="flex:1;margin:0" onchange="renderProgressHub()">
       <option value="">— Select a group —</option>
-      <option>IELTS Prep C1</option>
-      <option>Pre-IELTS B2</option>
-      <option>Pre-Intermediate B1</option>
-      <option>Elementary A2</option>
-      <option>Beginner A1</option>
     </select>
   </div>
 
@@ -2825,6 +3461,22 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <div class="sec" style="margin-top:4px"><i class="ti ti-layout-grid" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Group Breakdown</div>
     <div class="tprof-group-cards" id="tprof-group-cards"></div>
   </div>
+
+  <!-- ADMIN-ONLY SECTION: no student payment data, no teacher academic portfolio -->
+  <div id="profile-admin-section" style="display:none">
+    <div class="p2g">
+      <div class="p-info-card">
+        <div class="p-info-label">Account</div>
+        <div class="p-info-row"><span class="p-info-key">Role</span><span class="p-info-val">Administrator</span></div>
+        <div class="p-info-row"><span class="p-info-key">Username</span><span class="p-info-val" id="adm-profile-username">—</span></div>
+      </div>
+      <div class="p-info-card">
+        <div class="p-info-label">Quick links</div>
+        <div class="p-info-row" style="cursor:pointer" onclick="navTo('admin')"><span class="p-info-key"><i class="ti ti-shield-lock" style="margin-right:5px;vertical-align:-2px"></i>Admin Dashboard</span><span class="p-info-val">→</span></div>
+        <div class="p-info-row" style="cursor:pointer" onclick="navTo('admin-audit')"><span class="p-info-key"><i class="ti ti-list-details" style="margin-right:5px;vertical-align:-2px"></i>Audit Log</span><span class="p-info-val">→</span></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- STUDENT ANALYTICS MODAL -->
@@ -2892,6 +3544,75 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     </div>
     <div id="hw-grade-modal-body" style="padding:0 20px 20px">
       <div style="text-align:center;padding:40px 0;color:var(--txt3)"><span class="spinner lg"></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONE-TIME PASSWORD REVEAL MODAL (addendum §3) — password is never re-read
+     from the database; it only ever comes from the value the admin already
+     typed into the create/reset form, held in a local JS variable. -->
+<div class="modal-overlay" id="pwreveal-modal-overlay" onclick="if(event.target===this)closePwReveal()">
+  <div class="modal-box" style="max-width:420px;width:92%">
+    <div class="modal-head">
+      <div class="modal-title"><i class="ti ti-key" style="margin-right:6px;vertical-align:-2px;color:var(--accent)"></i>Save these credentials</div>
+      <button type="button" class="modal-close" onclick="closePwReveal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:0 20px 20px">
+      <div style="font-size:12px;color:var(--txt3);margin-bottom:14px">This won't be shown again — save it now before closing this window.</div>
+      <label class="login-lbl" for="pwreveal-username">Username</label>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" class="login-in" id="pwreveal-username" readonly style="flex:1">
+        <button type="button" class="mini-btn" onclick="copyPwRevealField('pwreveal-username')" title="Copy username"><i class="ti ti-copy"></i></button>
+      </div>
+      <label class="login-lbl" for="pwreveal-password">Password</label>
+      <div style="display:flex;gap:8px;margin-bottom:4px">
+        <input type="text" class="login-in" id="pwreveal-password" readonly style="flex:1;font-family:monospace">
+        <button type="button" class="mini-btn" onclick="copyPwRevealField('pwreveal-password')" title="Copy password"><i class="ti ti-copy"></i></button>
+      </div>
+      <div id="pwreveal-copied" style="font-size:11px;color:var(--accent);height:16px;margin-bottom:10px"></div>
+      <button type="button" class="login-btn primary" onclick="closePwReveal()" style="width:100%">I've saved this — close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE GROUP MODAL (addendum §2) -->
+<div class="modal-overlay" id="group-assign-modal-overlay" onclick="if(event.target===this)closeGroupAssignModal()">
+  <div class="modal-box" style="max-width:420px;width:92%">
+    <div class="modal-head">
+      <div class="modal-title"><i class="ti ti-users" style="margin-right:6px;vertical-align:-2px;color:var(--accent)"></i>Change group</div>
+      <button type="button" class="modal-close" onclick="closeGroupAssignModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:0 20px 20px">
+      <div id="ga-modal-who" style="font-size:12px;color:var(--txt3);margin-bottom:12px"></div>
+      <label class="login-lbl" for="ga-level">Level</label>
+      <select class="login-in" id="ga-level" onchange="_gaLevelChanged()"></select>
+      <label class="login-lbl" for="ga-group">Group</label>
+      <select class="login-in" id="ga-group"></select>
+      <button type="button" class="login-btn primary" style="width:100%;margin-top:12px" onclick="submitGroupAssign()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN RECORD-PAYMENT MODAL (addendum §5) -->
+<div class="modal-overlay" id="pay-record-modal-overlay" onclick="if(event.target===this)closePayRecordModal()">
+  <div class="modal-box" style="max-width:420px;width:92%">
+    <div class="modal-head">
+      <div class="modal-title"><i class="ti ti-currency-dollar" style="margin-right:6px;vertical-align:-2px;color:var(--accent)"></i>Record payment</div>
+      <button type="button" class="modal-close" onclick="closePayRecordModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:0 20px 20px">
+      <div id="pr-modal-who" style="font-size:12px;color:var(--txt3);margin-bottom:12px"></div>
+      <label class="login-lbl" for="pr-amount">Amount (UZS)</label>
+      <input class="login-in" id="pr-amount" type="number" min="0" step="1000">
+      <label class="login-lbl" for="pr-status">Status</label>
+      <select class="login-in" id="pr-status">
+        <option value="paid">Paid</option>
+        <option value="partial">Partial</option>
+        <option value="waived">Waived</option>
+      </select>
+      <label class="login-lbl" for="pr-notes">Notes (optional)</label>
+      <input class="login-in" id="pr-notes" placeholder="e.g. paid via Click">
+      <button type="button" class="login-btn primary" style="width:100%;margin-top:12px" onclick="submitPayRecord()">Save</button>
     </div>
   </div>
 </div>
@@ -4355,22 +5076,6 @@ let _dbLessons={};
 let _dbVocab={};
 let _dbCurrentLesson=null;
 
-// ─── CLASSROOM DATA ──────────────────────────────
-const classroomData=[
-  {init:'AT',name:'Azizbek T.',streak:7,online:true,me:true,color:'linear-gradient(135deg,var(--accent),var(--purple))',tc:'#fff'},
-  {init:'ZA',name:'Zafar A.',streak:9,online:true,color:'rgba(201,168,76,0.15)',tc:'var(--gold)'},
-  {init:'DS',name:'Dilnoza S.',streak:5,online:true,color:'rgba(52,196,160,0.15)',tc:'var(--teal)'},
-  {init:'MK',name:'Malika K.',streak:12,online:false,color:'rgba(124,110,255,0.15)',tc:'var(--accent2)'},
-  {init:'JR',name:'Jasur R.',streak:30,online:true,color:'rgba(91,156,246,0.15)',tc:'var(--blue)'},
-  {init:'NK',name:'Nodira K.',streak:3,online:false,color:'rgba(224,112,176,0.15)',tc:'var(--pink)'},
-  {init:'BO',name:'Bobur O.',streak:1,online:false,color:'rgba(160,107,62,0.15)',tc:'var(--bronze)'},
-  {init:'SY',name:'Sarvar Y.',streak:4,online:true,color:'rgba(155,114,245,0.15)',tc:'var(--purple)'},
-  {init:'FH',name:'Feruza H.',streak:2,online:false,color:'rgba(240,96,96,0.12)',tc:'var(--red)'},
-  {init:'OT',name:'Otabek T.',streak:6,online:true,color:'rgba(61,220,132,0.12)',tc:'var(--green)'},
-  {init:'LB',name:'Lobar B.',streak:8,online:false,color:'rgba(138,144,153,0.15)',tc:'var(--silver)'},
-  {init:'RM',name:'Rustam M.',streak:0,online:false,color:'var(--bg4)',tc:'var(--txt3)'},
-];
-
 // ─── AI STUDY PLAN DATA ──────────────────────────
 const studyPlans=[
   [
@@ -4540,23 +5245,60 @@ function xpPop(amount,x,y){
   setTimeout(()=>el.remove(),1100);
 }
 
-// ─── AUTH / ROLES / GROUPS (demo, client-side) ──
-// NOTE: this is a front-end demo. Real authentication, multi-device sessions and
-// per-user data must live on a backend (see server.js / README).
-const GROUPS=['Beginner A1','Elementary A2','Pre-Intermediate B1','Pre-IELTS B2','IELTS Prep C1'];
+// ─── AUTH / ROLES / GROUPS ──
+// NOTE: demo/local login (USERS below) never touches the database and is
+// unaffected by any of this. Real groups now live in the `groups` table
+// (see supabase/admin_groups.sql — 5 fixed levels, any number of named
+// groups per level, admin-managed). GROUPS/GROUPS_META/GROUPS_ASSIGNABLE
+// are populated live by loadGroupsFromDB(); the literal list below is only
+// the pre-fetch fallback so every screen still renders something usable on
+// first paint or if Supabase is ever unreachable (same "must keep working"
+// rule as demo login).
+let GROUPS=['Beginner A1','Elementary A2','Pre-Intermediate B1','Pre-IELTS B2','IELTS Prep C1'];
+let GROUPS_META=[]; // live rows from `groups`: {id,level,name,frozen,created_at}
+let GROUPS_ASSIGNABLE=[...GROUPS]; // non-frozen names only — for pickers that ENROLL someone (signup, admin create/assign)
+const LEVELS=[
+  {slug:'beginner',         label:'Beginner A1'},
+  {slug:'elementary',       label:'Elementary A2'},
+  {slug:'pre-intermediate', label:'Pre-Intermediate B1'},
+  {slug:'pre-ielts',        label:'Pre-IELTS B2'},
+  {slug:'ielts',            label:'IELTS Prep C1'},
+];
+const LEVEL_ORDER=LEVELS.map(l=>l.slug);
+async function loadGroupsFromDB(){
+  if(!_sb)return;
+  const{data,error}=await _sb.from('groups').select('*');
+  if(error||!data||!data.length)return; // keep the fallback list rather than blank every dropdown
+  data.sort((a,b)=>LEVEL_ORDER.indexOf(a.level)-LEVEL_ORDER.indexOf(b.level)||a.name.localeCompare(b.name));
+  GROUPS_META=data;
+  GROUPS=data.map(g=>g.name);
+  GROUPS_ASSIGNABLE=data.filter(g=>!g.frozen).map(g=>g.name);
+  _populateAnnouncementGroupSelects();
+  refreshAdminGroupUI();
+}
+function groupsForLevel(levelSlug,assignableOnly){
+  if(!GROUPS_META.length){
+    // DB fetch hasn't resolved yet (or failed) — fall back to the one legacy
+    // group per level so pickers still work before/without a live groups table.
+    const idx=LEVEL_ORDER.indexOf(levelSlug);
+    return idx>=0&&GROUPS[idx]?[GROUPS[idx]]:[];
+  }
+  return GROUPS_META.filter(g=>g.level===levelSlug&&(!assignableOnly||!g.frozen)).map(g=>g.name);
+}
 // Single source of truth for "what is a real group" — the student and teacher announcement
 // dropdowns each used to hardcode their own option list, and the two had drifted apart (extra
 // entries like "Pre-Intermediate A2+"/"Upper-Intermediate B2"/"Advanced C1" that didn't match
 // any real group). Generate both from GROUPS so they can never diverge again.
 function _groupOptionsHTML(allLabel){
-  return `<option value="All Groups">${allLabel}</option>`+GROUPS.map(g=>`<option value="${g}">${g}</option>`).join('');
+  return `<option value="All Groups">${allLabel}</option>`+GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
 }
-(function _populateAnnouncementGroupSelects(){
+function _populateAnnouncementGroupSelects(){
   const sSel=document.getElementById('announcement-target-group');
   if(sSel)sSel.innerHTML=_groupOptionsHTML('All Groups');
   const tSel=document.getElementById('td-ann-group');
   if(tSel)tSel.innerHTML=_groupOptionsHTML('📢 All Groups');
-})();
+}
+_populateAnnouncementGroupSelects();
 
 // ─── USER DATABASE (demo) ───────────────────────
 const USERS=[
@@ -4627,6 +5369,7 @@ function _applyAndGo(s){
   saveStore({session});
   applySession();
   hideLogin();
+  hideLanding();
   updateStreakTracker();
   restoreLastScreen();
 }
@@ -4761,12 +5504,31 @@ function toggleSignupForm(){
   f.style.display=showing?'none':'block';
   if(t)t.style.display=showing?'flex':'none';
   if(!showing){
-    const gsel=document.getElementById('signup-group');
-    if(gsel&&!gsel.dataset.filled){
-      gsel.innerHTML=GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
-      gsel.dataset.filled='1';
+    const lsel=document.getElementById('signup-level');
+    if(lsel&&!lsel.dataset.filled){
+      lsel.innerHTML=LEVELS.map(l=>`<option value="${l.slug}">${escHtml(l.label)}</option>`).join('');
+      lsel.dataset.filled='1';
+      _signupLevelChanged();
     }
   }
+}
+function _signupLevelChanged(){
+  const lsel=document.getElementById('signup-level');
+  const gsel=document.getElementById('signup-group');
+  if(!lsel||!gsel)return;
+  const names=groupsForLevel(lsel.value,true);
+  gsel.innerHTML=names.length
+    ?names.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('')
+    :`<option value="">No open groups at this level</option>`;
+}
+function _admNewLevelChanged(){
+  const lsel=document.getElementById('adm-new-level');
+  const gsel=document.getElementById('adm-new-group');
+  if(!lsel||!gsel)return;
+  const names=groupsForLevel(lsel.value,true);
+  gsel.innerHTML=names.length
+    ?names.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('')
+    :`<option value="">No open groups at this level</option>`;
 }
 function _initialsFromName(name){
   const parts=(name||'').trim().split(/\s+/);
@@ -4849,11 +5611,13 @@ function logout(){
   const u=document.getElementById('login-user');if(u)u.value='';
   const p=document.getElementById('login-pass');if(p)p.value='';
   const er=document.getElementById('login-error');if(er)er.style.display='none';
-  showLogin();
+  hideLogin();
+  showLanding();
 }
 function applySession(){
-  if(!session){showLogin();return;}
+  if(!session){showLanding();return;}
   hideLogin();
+  hideLanding();
   document.body.setAttribute('data-role',session.role);
   const fn=session.name.split(' ')[0];
   document.querySelectorAll('.js-username').forEach(e=>e.textContent=session.name);
@@ -4877,7 +5641,7 @@ function restoreLastScreen(){
   const screenEl=document.getElementById('screen-'+dest);
   const screenRole=screenEl?.getAttribute('data-role');
   if(screenRole&&screenRole!==session.role)dest=roleHome[session.role]||'home';
-  if(session.role==='admin'&&!['admin','admin-audit','materials','announce','profile'].includes(dest))dest='admin';
+  if(session.role==='admin'&&!['admin','admin-payments','admin-audit','profile'].includes(dest))dest='admin';
   show(dest,document.querySelector(`[data-id="${dest}"]`));
 }
 function initialsOf(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();}
@@ -4893,8 +5657,12 @@ async function renderAdminDashboard(forceRefresh){
   if(session?.role!=='admin')return;
   const listEl=document.getElementById('adm-user-list');
   const warnEl=document.getElementById('admin-backend-warning');
-  const gsel=document.getElementById('adm-new-group');
-  if(gsel&&!gsel.dataset.filled){gsel.innerHTML=GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');gsel.dataset.filled='1';}
+  const lsel=document.getElementById('adm-new-level');
+  if(lsel&&!lsel.dataset.filled){
+    lsel.innerHTML=LEVELS.map(l=>`<option value="${l.slug}">${escHtml(l.label)}</option>`).join('');
+    lsel.dataset.filled='1';
+    _admNewLevelChanged();
+  }
   listEl.innerHTML='<div style="text-align:center;padding:28px"><span class="spinner lg"></span></div>';
   const{data,error}=await _sb.rpc('admin_list_users');
   if(error){
@@ -4916,12 +5684,14 @@ async function renderAdminDashboard(forceRefresh){
     }else{
       listEl.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">Could not load accounts.</div>';
     }
+    renderAdminGroupsScreen();
     return;
   }
   if(warnEl)warnEl.style.display='none';
   _admUsers=data||[];
   document.getElementById('adm-stat-students').textContent=_admUsers.filter(u=>u.role==='student').length;
   document.getElementById('adm-stat-teachers').textContent=_admUsers.filter(u=>u.role==='teacher').length;
+  renderAdminGroupsScreen();
   try{
     const{count}=await _sb.from('essay_history').select('id',{count:'exact',head:true});
     document.getElementById('adm-stat-essays').textContent=count??'—';
@@ -4940,6 +5710,7 @@ async function renderAdminDashboard(forceRefresh){
       <div class="adm-col-hide" style="color:var(--txt2)">${escHtml(u.group_name||'—')}</div>
       <div class="adm-actions">
         ${u.role==='admin'?'<span style="font-size:10px;color:var(--txt3)">protected</span>':`
+        <button type="button" class="mini-btn" title="Change group" onclick="openGroupAssignModal('${u.id}')"><i class="ti ti-users" style="vertical-align:-1px"></i></button>
         <button type="button" class="mini-btn" title="${frozen?'Unfreeze (restore login)':'Freeze (block login)'}" onclick="adminToggleFreeze('${u.id}',${frozen})"><i class="ti ${frozen?'ti-lock-open':'ti-snowflake'}" style="vertical-align:-1px"></i></button>
         <button type="button" class="mini-btn" title="Change login/password" onclick="adminResetCreds('${u.id}')"><i class="ti ti-key" style="vertical-align:-1px"></i></button>
         <button type="button" class="eh-del-btn" title="Delete account" onclick="adminDeleteUser('${u.id}')"><i class="ti ti-trash"></i></button>`}
@@ -4953,6 +5724,7 @@ async function adminCreateUser(){
   const role=document.getElementById('adm-new-role').value;
   const group=document.getElementById('adm-new-group').value;
   if(!username||!pass||!name){showToast('Username, password and name are required');return;}
+  if(!group){showToast('Pick a group with at least one open group for this level');return;}
   if(!isValidUsername(username)){showToast('Username must be 3–20 chars: letters, numbers and _ only');return;}
   if(pass.length<6){showToast('Password must be at least 6 characters');return;}
   // Wrap the username into the reserved internal email the RPC expects — the
@@ -4971,8 +5743,8 @@ async function adminCreateUser(){
     return;
   }
   ['adm-new-username','adm-new-pass','adm-new-name'].forEach(i=>{document.getElementById(i).value='';});
-  showToast('Account created ✅ — they log in with the username "'+username+'"');
   renderAdminDashboard(true);
+  openPwReveal(username,pass);
 }
 let _admArmedDelete=null;
 async function adminDeleteUser(id){
@@ -5009,8 +5781,293 @@ async function adminResetCreds(id){
     console.error('[Admin] update creds failed:',error.message);
     return;
   }
-  showToast('Credentials updated 🔑');
   renderAdminDashboard(true);
+  if(newPass){
+    openPwReveal(changingName?uname:curUsername,newPass);
+  }else{
+    showToast('Credentials updated 🔑');
+  }
+}
+let _gaUserId=null;
+function openGroupAssignModal(userId){
+  const u=_admUsers.find(x=>x.id===userId);
+  const ov=document.getElementById('group-assign-modal-overlay');
+  if(!u||!ov)return;
+  _gaUserId=userId;
+  document.getElementById('ga-modal-who').textContent=(u.full_name||'This user')+' is currently in: '+(u.group_name||'no group');
+  const lsel=document.getElementById('ga-level');
+  lsel.innerHTML=LEVELS.map(l=>`<option value="${l.slug}">${escHtml(l.label)}</option>`).join('');
+  const curMeta=GROUPS_META.find(g=>g.name===u.group_name);
+  lsel.value=curMeta?curMeta.level:LEVELS[0].slug;
+  _gaLevelChanged();
+  const gsel=document.getElementById('ga-group');
+  if(u.group_name&&[...gsel.options].some(o=>o.value===u.group_name))gsel.value=u.group_name;
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+}
+function _gaLevelChanged(){
+  const lsel=document.getElementById('ga-level');
+  const gsel=document.getElementById('ga-group');
+  if(!lsel||!gsel)return;
+  const names=groupsForLevel(lsel.value,true);
+  gsel.innerHTML=names.length
+    ?names.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('')
+    :`<option value="">No open groups at this level</option>`;
+}
+function closeGroupAssignModal(){
+  const ov=document.getElementById('group-assign-modal-overlay');
+  if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
+  _gaUserId=null;
+}
+async function submitGroupAssign(){
+  const gsel=document.getElementById('ga-group');
+  const groupName=gsel?gsel.value:'';
+  if(!_gaUserId||!groupName){showToast('Pick a group first');return;}
+  const{error}=await _sb.rpc('admin_set_student_group',{p_user_id:_gaUserId,p_group_name:groupName});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('function')?'Groups backend not installed yet (run supabase/admin_groups.sql)':'Could not change group');
+    console.error('[Admin] set group failed:',error.message);
+    return;
+  }
+  closeGroupAssignModal();
+  showToast('Group updated ✅');
+  renderAdminDashboard(true);
+}
+// ─── GROUP MANAGEMENT (addendum §2) ──────────────────────────────────────────
+// Levels are fixed (5, never change); groups live under a level and are fully
+// admin-managed via supabase/admin_groups.sql. Freezing a group only hides it
+// from pickers that ENROLL someone (signup, admin create/assign) — students
+// already in a frozen group keep full, unaffected access, since every other
+// screen still matches their group by name, same as before this feature existed.
+function renderAdminGroupsScreen(){
+  const lsel=document.getElementById('adm-grp-new-level');
+  if(lsel&&!lsel.dataset.filled){
+    lsel.innerHTML=LEVELS.map(l=>`<option value="${l.slug}">${escHtml(l.label)}</option>`).join('');
+    lsel.dataset.filled='1';
+  }
+  const listEl=document.getElementById('adm-groups-list');
+  if(!listEl)return;
+  if(!GROUPS_META.length){
+    listEl.innerHTML='<div style="text-align:center;padding:16px"><span class="spinner lg"></span></div>';
+    return;
+  }
+  listEl.innerHTML=LEVELS.map(l=>{
+    const rows=GROUPS_META.filter(g=>g.level===l.slug);
+    return `
+      <div style="margin-bottom:10px">
+        <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">${escHtml(l.label)}</div>
+        ${rows.length?rows.map(g=>{
+          const count=_admUsers.filter(u=>u.group_name===g.name).length;
+          return `
+          <div class="adm-user-row">
+            <div style="min-width:0">
+              <b>${escHtml(g.name)}</b>
+              ${g.frozen?'<span class="adm-status-badge frozen">Frozen</span>':''}
+              <div style="font-size:10px;color:var(--txt3)">${count} member${count===1?'':'s'}</div>
+            </div>
+            <div class="adm-actions">
+              <button type="button" class="mini-btn" title="${g.frozen?'Unfreeze (show in new-assignment pickers)':'Freeze (hide from new-assignment pickers)'}" onclick="adminToggleGroupFrozen('${g.id}',${g.frozen})"><i class="ti ${g.frozen?'ti-lock-open':'ti-snowflake'}" style="vertical-align:-1px"></i></button>
+              <button type="button" class="eh-del-btn" title="Delete group" onclick="adminDeleteGroup('${g.id}')"><i class="ti ti-trash"></i></button>
+            </div>
+          </div>`;
+        }).join(''):'<div style="font-size:11px;color:var(--txt3);padding:4px 0 8px">No groups yet</div>'}
+      </div>`;
+  }).join('');
+}
+function refreshAdminGroupUI(){
+  if(session?.role==='admin')renderAdminGroupsScreen();
+}
+async function adminCreateGroup(){
+  const level=document.getElementById('adm-grp-new-level').value;
+  const nameIn=document.getElementById('adm-grp-new-name');
+  const name=(nameIn.value||'').trim();
+  if(!name){showToast('Group name is required');return;}
+  const{error}=await _sb.rpc('admin_create_group',{p_level:level,p_name:name});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('already exists')?'That group name is already taken':(em.includes('function')?'Groups backend not installed yet (run supabase/admin_groups.sql)':'Could not create the group'));
+    console.error('[Admin] create group failed:',error.message);
+    return;
+  }
+  nameIn.value='';
+  showToast('Group created ✅');
+  await loadGroupsFromDB();
+}
+async function adminToggleGroupFrozen(groupId,currentlyFrozen){
+  const{error}=await _sb.rpc('admin_set_group_frozen',{p_group_id:groupId,p_frozen:!currentlyFrozen});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('function')?'Groups backend not installed yet (run supabase/admin_groups.sql)':'Could not update the group');
+    console.error('[Admin] freeze group failed:',error.message);
+    return;
+  }
+  showToast(currentlyFrozen?'Group unfrozen':'Group frozen — hidden from new-assignment pickers');
+  await loadGroupsFromDB();
+}
+let _admArmedDeleteGroup=null;
+async function adminDeleteGroup(groupId){
+  if(_admArmedDeleteGroup!==groupId){
+    _admArmedDeleteGroup=groupId;
+    showToast('⚠ Tap delete again to permanently remove this group');
+    setTimeout(()=>{if(_admArmedDeleteGroup===groupId)_admArmedDeleteGroup=null;},4000);
+    return;
+  }
+  _admArmedDeleteGroup=null;
+  const{error}=await _sb.rpc('admin_delete_group',{p_group_id:groupId});
+  if(error){
+    const em=error.message||'';
+    showToast(em.toLowerCase().includes('reassign')?em:'Could not delete the group');
+    console.error('[Admin] delete group failed:',em);
+    return;
+  }
+  showToast('Group deleted');
+  await loadGroupsFromDB();
+}
+// ─── PAYMENTS (addendum §5) ──────────────────────────────────────────────────
+// Record-keeping only — this never collects or transmits real card data; it
+// just logs "student X paid Y for month Z" after money already changed hands
+// some other way. See supabase/admin_payments.sql.
+let _admPayStatusRows=[];
+let _prStudentId=null;
+async function renderAdminPayments(){
+  if(session?.role!=='admin')return;
+  const rateIn=document.getElementById('pay-rate-in');
+  if(rateIn&&!rateIn.dataset.filled){
+    rateIn.dataset.filled='1';
+    const{data,error}=await _sb.rpc('admin_get_payment_settings');
+    rateIn.value=(!error&&data&&data.length)?data[0].monthly_rate:600000;
+  }
+  const periodIn=document.getElementById('pay-period-in');
+  if(periodIn&&!periodIn.value){
+    const now=new Date();
+    periodIn.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  }
+  const gsel=document.getElementById('pay-group-filter');
+  if(gsel){
+    const cur=gsel.value;
+    gsel.innerHTML='<option value="">All groups</option>'+GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
+    if(cur&&GROUPS.includes(cur))gsel.value=cur;
+  }
+  const listEl=document.getElementById('pay-status-list');
+  if(!listEl)return;
+  const period=periodIn?periodIn.value:'';
+  if(!period){listEl.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">Pick a month.</div>';return;}
+  listEl.innerHTML='<div style="text-align:center;padding:28px"><span class="spinner lg"></span></div>';
+  const{data,error}=await _sb.rpc('admin_list_payment_status',{p_period:period});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    listEl.innerHTML=`<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">${em.includes('function')?'Payments backend not installed yet (run supabase/admin_payments.sql)':'Could not load payment status.'}</div>`;
+    console.error('[Admin] list payment status failed:',error.message);
+    return;
+  }
+  _admPayStatusRows=data||[];
+  _renderPaymentRows();
+}
+function _renderPaymentRows(){
+  const listEl=document.getElementById('pay-status-list');
+  if(!listEl)return;
+  const filterGroup=document.getElementById('pay-group-filter')?.value||'';
+  const rows=filterGroup?_admPayStatusRows.filter(r=>r.group_name===filterGroup):_admPayStatusRows;
+  if(!rows.length){listEl.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-size:12px">No students found.</div>';return;}
+  listEl.innerHTML=rows.map(r=>{
+    const st=r.status||'unpaid';
+    const badgeClass=st==='paid'?'paid':st==='partial'?'partial':st==='waived'?'paid':'unpaid';
+    return `
+    <div class="adm-user-row">
+      <div style="min-width:0">
+        <b>${escHtml(r.full_name||'—')}</b>
+        <span class="adm-status-badge ${badgeClass}">${escHtml(st)}</span>
+        <div style="font-size:10px;color:var(--txt3)">${escHtml(r.group_name||'—')}${r.amount!=null?' · '+Number(r.amount).toLocaleString()+' UZS':''}${r.paid_at?' · '+new Date(r.paid_at).toLocaleDateString('en-GB'):''}</div>
+      </div>
+      <div class="adm-actions">
+        <button type="button" class="mini-btn" title="Record payment" onclick="openPayRecordModal('${r.student_id}')"><i class="ti ti-currency-dollar" style="vertical-align:-1px"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openPayRecordModal(studentId){
+  const row=_admPayStatusRows.find(r=>r.student_id===studentId);
+  const ov=document.getElementById('pay-record-modal-overlay');
+  if(!row||!ov)return;
+  _prStudentId=studentId;
+  document.getElementById('pr-modal-who').textContent=(row.full_name||'This student')+' — '+(document.getElementById('pay-period-in')?.value||'');
+  const rateIn=document.getElementById('pay-rate-in');
+  document.getElementById('pr-amount').value=row.amount!=null?row.amount:(rateIn?rateIn.value:600000);
+  document.getElementById('pr-status').value=(row.status&&row.status!=='unpaid')?row.status:'paid';
+  document.getElementById('pr-notes').value=row.notes||'';
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+}
+function closePayRecordModal(){
+  const ov=document.getElementById('pay-record-modal-overlay');
+  if(ov){ov.classList.remove('open');releaseFocus(ov.querySelector('.modal-box'));}
+  _prStudentId=null;
+}
+async function submitPayRecord(){
+  const period=document.getElementById('pay-period-in')?.value||'';
+  const amount=Number(document.getElementById('pr-amount').value);
+  const status=document.getElementById('pr-status').value;
+  const notes=(document.getElementById('pr-notes').value||'').trim()||null;
+  if(!_prStudentId||!period||!(amount>=0)){showToast('Enter a valid amount');return;}
+  const{error}=await _sb.rpc('admin_record_payment',{p_student_id:_prStudentId,p_period:period,p_amount:amount,p_status:status,p_notes:notes});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('function')?'Payments backend not installed yet (run supabase/admin_payments.sql)':'Could not record the payment');
+    console.error('[Admin] record payment failed:',error.message);
+    return;
+  }
+  closePayRecordModal();
+  showToast('Payment recorded ✅');
+  renderAdminPayments();
+}
+async function adminSaveMonthlyRate(){
+  const rateIn=document.getElementById('pay-rate-in');
+  const rate=Number(rateIn?.value);
+  if(!(rate>=0)){showToast('Enter a valid rate');return;}
+  const{error}=await _sb.rpc('admin_set_monthly_rate',{p_rate:rate});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('function')?'Payments backend not installed yet (run supabase/admin_payments.sql)':'Could not update the rate');
+    console.error('[Admin] set monthly rate failed:',error.message);
+    return;
+  }
+  showToast('Rate updated ✅');
+}
+function openPwReveal(username,password){
+  const ov=document.getElementById('pwreveal-modal-overlay');
+  if(!ov)return;
+  document.getElementById('pwreveal-username').value=username;
+  document.getElementById('pwreveal-password').value=password;
+  document.getElementById('pwreveal-copied').textContent='';
+  ov.classList.add('open');
+  trapFocus(ov.querySelector('.modal-box'));
+}
+function closePwReveal(){
+  const ov=document.getElementById('pwreveal-modal-overlay');
+  if(!ov)return;
+  ov.classList.remove('open');
+  releaseFocus(ov.querySelector('.modal-box'));
+  const u=document.getElementById('pwreveal-username'),p=document.getElementById('pwreveal-password');
+  if(u)u.value='';
+  if(p)p.value='';
+}
+async function copyPwRevealField(id){
+  const el=document.getElementById(id);
+  if(!el||!el.value)return;
+  try{
+    await navigator.clipboard.writeText(el.value);
+  }catch(e){
+    el.removeAttribute('readonly');
+    el.select();
+    document.execCommand('copy');
+    el.setAttribute('readonly','');
+  }
+  const note=document.getElementById('pwreveal-copied');
+  if(note){
+    note.textContent='Copied ✓';
+    setTimeout(()=>{if(note.textContent==='Copied ✓')note.textContent='';},1500);
+  }
 }
 // ─── FREEZE / UNFREEZE (addendum) ────────────────────────────────────────────
 // Blocks/restores an account's login without deleting it or any of its data.
@@ -6337,6 +7394,12 @@ async function saveDrillsToSupabase() {
 
 // ─── TEACHER PROGRESS HUB ────────────────────────────────────────────────────
 async function renderProgressHub() {
+  const gsel=document.getElementById('progress-group-sel');
+  if(gsel){
+    const cur=gsel.value;
+    gsel.innerHTML='<option value="">— Select a group —</option>'+GROUPS.map(g=>`<option value="${escHtml(g)}">${escHtml(g)}</option>`).join('');
+    if(cur&&GROUPS.includes(cur))gsel.value=cur;
+  }
   const group = (document.getElementById('progress-group-sel')?.value || '').trim();
   const list  = document.getElementById('progress-student-list');
   if (!list) return;
@@ -6396,7 +7459,6 @@ function show(id,el){
   if(id==='vocab')_renderVocabScreen();
   if(id==='dictation')renderDictationScreen();
   if(id==='speaking')renderSpeakingScreen();
-  if(id==='classroom')buildClassroom();
   if(id==='announce')buildAnnouncements();
   if(id==='levels')renderLevelsScreen();
   if(id==='lessons')renderLessonsScreen();
@@ -6404,6 +7466,7 @@ function show(id,el){
   if(id==='chat'){renderChat();if(session&&session.role==='teacher')initTeacherChat();else startChatPolling();}
   if(id==='tdash'){renderTeacherDash();cmsLoadLessonDropdown();}
   if(id==='admin')renderAdminDashboard();
+  if(id==='admin-payments')renderAdminPayments();
   if(id==='admin-audit')renderAdminAudit();
   if(id==='cms'){cmsLoadLessonDropdown();if(!document.getElementById('cms-vocab-staging').children.length)cmsAddWordBlock();}
   if(id==='progress'){renderProgressHub();}
@@ -6417,8 +7480,24 @@ function show(id,el){
     },200);
   }
   if(id==='profile'){
-    if(session&&session.role==='teacher'){renderTeacherProfile();}
-    else{setTimeout(updatePayUI,200);}
+    // Explicit per-role branch, every time the screen shows — not just
+    // "teacher vs else" — so a role that follows a teacher's profile visit
+    // in the same tab (no reload) can never inherit that leftover DOM
+    // section instead of getting its own. Each branch resets ALL three
+    // sections' visibility, not just the one it wants shown.
+    const psEl=document.getElementById('profile-student-section');
+    const ptEl=document.getElementById('profile-teacher-section');
+    const paEl=document.getElementById('profile-admin-section');
+    if(session&&session.role==='teacher'){
+      if(psEl)psEl.style.display='none'; if(paEl)paEl.style.display='none'; if(ptEl)ptEl.style.display='';
+      renderTeacherProfile();
+    }else if(session&&session.role==='admin'){
+      if(psEl)psEl.style.display='none'; if(ptEl)ptEl.style.display='none'; if(paEl)paEl.style.display='';
+      renderAdminProfile();
+    }else{
+      if(ptEl)ptEl.style.display='none'; if(paEl)paEl.style.display='none'; if(psEl)psEl.style.display='';
+      setTimeout(updatePayUI,200);
+    }
   }
   if(id==='streak'){
     setTimeout(()=>{
@@ -7804,7 +8883,14 @@ function matFileChosen(input){
     lbl.classList.remove('has-file');
   }
 }
+function _populateMatGroupChecks(){
+  const box=document.getElementById('mat-group-checks');
+  if(!box)return;
+  box.innerHTML=`<label class="mat-group-check"><input type="checkbox" value="All Groups" checked> All Groups</label>`+
+    GROUPS.map(g=>`<label class="mat-group-check"><input type="checkbox" value="${escHtml(g)}"> ${escHtml(g)}</label>`).join('');
+}
 function openMatModal(){
+  _populateMatGroupChecks();
   document.getElementById('mat-modal').classList.add('open');
   document.getElementById('mat-title').focus();
 }
@@ -8188,22 +9274,18 @@ async function renderTeacherProfile(){
 }
 
 
-// ─── CLASSROOM ───────────────────────────────────
-function buildClassroom(){
-  const el=document.getElementById('classroom-grid');if(!el)return;
-  const sub=document.getElementById('classroom-sub');
-  const onlineCount=classroomData.filter(s=>s.online).length;
-  if(sub)sub.textContent=`${(session&&session.group)||'B1 Intermediate'} · ${onlineCount} online`;
-  el.innerHTML=classroomData.map(s=>`
-    <div class="cls-card${s.me?' me':''}">
-      <div class="cls-ava-wrap">
-        <div class="cls-ava" style="background:${s.color};color:${s.tc}">${s.init}</div>
-        <div class="cls-status ${s.online?'online':'offline'}"></div>
-      </div>
-      <div class="cls-name">${escHtml(s.name)}${s.me?' (you)':''}</div>
-      <div class="cls-streak">${s.streak>0?`🔥 ${s.streak} days`:'no streak'}</div>
-      ${!s.me?`<div class="cls-online-lbl">${s.online?'<span style="color:var(--green)">● online</span>':'offline'}</div>`:''}
-    </div>`).join('');
+// ─── ADMIN PROFILE ────────────────────────────────
+function renderAdminProfile(){
+  const phTitle=document.getElementById('profile-ph-title');
+  const phSub=document.getElementById('profile-ph-sub');
+  if(phTitle)phTitle.textContent='Administrator Profile';
+  if(phSub)phSub.textContent='Account details';
+  const heroName=document.querySelector('.profile-name.js-username');
+  if(heroName&&session)heroName.textContent=session.name;
+  const un=document.getElementById('adm-profile-username');
+  if(un)un.textContent=session?emailToUsername(session.email||''):'—';
+  const tags=document.getElementById('profile-tags');
+  if(tags)tags.innerHTML=`<span class="ptag hl">Administrator</span>`;
 }
 
 // ─── AI STUDY PLAN (home block) ─────────────────
@@ -8443,8 +9525,13 @@ applySession();
 initDraftAutosave();
 restoreLastScreen();
 updateStreakTracker();
-// Restore Supabase auth session on page load (handles refresh without re-login)
+// Restore Supabase auth session on page load (handles refresh without re-login).
+// This resolution decides landing-page-vs-portal for a visitor with no locally
+// cached session — hideSplash() is held back (see _tryHideSplash below) until
+// this settles, so we decide once, up front, instead of showing the landing
+// page and then flashing into the portal a moment later.
 if(_sb){
+  loadGroupsFromDB();
   _sb.auth.getSession().then(({data:{session:sbSess}})=>{
     if(sbSess&&!session){
       const meta=sbSess.user.user_metadata||{};
@@ -8462,7 +9549,8 @@ if(_sb){
       restoreLastScreen();
       hideLogin();
     }
-  }).catch(()=>{});
+    _bootAuthSettled=true;_tryHideSplash();
+  }).catch(()=>{_bootAuthSettled=true;_tryHideSplash();});
   _sb.auth.onAuthStateChange((event,sbSess)=>{
     if(event==='SIGNED_OUT'){
       if(session){logout();}
@@ -8488,7 +9576,16 @@ if(_sb){
 initOrbs('hero-orbs',3,['rgba(124,110,255,0.35)','rgba(155,114,245,0.3)','rgba(52,196,160,0.25)']);
 initOrbs('bg-orbs',4,['rgba(124,110,255,0.12)','rgba(224,112,176,0.08)','rgba(52,196,160,0.08)','rgba(91,156,246,0.08)']);
 setTimeout(animateCounters,300);
-setTimeout(hideSplash,1400);
+// Splash hides once BOTH a minimum duration has elapsed AND (if Supabase is
+// configured) the session-restore check above has settled — whichever is
+// slower. This is the "decide once, up front" fix: a visitor with no local
+// session never sees the landing page appear and then flash into the portal
+// once the async Supabase check resolves a moment later. The 4s mark is a
+// pure failsafe in case that check hangs without ever resolving or rejecting.
+let _bootMinElapsed=false, _bootAuthSettled=!_sb;
+function _tryHideSplash(){if(_bootMinElapsed&&_bootAuthSettled)hideSplash();}
+setTimeout(()=>{_bootMinElapsed=true;_tryHideSplash();},1400);
+setTimeout(()=>{_bootAuthSettled=true;_tryHideSplash();},4000);
 setTimeout(()=>{
   const p=document.getElementById('pb'),c=document.getElementById('cb');
   if(p)p.style.width='65%';if(c)c.style.width='44%';

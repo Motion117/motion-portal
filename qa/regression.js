@@ -51,6 +51,16 @@ async function demoDuplicates(token) {
 }
 
 async function login(page, role) {
+  // Since the landing-page addendum, the login overlay is no longer shown
+  // by default (the marketing landing page is) — open it first if needed.
+  const overlayOpen = await page.evaluate(() => {
+    const o = document.getElementById('login-overlay');
+    return o && getComputedStyle(o).display !== 'none';
+  });
+  if (!overlayOpen) {
+    await page.click('#ld-login-link');
+    await page.waitForTimeout(150);
+  }
   await page.fill('#login-user', ROLES[role].user);
   await page.fill('#login-pass', ROLES[role].pass);
   await page.click('.login-btn.primary');

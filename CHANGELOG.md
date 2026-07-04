@@ -3,6 +3,133 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## ⚠ Live secret found in working tree — not committed, needs your action
+
+While working through this round I found `supabase/admin_role.sql` currently
+has your **real admin password** (`mirazam1108`) sitting in the `v_pw`
+variable again, as an uncommitted local change — this is exactly the same
+class of issue fixed in commit `380e6ad` (see below), just not yet
+re-committed. **I did not commit or push this file.** I've left it out of
+every commit in this round on purpose. Before you commit it yourself: replace
+the real password with the `CHANGE_ME_BEFORE_RUNNING` placeholder (the file
+already ran successfully — `admin@motion.edu` exists in the live database —
+so you don't need to re-run it; keep your real password somewhere private
+instead, like a password manager).
+
+## Addendum — Landing page + admin portal refinements (Parts 1 & 2)
+
+**Part 1 — Landing page is now the app, not a separate site.** The marketing
+page content from `site/index.html` (Round 3 §7 spec — unchanged) is ported
+directly into `index.html` as a scoped `#landing-page` overlay, reusing the
+app's own theme/i18n mechanism rather than becoming a second deploy. Decided
+to extend the single existing SPA rather than split into two codebases,
+per the addendum's stated default — the portal already owns screen routing,
+theming, and session state, and a second deploy would mean keeping two
+copies of login/session logic in sync forever.
+- No session → landing page, Russian by default, single "Login" button
+  (no role picker) opening the existing unified login form.
+- Valid session → straight to the correct portal, decided once during boot
+  (a dual-flag splash gate waits for the async Supabase session check before
+  hiding the splash screen), so there's no landing-then-portal flash.
+- Logo/back-button on the login screen returns to the landing page without
+  logging in; logging out returns to the landing page, not the login form.
+- Fixed a real bug this surfaced: `.login-overlay` defaulted to
+  `display:flex` in CSS, so it was visible on top of the landing page on
+  every load regardless of session state — changed the default to `none`,
+  relying on `showLogin()`'s existing explicit `display:flex`.
+- Meta title/description swapped to marketing copy (crawlable); portal
+  screens have no server-rendered path or sitemap entry, so nothing internal
+  is indexable.
+- Verified with a new permanent Playwright suite, `qa/test_landing.js`
+  (27 checks: fresh visit, login/back navigation, per-role routing, reload
+  with session, logout destination, mobile viewport) — all passing. Also had
+  to patch the existing `qa/regression.js` login helper, which assumed the
+  login overlay was already open on page load — no longer true now that the
+  landing page is the default.
+
+**Part 2 §1 — Admin no longer inherits teacher-only content (P0 fix).**
+Root cause was stale DOM, not an inverted role check as the addendum
+guessed: switching role in the same tab left the teacher's profile section
+`display:block` from a previous render. `show()`'s profile branch now
+explicitly resets all three role sections every time, showing only the
+current role's own section. Verified via `qa/test_admin_nav.js`.
+
+**Part 2 §2 — Groups within levels (the real data-model change).** New
+`groups` table (`supabase/admin_groups.sql`, reviewable, not auto-applied —
+same policy as every other privilege-granting SQL file here): 5 fixed
+levels stay, each can hold any number of named groups, admin-managed via
+four new SECURITY DEFINER RPCs (create/freeze/delete/assign). Migration
+seeds one real group per existing flat level, carrying the exact old name
+forward (`'Beginner A1'`, etc.) — **no existing column changes at all**, so
+every student's homework/schedule/chat/announcement/essay history keeps
+resolving exactly as it did before.
+- **Design tradeoff, worth knowing:** every existing group-bearing column
+  (`profiles.group_name`, `homework.group_name`, `schedule.group_name`,
+  `essay_submissions.group_name`, `announcements.target_group`,
+  `messages.target_group`) matches by *name*, not an id/FK — rewriting all
+  six to a proper foreign key would be a much larger migration than this
+  addendum asked for. The tradeoff: group names must stay unique **across
+  all levels**, not just within one (no "Morning" in both Beginner and
+  Elementary at once) — enforced with a unique index, surfaced as a clear
+  "name already taken" error in the admin UI, the same pattern already used
+  for username uniqueness.
+- Fixed two hardcoded duplicate group lists that had already drifted from
+  the single `GROUPS` source of truth (the materials-publish modal's
+  checkboxes and the Progress Hub's group selector) — both now render from
+  the live table like everything else.
+- Signup form and admin "Create Account" both became level → group two-step
+  pickers; new admin "Groups" screen (add/freeze/delete + member counts per
+  level); new "change group" action per user row for reassigning an
+  existing student/teacher.
+- Freezing a group hides it only from pickers that *enroll* someone
+  (signup, admin create/assign) — screens that display existing data
+  (teacher dashboard tabs, chat, schedule) still show it, so a frozen
+  group's existing students keep full, unaffected access.
+- Verified with a new `qa/test_groups.js` (6 checks: fallback pickers work
+  pre-fetch, level→group cascading, Groups screen renders, RPC-missing
+  errors surface a clear message instead of breaking the UI).
+
+**Part 2 §3 — Password reveal-once, no reversible storage.** The addendum
+itself flagged that "admin sees a student's *current* password" is
+impossible on any system with one-way bcrypt hashing (which this app
+already uses) — building reversible storage would be a real security
+downgrade, not a convenience. Built what's actually useful instead: right
+after admin creates an account or resets credentials, a modal shows the
+username + password once, with a copy button and a "won't be shown again —
+save it now" notice. The value only ever comes from what admin already
+typed into the form — it is never written to, or re-read from, any
+database column. Verified with `qa/test_pwreveal.js`.
+
+**Part 2 §4 — Materials/Announcements hidden from admin.** Reused the
+existing `data-hide-admin` attribute (already used for hiding Chat from
+admin) — no new mechanism needed.
+
+**Part 2 §5 — Payments (admin-only record-keeping, not a payment
+processor).** New `payments` + `payment_settings` tables
+(`supabase/admin_payments.sql`, reviewable, not auto-applied). Never
+collects or transmits real card data — it only logs "student X paid Y for
+month Z" after money changed hands some other way. Monthly rate defaults to
+600,000 UZS but is editable from the admin UI, never hardcoded. New
+"Payments" admin screen: per-month status for every student (paid /
+partial / waived / unpaid), filterable by group, one click to record a
+payment (amount + status + notes). Verified with `qa/test_payments.js`.
+
+**Part 2 §6 — Fake groupmates list removed.** Deleted entirely (nav item,
+screen, hardcoded fake roster data, render function, CSS) — not hidden,
+per the addendum's explicit instruction, since it was never real data.
+
+**Outstanding for you:** `supabase/admin_groups.sql` and
+`supabase/admin_payments.sql` are written and reviewable but **not yet
+applied** to the live database (same policy as `admin_role.sql`/
+`admin_freeze.sql` — schema/privilege changes always wait for your own
+review and run). Until you run them, the Groups and Payments admin screens
+show a clear "backend not installed yet" message instead of breaking —
+verified this explicitly in both new test suites. Once applied, the
+addendum's §7 QA script (create a group, assign a student, freeze a
+different group, reset a password, record a payment, confirm groupmates
+gone) can be run end-to-end against real data — say the word and I'll do
+that pass with you.
+
 ## Security fix — leaked password in admin_role.sql + credential policy locked in
 
 **⚠ Critical finding, fixed:** `supabase/admin_role.sql` had been hand-edited
