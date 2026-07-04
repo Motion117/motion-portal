@@ -6,14 +6,13 @@ criterion or meaningful decision. Newest first.
 ## Security fix — leaked password in admin_role.sql + credential policy locked in
 
 **⚠ Critical finding, fixed:** `supabase/admin_role.sql` had been hand-edited
-(outside this session) to contain a real plaintext password
-(`v_pw text := 'mirazam1108'`) instead of the `CHANGE_ME_BEFORE_RUNNING`
-placeholder. That edit was committed (`ed12a93`) and pushed to
-`origin/main` — the password has been sitting in this repo's public git
-history. Because `admin_role.sql` had never actually been *run*, no live
-Supabase account was ever created with it, but running the file as-is
-would have created the real production admin account with an
-already-leaked password.
+(outside this session) to contain a real plaintext password in the
+`v_pw` variable, instead of the `CHANGE_ME_BEFORE_RUNNING` placeholder.
+That edit was committed (`ed12a93`) and pushed to `origin/main` — the
+password has been sitting in this repo's git history. Because
+`admin_role.sql` had never actually been *run*, no live Supabase account
+was ever created with it, but running the file as-is would have created
+the real production admin account with an already-leaked password.
 
 **Fixed:**
 - Restored the `CHANGE_ME_BEFORE_RUNNING` placeholder so the file's own
@@ -30,13 +29,14 @@ already-leaked password.
   — the check now matches the email that's actually inserted, so re-running
   the file is safely a no-op instead of attempting a duplicate insert.
 
-**Action needed from you:** `mirazam1108` must be treated as burned —
-don't reuse it anywhere, including as the real admin password. Pick a new
-one when you fill in `CHANGE_ME_BEFORE_RUNNING`. Optionally, since the old
-value lives permanently in git history, you may want to ask whether this
-repo is public and consider scrubbing history (`git filter-repo` / GitHub's
-secret-removal tooling) — I did not do this myself since rewriting pushed
-history is destructive and needs your explicit go-ahead.
+**Action needed from you:** the old password (visible in commit `ed12a93`
+if you need to check it) must be treated as burned — don't reuse it
+anywhere, including as the real admin password. Pick a new one when you
+fill in `CHANGE_ME_BEFORE_RUNNING`. Since the old value lives permanently
+in git history, you may want to check whether this repo is public and
+consider scrubbing history (`git filter-repo` / GitHub's secret-removal
+tooling) — I did not do this myself since rewriting pushed history is
+destructive and needs your explicit go-ahead.
 
 **Credential policy — closed, not changed:** per your explicit instruction,
 account creation, deletion, and password/login resets stay strictly
