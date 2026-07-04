@@ -4457,46 +4457,16 @@ function _applyAndGo(s){
   restoreLastScreen();
 }
 
-// Demo accounts (student/teacher) get a real anonymous Supabase identity so RLS-gated
-// reads/writes work. Anonymous sign-in always mints a brand-new auth.users row with no
-// way to "log back into" an old one — so instead of calling signInAnonymously() on every
-// login (which created a fresh duplicate profiles row, and therefore a fresh duplicate
-// roster/chat-thread entry, every single time someone logged into the SAME demo account),
-// we persist that account's session tokens locally and restore the SAME identity next
-// time. logout() now signs out with {scope:'local'} instead of the default 'global' scope
-// specifically so this stored refresh token stays valid server-side across logout/login.
-async function _restoreOrCreateDemoSession(loginVal,localUser){
-  const store=loadStore();
-  const saved=(store.demoSessions||{})[loginVal];
-  if(saved?.refresh_token){
-    try{
-      const{data,error}=await _sb.auth.setSession({access_token:saved.access_token,refresh_token:saved.refresh_token});
-      if(!error&&data?.session?.user){
-        // Defensively re-stamp metadata (e.g. group reassignment) — cheap no-op
-        // most of the time since it's usually already correct from last login.
-        await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
-        await _sb.auth.refreshSession();
-        const fresh=await _sb.auth.getSession();
-        _persistDemoSession(loginVal,fresh.data?.session);
-        return{uid:data.session.user.id};
-      }
-    }catch(e){/* stored token expired/invalid — fall through to minting a new identity */}
-  }
-  const{data:anonData,error:anonError}=await _sb.auth.signInAnonymously();
-  if(anonError||!anonData?.user)return null;
-  await _sb.auth.updateUser({data:{role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar}});
-  await _sb.auth.refreshSession();
-  const fresh=await _sb.auth.getSession();
-  _persistDemoSession(loginVal,fresh.data?.session);
-  return{uid:anonData.user.id};
-}
-function _persistDemoSession(loginVal,session){
-  if(!session)return;
-  const store=loadStore();
-  const demoSessions=store.demoSessions||{};
-  demoSessions[loginVal]={access_token:session.access_token,refresh_token:session.refresh_token};
-  saveStore({demoSessions});
-}
+// ROUND 3 STRUCTURAL FIX — anonymous demo sign-in is GONE.
+// Demo accounts are now real, fixed Supabase Auth users seeded once in the
+// database (student@motion.edu / teacher@motion.edu), so demo login goes
+// through the exact same signInWithPassword path as any real account. There
+// is no longer any code path that can mint a new identity on login — the
+// mechanism behind the Round 1/2/3 duplicate-profile and role-flash bugs no
+// longer exists in this file. (The old approach persisted anonymous-session
+// tokens in localStorage and prayed; every fresh browser context minted
+// another duplicate identity.)
+const DEMO_EMAILS=['student@motion.edu','teacher@motion.edu'];
 async function doLogin(){
   const loginVal=(document.getElementById('login-user').value||'').trim().toLowerCase();
   const pass=(document.getElementById('login-pass').value||'').trim();
@@ -4531,23 +4501,17 @@ async function doLogin(){
         avatar: meta.avatar||localUser?.avatar||(loginVal[0]||'?').toUpperCase(),
         uid:    sbData.user.id,
         email:  sbData.user.email||email,
+        isDemo: DEMO_EMAILS.includes((sbData.user.email||email).toLowerCase()),
       });
       return;
     }
 
-    // Supabase auth failed — fall back to local demo users before showing error.
+    // Supabase auth failed. Demo accounts are real seeded users now, so a
+    // failure here means Supabase itself is unreachable (or the demo users
+    // were never seeded) — fall back to a pure-local offline session so demo
+    // login never breaks (CLAUDE.md rule 2). No Supabase identity is created
+    // in this path, so it can never mint a duplicate.
     if(localUser){
-      // Try to give the demo account a real (anonymous) Supabase session so its
-      // writes/reads pass existing auth.uid()-based RLS policies. If anonymous
-      // sign-ins aren't enabled yet (or any error occurs), fall through to the
-      // old fake local-uid behavior — demo login must never break.
-      try{
-        const demoSession=await _restoreOrCreateDemoSession(loginVal,localUser);
-        if(demoSession){
-          _applyAndGo({role:localUser.role,name:localUser.name,group:localUser.group,avatar:localUser.avatar,uid:demoSession.uid,isAnonymous:true});
-          return;
-        }
-      }catch(anonErr){/* anonymous sign-in unavailable — fall through below */}
       const _st=loadStore();
       let _lid=_st.localUid;
       if(!_lid){_lid='local-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7);saveStore({localUid:_lid});}
@@ -4637,11 +4601,10 @@ function togglePassVis(){
 }
 function logout(){
   if(_sb){
-    // Demo (anonymous) sessions sign out with scope:'local' so the refresh token we
-    // saved in _persistDemoSession() stays valid server-side — that's what lets the
-    // SAME demo account reuse its identity on the next login instead of minting a
-    // duplicate. Real Supabase-authenticated users still get a full/global sign-out.
-    const scope=session?.isAnonymous?'local':'global';
+    // Shared demo accounts sign out with scope:'local' — a global sign-out on
+    // student@motion.edu would revoke EVERY visitor's session on that shared
+    // account at once. Personal accounts get the full global sign-out.
+    const scope=session?.isDemo?'local':'global';
     _sb.auth.signOut({scope}).catch(()=>{});
   }
   // Reset every module-level variable that holds role-specific state — not just
@@ -4649,6 +4612,10 @@ function logout(){
   // in between) never shows stale role content (e.g. the previous role's chat
   // group/thread or current lesson) before fresh data loads in.
   session=null;saveStore({session:null});
+  // Clear the role attribute immediately so no wrong-role DOM can even exist
+  // behind the login overlay — the next login sets it fresh. (Round 3
+  // hardening after the role-flash regression.)
+  document.body.removeAttribute('data-role');
   tGroup='';
   _dbCurrentLesson=null;
   activeTChatGroup=null;

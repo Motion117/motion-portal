@@ -3,6 +3,67 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Round 3, P0 — Vocabulary RLS fix + structural end to the demo-identity bug class
+
+**Section 2 (vocabulary saves blocked by RLS) — root cause found, fixed,
+verified live.** The `vocabulary_insert` policy was scoped to the `anon`
+database role (`roles: {anon}`) — a legacy of the pre-Round-1 era when demo
+teachers had no session at all and hit PostgREST as `anon`. Round 2's login
+fix gave demo teachers real sessions, so they now arrive as `authenticated` —
+a role which had NO insert policy on `vocabulary`. The save was doomed the
+moment the login fix shipped; nobody had tried a vocab save since. So yes:
+the Round 2 migration didn't accidentally drop a policy, but the Round 2
+*login change* did exactly the class of collateral damage the Round 3 doc
+suspected. `lessons_insert` had the same `{anon}` scoping (same latent bug),
+and `grammar_drills_insert` was worse — `with_check: true` for ALL callers,
+meaning anyone with the public anon key could insert drills without logging
+in. All three replaced with the standard teacher-gated JWT-claim policies
+used everywhere else, plus teacher-gated UPDATE/DELETE that never existed.
+*Verified live via REST with fresh sessions*: teacher insert → 201, student
+insert → 403, anon-key-only insert → 401.
+
+**Section 3 (role mixup + duplicate students, regressed twice) — the
+recommended structural fix was implemented, not a third patch.** Why the
+Round 2 fix didn't hold: it persisted anonymous-session tokens in
+localStorage and reused them — which works only in the SAME browser profile.
+Every fresh context (new device, incognito, cleared storage, another
+browser, automated tests) had no stored token and minted a brand-new
+anonymous identity. Evidence: after the 2026-07-03 cleanup left exactly 1
+real user, 23 new anonymous identities had accumulated by 2026-07-04 —
+the mechanism itself was the bug.
+- Created fixed, real Supabase Auth accounts `student@motion.edu` /
+  `teacher@motion.edu` (passwords = existing demo credentials), seeded via
+  SQL with correct role/name/group metadata. The app's existing
+  `signInWithPassword` primary path now simply succeeds for demo logins.
+- Deleted ALL anonymous sign-in code from `index.html`
+  (`_restoreOrCreateDemoSession`, `_persistDemoSession`, the fallback that
+  called `signInAnonymously`) — there is no longer any code path that can
+  mint an identity at login. Offline fallback (local uid, no Supabase)
+  kept per CLAUDE.md rule 2.
+- Reassigned all rows owned by the 23 anonymous dupes (messages,
+  essay_history, essay_submissions, homework+submissions, grade_events,
+  dictation_attempts) onto the canonical demo accounts, then deleted the
+  dupes. **Before: 26 auth users. After: 3** (1 real signup + 2 demo).
+- `logout()` hardened: demo accounts sign out with `scope:'local'` (a
+  global sign-out on a SHARED account would revoke every visitor's session
+  at once); personal accounts keep global. Also now clears
+  `body[data-role]` at logout so wrong-role DOM can't even exist behind
+  the login overlay.
+- **Permanent regression harness added at `qa/regression.js`** (+
+  `qa/serve.js`) per section 11.9 — 14 same-tab alternating logins + 8
+  fresh-context logins, asserting: profile count identical before/after,
+  correct role visible immediately at overlay dismissal every time, zero
+  duplicate demo-name profiles. **Passed: 22 logins, count stable at 3.**
+  This exact script would have caught both regressions the day they
+  happened; it is now the bar for calling any future round done.
+- A DB-level trigger blocking anonymous sign-ups was attempted but blocked
+  by the safety classifier (trigger on `auth.users` = shared auth
+  infrastructure). Equivalent protection achieved by removing the client
+  mechanism + the scripted integrity check. **One item only the user can
+  do: flip "Enable anonymous sign-ins" OFF in Supabase Dashboard → Auth →
+  Providers** — with the app no longer using it, nothing breaks, and the
+  bug class becomes impossible at the platform level too.
+
 ## Post-Round-2 — "Chat with teacher" restyled to match the AI Assistant widget
 
 User-requested visual change, not a bug fix. The student's "Chat with teacher"
