@@ -1070,6 +1070,9 @@ body[data-role="admin"] [data-role="student"]{display:none !important;}
 .adm-role-pill.student{background:rgba(91,156,246,0.12);color:#5b9cf6;}
 .adm-role-pill.teacher{background:rgba(52,196,160,0.12);color:var(--teal);}
 .adm-role-pill.admin{background:rgba(201,168,76,0.15);color:var(--gold);}
+.adm-user-row.frozen{opacity:0.55;}
+.adm-user-row.frozen b{text-decoration:line-through;text-decoration-color:var(--txt3);}
+.adm-status-badge.frozen{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:2px 7px;border-radius:20px;background:rgba(91,156,246,0.16);color:#5b9cf6;margin-left:6px;vertical-align:1px;}
 
 /* ── LOGIN OVERLAY ── */
 .login-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1000px 600px at 50% 0%,rgba(124,110,255,0.14),transparent 60%),var(--bg);}
@@ -1497,6 +1500,10 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       Teacher: <b>teacher</b> / <b>teacher2026</b>
     </div>
 
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--txt3)">
+      Forgot your password? Ask your teacher or the school admin to reset it.
+    </div>
+
     <div id="signup-toggle-wrap" style="text-align:center;margin-top:14px">
       <a href="#" onclick="toggleSignupForm();return false;" style="font-size:12px;color:var(--accent)">New student? Create an account</a>
     </div>
@@ -1508,8 +1515,8 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
       <label class="login-lbl" for="signup-group">Group</label>
       <select class="login-in" id="signup-group"></select>
 
-      <label class="login-lbl" for="signup-email">Email</label>
-      <input class="login-in" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email">
+      <label class="login-lbl" for="signup-username">Username</label>
+      <input class="login-in" id="signup-username" placeholder="letters, numbers, _ (3–20)" autocomplete="username">
 
       <label class="login-lbl" for="signup-password">Password</label>
       <input class="login-in" id="signup-password" type="password" placeholder="At least 6 characters" autocomplete="new-password">
@@ -2405,7 +2412,7 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="card glass">
     <div class="sec" style="margin-top:0"><i class="ti ti-user-plus" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Create Account</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <input class="ai-in" id="adm-new-email" placeholder="Email (login)" style="margin:0" autocomplete="off">
+      <input class="ai-in" id="adm-new-username" placeholder="Username (login)" style="margin:0" autocomplete="off">
       <input class="ai-in" id="adm-new-pass" placeholder="Password (min 6 chars)" style="margin:0" autocomplete="off">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
@@ -4634,6 +4641,34 @@ function _applyAndGo(s){
 // tokens in localStorage and prayed; every fresh browser context minted
 // another duplicate identity.)
 const DEMO_EMAILS=['student@motion.edu','teacher@motion.edu'];
+
+// ─── USERNAME LOGIN (addendum) ───────────────────────────────────────────────
+// Supabase Auth has no native "username" — every account needs an email-shaped
+// identifier. The standard workaround: store a reserved fake email internally
+// and only ever show/accept a plain username. We keep `motion.edu` as that
+// reserved internal domain because every account that already exists (the two
+// demo accounts + the admin account) was seeded on it — switching domains would
+// force a migration, which the addendum explicitly says to avoid. It's never
+// used for real mail. A person types just `azizbek123`; internally that's
+// `azizbek123@motion.edu`. Anyone who signed up earlier with a real email
+// (they typed an `@`) keeps logging in with that exact email, untouched.
+const INTERNAL_EMAIL_DOMAIN='motion.edu';
+function usernameToEmail(v){
+  const s=(v||'').trim().toLowerCase();
+  return s.includes('@') ? s : (s?s+'@'+INTERNAL_EMAIL_DOMAIN:'');
+}
+// 3–20 chars, letters/digits/underscore only, no @. Used for signup + admin-create.
+function isValidUsername(v){
+  return /^[a-z0-9_]{3,20}$/.test((v||'').trim().toLowerCase());
+}
+// For display: strip the internal domain so the admin roster shows plain
+// usernames. A real-email account (any other domain) is shown in full.
+function emailToUsername(email){
+  const e=(email||'').trim();
+  if(!e)return '';
+  return e.toLowerCase().endsWith('@'+INTERNAL_EMAIL_DOMAIN) ? e.slice(0,e.length-('@'+INTERNAL_EMAIL_DOMAIN).length) : e;
+}
+
 async function doLogin(){
   const loginVal=(document.getElementById('login-user').value||'').trim().toLowerCase();
   const pass=(document.getElementById('login-pass').value||'').trim();
@@ -4644,7 +4679,7 @@ async function doLogin(){
   const localUser=USERS.find(u=>u.login===loginVal&&u.password===pass);
 
   if(_sb){
-    const email=loginVal.includes('@')?loginVal:loginVal+'@motion.edu';
+    const email=usernameToEmail(loginVal);
     const btn=document.querySelector('.login-btn.primary');
     if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Signing in…';}
 
@@ -4687,7 +4722,11 @@ async function doLogin(){
     }
 
     // Both Supabase and local failed — show a helpful error.
-    if(sbError?.message?.includes('Email not confirmed')){
+    const em=(sbError?.message||'').toLowerCase();
+    if(em.includes('banned')||em.includes('suspend')){
+      // Account frozen by an admin (auth.users.banned_until in the future).
+      showLoginError('This account has been suspended. Please contact your school admin.');
+    } else if(em.includes('email not confirmed')){
       showLoginError('Account not activated. Run supabase_users_fix.sql in your Supabase SQL Editor.');
     } else {
       showLoginError('Wrong username or password');
@@ -4736,24 +4775,35 @@ function _initialsFromName(name){
 async function doSignup(){
   const name=(document.getElementById('signup-name').value||'').trim();
   const group=document.getElementById('signup-group').value;
-  const email=(document.getElementById('signup-email').value||'').trim().toLowerCase();
+  const username=(document.getElementById('signup-username').value||'').trim().toLowerCase();
   const pass=document.getElementById('signup-password').value||'';
-  if(!name||!email||!pass){showLoginError('Fill in name, email, and password to create an account');return;}
+  if(!name||!username||!pass){showLoginError('Fill in name, username, and password to create an account');return;}
+  if(!isValidUsername(username)){showLoginError('Username must be 3–20 characters: letters, numbers and _ only');return;}
   if(pass.length<6){showLoginError('Password must be at least 6 characters');return;}
   if(!_sb){showLoginError('Cannot create an account right now — check your connection and reload the page');return;}
+  const email=usernameToEmail(username); // wrap to the reserved internal domain
   const avatar=_initialsFromName(name);
   const btn=document.querySelector('#signup-form .login-btn.primary');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner sm on-accent"></span> Creating…';}
   try{
-    const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{role:'student',name,group,avatar}}});
-    if(error){showLoginError(error.message);return;}
+    const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{role:'student',name,group,avatar,username}}});
+    if(error){
+      // Case-insensitive uniqueness falls out of Supabase's own email-exists check.
+      const em=(error.message||'').toLowerCase();
+      showLoginError(em.includes('registered')||em.includes('exists')?'That username is already taken':'Could not create the account — please try a different username');
+      console.error('[Signup] failed:',error.message);
+      return;
+    }
     if(data?.session){
       _applyAndGo({role:'student',name,group,avatar,uid:data.user.id,email:data.user.email||email});
     }else{
-      showLoginError('Account created — check your email to confirm, then sign in.');
+      // Email confirmation is meaningless for a fake internal address — this
+      // only appears if the project has "confirm email" ON. Tell them to sign in.
+      showLoginError('Account created! You can now sign in with your username.');
     }
   }catch(e){
-    showLoginError('Sign up failed: '+e.message);
+    console.error('[Signup] error:',e.message);
+    showLoginError('Sign up failed — please try again');
   }finally{
     if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-user-plus"></i> Create account';}
   }
@@ -4876,33 +4926,52 @@ async function renderAdminDashboard(forceRefresh){
     const{count}=await _sb.from('essay_history').select('id',{count:'exact',head:true});
     document.getElementById('adm-stat-essays').textContent=count??'—';
   }catch(e){}
-  listEl.innerHTML=_admUsers.map(u=>`
-    <div class="adm-user-row">
-      <div style="min-width:0"><b>${escHtml(u.full_name||'—')}</b><div style="font-size:10px;color:var(--txt3);overflow:hidden;text-overflow:ellipsis">${escHtml(u.email||'')}</div></div>
+  listEl.innerHTML=_admUsers.map(u=>{
+    const frozen=!!u.is_frozen; // present once admin_freeze.sql is applied; absent → treated as active
+    return `
+    <div class="adm-user-row${frozen?' frozen':''}">
+      <div style="min-width:0">
+        <b>${escHtml(u.full_name||'—')}</b>
+        ${frozen?'<span class="adm-status-badge frozen">Frozen</span>':''}
+        <div style="font-size:10px;color:var(--txt3);overflow:hidden;text-overflow:ellipsis">@${escHtml(emailToUsername(u.email||''))}</div>
+      </div>
       <div class="adm-col-hide" style="color:var(--txt3);font-size:11px">${u.last_sign_in_at?'last seen '+new Date(u.last_sign_in_at).toLocaleDateString('en-GB'):'never signed in'}</div>
       <div><span class="adm-role-pill ${escHtml(u.role)}">${escHtml(u.role)}</span></div>
       <div class="adm-col-hide" style="color:var(--txt2)">${escHtml(u.group_name||'—')}</div>
       <div class="adm-actions">
         ${u.role==='admin'?'<span style="font-size:10px;color:var(--txt3)">protected</span>':`
+        <button type="button" class="mini-btn" title="${frozen?'Unfreeze (restore login)':'Freeze (block login)'}" onclick="adminToggleFreeze('${u.id}',${frozen})"><i class="ti ${frozen?'ti-lock-open':'ti-snowflake'}" style="vertical-align:-1px"></i></button>
         <button type="button" class="mini-btn" title="Change login/password" onclick="adminResetCreds('${u.id}')"><i class="ti ti-key" style="vertical-align:-1px"></i></button>
         <button type="button" class="eh-del-btn" title="Delete account" onclick="adminDeleteUser('${u.id}')"><i class="ti ti-trash"></i></button>`}
       </div>
-    </div>`).join('');
+    </div>`;}).join('');
 }
 async function adminCreateUser(){
-  const email=(document.getElementById('adm-new-email').value||'').trim();
+  const username=(document.getElementById('adm-new-username').value||'').trim().toLowerCase();
   const pass=document.getElementById('adm-new-pass').value||'';
   const name=(document.getElementById('adm-new-name').value||'').trim();
   const role=document.getElementById('adm-new-role').value;
   const group=document.getElementById('adm-new-group').value;
-  if(!email||!pass||!name){showToast('Email, password and name are required');return;}
+  if(!username||!pass||!name){showToast('Username, password and name are required');return;}
+  if(!isValidUsername(username)){showToast('Username must be 3–20 chars: letters, numbers and _ only');return;}
+  if(pass.length<6){showToast('Password must be at least 6 characters');return;}
+  // Wrap the username into the reserved internal email the RPC expects — the
+  // already-reviewed admin_create_user SQL is unchanged; it just receives an
+  // email-shaped string as before. The person only ever sees/uses the username.
+  const email=usernameToEmail(username);
   const btn=document.getElementById('adm-create-btn');
   btn.disabled=true;
   const{error}=await _sb.rpc('admin_create_user',{p_email:email,p_password:pass,p_role:role,p_name:name,p_group:group});
   btn.disabled=false;
-  if(error){showToast(error.message.includes('function')?'Admin backend not installed yet':'Could not create: '+error.message);return;}
-  ['adm-new-email','adm-new-pass','adm-new-name'].forEach(i=>{document.getElementById(i).value='';});
-  showToast('Account created ✅');
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    if(em.includes('function'))showToast('Admin backend not installed yet');
+    else if(em.includes('already exists'))showToast('That username is already taken');
+    else{showToast('Could not create the account');console.error('[Admin] create failed:',error.message);}
+    return;
+  }
+  ['adm-new-username','adm-new-pass','adm-new-name'].forEach(i=>{document.getElementById(i).value='';});
+  showToast('Account created ✅ — they log in with the username "'+username+'"');
   renderAdminDashboard(true);
 }
 let _admArmedDelete=null;
@@ -4915,20 +4984,60 @@ async function adminDeleteUser(id){
   }
   _admArmedDelete=null;
   const{error}=await _sb.rpc('admin_delete_user',{p_user_id:id});
-  if(error){showToast('Could not delete: '+error.message);return;}
+  if(error){showToast('Could not delete the account');console.error('[Admin] delete failed:',error.message);return;}
   showToast('Account deleted');
   renderAdminDashboard(true);
 }
 async function adminResetCreds(id){
   const u=_admUsers.find(x=>x.id===id);
-  const newEmail=prompt('New login email for '+(u?.full_name||'user')+' (leave empty to keep current):',u?.email||'');
-  if(newEmail===null)return;
+  const curUsername=emailToUsername(u?.email||'');
+  const newUsername=prompt('New username for '+(u?.full_name||'user')+' (leave empty to keep current):',curUsername);
+  if(newUsername===null)return;
+  const uname=(newUsername||'').trim().toLowerCase();
+  if(uname&&uname!==curUsername&&!isValidUsername(uname)){showToast('Username must be 3–20 chars: letters, numbers and _ only');return;}
   const newPass=prompt('New password (leave empty to keep current):','');
   if(newPass===null)return;
-  if(!newEmail&&!newPass){showToast('Nothing to change');return;}
-  const{error}=await _sb.rpc('admin_update_credentials',{p_user_id:id,p_new_email:newEmail||null,p_new_password:newPass||null});
-  if(error){showToast('Could not update: '+error.message);return;}
+  if(newPass&&newPass.length<6){showToast('Password must be at least 6 characters');return;}
+  const changingName=uname&&uname!==curUsername;
+  if(!changingName&&!newPass){showToast('Nothing to change');return;}
+  // Wrap the username back into the internal email the RPC expects.
+  const newEmail=changingName?usernameToEmail(uname):null;
+  const{error}=await _sb.rpc('admin_update_credentials',{p_user_id:id,p_new_email:newEmail,p_new_password:newPass||null});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('already exists')?'That username is already taken':'Could not update the account');
+    console.error('[Admin] update creds failed:',error.message);
+    return;
+  }
   showToast('Credentials updated 🔑');
+  renderAdminDashboard(true);
+}
+// ─── FREEZE / UNFREEZE (addendum) ────────────────────────────────────────────
+// Blocks/restores an account's login without deleting it or any of its data.
+// Backed by admin_set_account_frozen() in supabase/admin_freeze.sql (same
+// SECURITY DEFINER pattern; sets auth.users.banned_until and kills existing
+// sessions so lockout is prompt). Needs a confirm since it cuts off access.
+let _admArmedFreeze=null;
+async function adminToggleFreeze(id,currentlyFrozen){
+  const action=currentlyFrozen?'unfreeze':'freeze';
+  if(!currentlyFrozen){
+    // Freezing cuts off access — arm-confirm. Unfreezing is safe, do immediately.
+    if(_admArmedFreeze!==id){
+      _admArmedFreeze=id;
+      showToast('⚠ Tap freeze again to block this account’s login');
+      setTimeout(()=>{if(_admArmedFreeze===id)_admArmedFreeze=null;},4000);
+      return;
+    }
+    _admArmedFreeze=null;
+  }
+  const{error}=await _sb.rpc('admin_set_account_frozen',{p_user_id:id,p_frozen:!currentlyFrozen});
+  if(error){
+    const em=(error.message||'').toLowerCase();
+    showToast(em.includes('function')?'Freeze backend not installed yet (run supabase/admin_freeze.sql)':'Could not '+action+' the account');
+    console.error('[Admin] freeze toggle failed:',error.message);
+    return;
+  }
+  showToast(currentlyFrozen?'Account unfrozen — login restored':'Account frozen — login blocked');
   renderAdminDashboard(true);
 }
 async function renderAdminAudit(){

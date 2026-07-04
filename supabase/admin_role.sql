@@ -1,4 +1,4 @@
--- ============================================================================
+declare v_admin uuid := gen_random_uuid(); v_pw text := 'admin';-- ============================================================================
 -- MOTION PORTAL — ADMIN ROLE INSTALLATION (Round 3, section 6)
 -- ============================================================================
 -- REVIEW THIS WHOLE FILE, THEN RUN IT ONCE in Supabase Dashboard → SQL Editor.
@@ -192,12 +192,12 @@ create policy dictation_attempts_select_admin on public.dictation_attempts
 -- ─── 4. The admin account ───────────────────────────────────────────────────
 -- ⚠ Replace CHANGE_ME_BEFORE_RUNNING with your real password (step 1 above).
 do $$
-declare v_admin uuid := gen_random_uuid(); v_pw text := 'CHANGE_ME_BEFORE_RUNNING';
+declare v_admin uuid := gen_random_uuid(); v_pw text := 'mirazam1108';
 begin
   if v_pw = 'CHANGE' || '_ME_BEFORE_RUNNING' then
     raise exception 'Set your real admin password first (replace CHANGE_ME_BEFORE_RUNNING).';
   end if;
-  if exists (select 1 from auth.users where email='admin@motion.edu') then
+  if exists (select 1 from auth.users where email='motionlearnuz@gmial.com') then
     raise notice 'admin@motion.edu already exists — skipping seed';
     return;
   end if;

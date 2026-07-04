@@ -3,6 +3,86 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Addendum — Username login + Freeze/Unfreeze accounts
+
+**⚠ First, an important finding:** the addendum said to do this "after
+`admin_role.sql` has been run and the admin account confirmed working." I
+checked the live database — **`admin_role.sql` is NOT actually applied yet**:
+there are no `admin_*` functions, no `admin_audit_log` table, and no
+`admin@motion.edu` account. (The file was edited to set the admin password to
+`admin`, but it looks like it was never actually executed in the SQL Editor,
+or the run didn't complete.) Everything below is built and the code is live,
+but the two admin-gated pieces (admin creating username accounts, and
+freeze/unfreeze) **cannot function until both SQL files are run** — see the
+action list at the end. Also: `admin` is a very weak admin password — please
+change it (edit the password in `admin_role.sql` before running it, or reset
+it later from the admin UI).
+
+**1. Username login (no email) — done, live-verified where possible.**
+Supabase Auth requires an email-shaped identifier, so the standard workaround
+is used: a reserved internal domain wraps a plain username. Kept
+`@motion.edu` as that internal domain (not `@motion.internal`) specifically
+because every existing account — the two demo accounts and the admin account
+the SQL will create — is already on it; switching domains would force a
+migration, which the addendum said to avoid. It's never used for real mail.
+- Login: already username-labelled; `usernameToEmail()` passes through
+  anything containing `@` (real-email accounts keep working) and wraps a bare
+  username to `<name>@motion.edu`. Verified: demo `student`/`teacher` bare
+  logins still work end-to-end against real Supabase.
+- Signup: email field replaced with a validated username field
+  (`isValidUsername`: 3–20 chars, `[a-z0-9_]`, no `@`); wraps to the internal
+  domain before `signUp`; case-insensitive uniqueness falls out of Supabase's
+  existing email-exists check. Verified in the DOM + helper unit checks
+  (`usernameToEmail`, `isValidUsername`, `emailToUsername` all correct).
+- Admin "create user": input changed to Username; the client wraps to the
+  internal email before calling the **unchanged** `admin_create_user` RPC (per
+  the addendum — the reviewed SQL function is untouched; it still just receives
+  an email-shaped string). Roster now displays plain usernames (strips the
+  internal domain; real emails shown in full). Credential-reset prompt is
+  username-based too.
+- "Forgot password" — there was no email-reset flow to remove; added a line
+  on the login screen: "Forgot your password? Ask your teacher or the school
+  admin to reset it" (the real mechanism is `admin_update_credentials`).
+  **Open question for you:** should teachers be able to reset their *own*
+  students' passwords (not just admin)? That changes who holds the power, so
+  I did NOT build it silently — say the word and I'll add it.
+- Frozen/suspended accounts get a friendly login error ("This account has
+  been suspended. Please contact your school admin.") instead of a raw error.
+
+**2. Freeze / unfreeze — code done; SQL is a reviewable file to run.**
+Same pattern as `admin_role.sql`, shipped as its own reviewable snippet
+`supabase/admin_freeze.sql` (held back for a human look, like the admin file):
+- `admin_set_account_frozen(user_id, frozen)` — SECURITY DEFINER, verifies
+  admin via `_assert_admin()`, refuses admin/self. FREEZE sets
+  `auth.users.banned_until` 100 years out AND deletes that user's existing
+  sessions + refresh tokens so an already-open session is cut off at its next
+  refresh (not left lingering). UNFREEZE clears `banned_until`. No data is
+  ever touched — homework, grades, essays, chat, teacher-created lessons all
+  stay. Every action writes `freeze_user`/`unfreeze_user` to the audit log.
+- Also re-defines `admin_list_users()` to add an `is_frozen` column so the
+  roster can show status (identical otherwise; safe to re-run).
+- Admin UI: each account row now has a freeze/unfreeze toggle (arm-confirm on
+  freeze since it cuts access) and, when frozen, a "Frozen" badge + greyed/
+  struck-through styling. The client reads `is_frozen` and degrades
+  gracefully if the freeze SQL isn't applied yet (treats everyone as active,
+  toggle shows an "install backend" toast).
+- Freezing a teacher only blocks that teacher's login; their content stays
+  visible to students by design. A separate content-hiding toggle was NOT
+  bundled in — noted here as an option if you want it.
+
+**What you need to do (these need your hands — I can't run privileged SQL on
+the shared DB):**
+1. **Run `supabase/admin_role.sql`** in the Supabase SQL Editor — set a real
+   admin password inside it first (currently `admin`, too weak). This is the
+   prerequisite the addendum assumed was already done.
+2. **Run `supabase/admin_freeze.sql`** right after, to activate freeze/unfreeze
+   and the roster status column.
+3. Once both are run: admin logs in with `admin`, creates accounts by
+   username, and freeze/unfreeze works. I'll happily run the full live
+   acceptance test (create username account → log in with just the username →
+   freeze → confirm locked out → unfreeze → confirm restored, all in the audit
+   log) the moment the backend is in place — just say it's applied.
+
 ## Round 3 — FINAL REPORT (everything done in one autonomous run)
 
 Every section of the Round 3 brief is implemented, verified, committed and
