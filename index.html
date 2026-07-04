@@ -465,6 +465,23 @@ body{font-family:'Inter',system-ui,sans-serif;color:var(--txt);background:var(--
 .dit-word.correct{color:var(--green);}
 .dit-word.missing{color:var(--red);text-decoration:line-through;opacity:0.75;}
 .dit-word.extra{color:var(--gold);}
+.dit-level-tabs{display:flex;justify-content:center;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.dit-level-tab{
+  font-family:inherit;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;
+  background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2);
+  border-radius:9px;transition:all 0.2s;
+}
+.dit-level-tab:hover{background:var(--bg4);color:var(--txt);}
+.dit-level-tab.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 0 12px rgba(124,110,255,0.35);}
+.dit-speed-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:14px;flex-wrap:wrap;}
+.dit-speed-lbl{font-size:10px;color:var(--txt3);letter-spacing:0.08em;text-transform:uppercase;margin-right:4px;}
+.dit-speed-btn{
+  font-family:inherit;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;
+  background:var(--bg3);color:var(--txt2);border:0.5px solid var(--line2);
+  border-radius:8px;transition:all 0.15s;
+}
+.dit-speed-btn:hover{background:var(--bg4);color:var(--txt);}
+.dit-speed-btn.active{background:rgba(124,110,255,0.16);color:var(--accent2);border-color:rgba(124,110,255,0.4);}
 
 /* ── SPEAKING PRACTICE ── */
 .sp-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:16px;}
@@ -1721,35 +1738,9 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
 
 <!-- SCHEDULE -->
 <div class="screen" id="screen-schedule">
-  <div class="ph"><div class="pt">Schedule</div><div class="ps">June 2025 · B1 Intermediate</div></div>
-  <div class="card">
-    <div class="tl">
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-day-n">11</div><div class="tl-day-l">Wed</div></div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;gap:0;"><div class="tl-dot"></div></div>
-        <div class="tl-body"><div style="display:flex;align-items:center;justify-content:space-between"><div class="tl-title">Grammar &amp; Speaking</div><span class="pill pp">Today</span></div><div class="tl-meta">Ms. Nilufar · Room 3</div><div class="tl-time">15:00 – 16:30</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-day-n">13</div><div class="tl-day-l">Fri</div></div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;"><div class="tl-dot"></div></div>
-        <div class="tl-body"><div style="display:flex;align-items:center;justify-content:space-between"><div class="tl-title">Listening &amp; Vocabulary</div><span class="pill pd">In two days</span></div><div class="tl-meta">Ms. Nilufar · Room 2</div><div class="tl-time">15:00 – 16:30</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-day-n">16</div><div class="tl-day-l">Mon</div></div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;"><div class="tl-dot off"></div></div>
-        <div class="tl-body"><div class="tl-title">Writing Workshop</div><div class="tl-meta">Ms. Nilufar · Room 3</div><div class="tl-time">15:00 – 16:30</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-day-n">18</div><div class="tl-day-l">Wed</div></div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;"><div class="tl-dot off"></div></div>
-        <div class="tl-body"><div style="display:flex;align-items:center;justify-content:space-between"><div class="tl-title">Mock Test — B1</div><span class="pill pg">Test</span></div><div class="tl-meta">Ms. Nilufar · Room 1</div><div class="tl-time">15:00 – 17:00</div></div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-day-n">20</div><div class="tl-day-l">Fri</div></div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;"><div class="tl-dot off"></div></div>
-        <div class="tl-body"><div class="tl-title">Grammar &amp; Speaking</div><div class="tl-meta">Ms. Nilufar · Room 3</div><div class="tl-time">15:00 – 16:30</div></div>
-      </div>
-    </div>
+  <div class="ph"><div class="pt">Schedule</div><div class="ps" id="schedule-sub">Weekly schedule for your group</div></div>
+  <div class="card" id="schedule-card">
+    <div id="schedule-content"><div style="text-align:center;padding:32px;color:var(--txt3)"><span class="spinner lg"></span></div></div>
   </div>
 </div>
 
@@ -1951,7 +1942,13 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <div class="ps">Unit 5 · Present Perfect · <span id="gr-counter">1 / 8</span></div>
     <select class="lesson-select" id="gr-lesson-picker" style="margin-top:10px" onchange="lessonPickerChanged(this)"></select>
   </div>
-  <div class="card glass">
+  <div class="card glass" id="gr-topic-prompt" style="display:none;text-align:center;padding:40px 20px">
+    <div style="font-size:2.2rem;margin-bottom:10px">🧭</div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">Choose a topic first</div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:16px">Pick a lesson from the selector above, or browse the Level Track to choose what to practice.</div>
+    <button type="button" class="hw-btn" style="margin-top:0" onclick="navTo('levels')"><i class="ti ti-layers-difference" style="margin-right:5px;vertical-align:-1px"></i>Open Level Track</button>
+  </div>
+  <div class="card glass" id="gr-trainer-card">
     <div class="bw" style="margin-bottom:16px"><div class="bf accent" id="gr-pfill" style="width:0%"></div></div>
     <div id="gr-question-wrap">
       <div style="font-size:10px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px" id="gr-type">Fill in the gap</div>
@@ -1976,7 +1973,57 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   <div class="ph">
     <div class="pt">Vocabulary trainer</div>
     <div class="ps">Unit 5 · 20 words · tap a card to see the translation</div>
-    <select class="lesson-select" id="vocab-lesson-picker" style="margin-top:10px" onchange="lessonPickerChanged(this)"></select>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+      <select class="lesson-select" id="vocab-lesson-picker" onchange="lessonPickerChanged(this)"></select>
+      <button type="button" class="mini-btn" id="vocab-myw-btn" onclick="openMyWords()"><i class="ti ti-star" style="vertical-align:-1px"></i> My Words</button>
+    </div>
+  </div>
+  <div class="card glass" id="vocab-topic-prompt" style="display:none;text-align:center;padding:40px 20px">
+    <div style="font-size:2.2rem;margin-bottom:10px">🧭</div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">Choose a topic first</div>
+    <div style="font-size:12px;color:var(--txt2);margin-bottom:16px">Pick a lesson from the selector above, browse the Level Track, or practice your own saved words.</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button type="button" class="hw-btn" style="margin-top:0" onclick="navTo('levels')"><i class="ti ti-layers-difference" style="margin-right:5px;vertical-align:-1px"></i>Open Level Track</button>
+      <button type="button" class="hw-btn" style="margin-top:0;background:var(--bg4);box-shadow:none" onclick="openMyWords()"><i class="ti ti-star" style="margin-right:5px;vertical-align:-1px"></i>My Words</button>
+    </div>
+  </div>
+  <div id="vocab-myw-panel" style="display:none">
+    <div class="card glass">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="sec" style="margin:0"><i class="ti ti-star" style="margin-right:5px;vertical-align:-2px;color:var(--gold)"></i>My Words</div>
+        <button type="button" class="mini-btn" onclick="closeMyWords()"><i class="ti ti-arrow-left" style="vertical-align:-1px"></i> Back</button>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);margin-bottom:12px">Your personal vocabulary — only you can see these topics.</div>
+      <div id="myw-topic-list-view">
+        <div id="myw-topics"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <input class="ai-in" id="myw-new-topic-name" placeholder="New topic name (e.g. Phrasal Verbs)" style="margin:0">
+          <button type="button" class="hw-btn" style="margin-top:0;white-space:nowrap" onclick="createMyTopic()"><i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>New Topic</button>
+        </div>
+      </div>
+      <div id="myw-topic-detail-view" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:14px;font-weight:600" id="myw-detail-title">Topic</div>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="mini-btn" onclick="mywBackToTopics()"><i class="ti ti-arrow-left" style="vertical-align:-1px"></i> Topics</button>
+            <button type="button" class="hw-btn" style="margin-top:0;padding:6px 14px" id="myw-practice-btn" onclick="practiceMyTopic()"><i class="ti ti-cards" style="margin-right:4px;vertical-align:-1px"></i>Practice</button>
+          </div>
+        </div>
+        <div id="myw-word-list" style="margin-bottom:14px"></div>
+        <div style="border-top:0.5px solid var(--line2);padding-top:12px">
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input class="ai-in" id="myw-word" placeholder="English word" style="margin:0">
+            <button type="button" class="mini-btn" style="white-space:nowrap" id="myw-ai-btn" onclick="mywAIFill()"><i class="ti ti-sparkles" style="vertical-align:-1px"></i> AI Fill</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <input class="ai-in" id="myw-def" placeholder="Translation" style="margin:0">
+            <input class="ai-in" id="myw-ph" placeholder="Phonetic /.../" style="margin:0">
+          </div>
+          <input class="ai-in" id="myw-ex" placeholder="Example sentence" style="width:100%;margin-bottom:8px">
+          <button type="button" class="hw-btn" style="margin-top:0" id="myw-add-btn" onclick="addMyWord()"><i class="ti ti-plus" style="margin-right:4px;vertical-align:-1px"></i>Add word</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="vocab-done-screen" style="display:none" class="vocab-done">
     <div class="vocab-done-icon">🎉</div>
@@ -2027,13 +2074,28 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <button type="button" class="hw-btn" onclick="dictationRestart()">Practice again</button>
   </div>
   <div id="dit-empty" class="card glass" style="display:none;text-align:center;padding:32px 16px;color:var(--txt3)"></div>
+  <div class="dit-level-tabs" id="dit-level-tabs">
+    <button type="button" class="dit-level-tab" data-level="beginner" onclick="dictationSetLevel('beginner')">1 · A1</button>
+    <button type="button" class="dit-level-tab" data-level="elementary" onclick="dictationSetLevel('elementary')">2 · A2</button>
+    <button type="button" class="dit-level-tab" data-level="pre-intermediate" onclick="dictationSetLevel('pre-intermediate')">3 · B1</button>
+    <button type="button" class="dit-level-tab" data-level="pre-ielts" onclick="dictationSetLevel('pre-ielts')">4 · B2</button>
+    <button type="button" class="dit-level-tab" data-level="ielts" onclick="dictationSetLevel('ielts')">5 · C1</button>
+  </div>
   <div id="dit-active">
     <div class="bw" style="margin-bottom:16px"><div class="bf accent" id="dit-pfill" style="width:0%"></div></div>
     <div class="card glass" style="padding:22px;text-align:center">
       <div style="font-size:10px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px" id="dit-topic">Topic</div>
       <div class="dit-play-row">
         <button type="button" class="dit-play-btn" id="dit-play-btn" onclick="dictationPlay()" aria-label="Play sentence"><i class="ti ti-volume"></i></button>
-        <button type="button" class="mini-btn" onclick="dictationPlaySlow()"><i class="ti ti-clock-hour-9" style="vertical-align:-2px"></i> Play slowly</button>
+      </div>
+      <div class="dit-speed-row" id="dit-speed-row" role="group" aria-label="Playback speed">
+        <span class="dit-speed-lbl">Speed</span>
+        <button type="button" class="dit-speed-btn" data-rate="0.5" onclick="dictationSetRate(0.5)">0.5×</button>
+        <button type="button" class="dit-speed-btn" data-rate="0.75" onclick="dictationSetRate(0.75)">0.75×</button>
+        <button type="button" class="dit-speed-btn" data-rate="1" onclick="dictationSetRate(1)">1×</button>
+        <button type="button" class="dit-speed-btn" data-rate="1.25" onclick="dictationSetRate(1.25)">1.25×</button>
+        <button type="button" class="dit-speed-btn active" data-rate="1.5" onclick="dictationSetRate(1.5)">1.5×</button>
+        <button type="button" class="dit-speed-btn" data-rate="2" onclick="dictationSetRate(2)">2×</button>
       </div>
       <div style="font-size:11px;color:var(--txt3);margin-top:10px" id="dit-play-count">Not played yet</div>
       <textarea class="hw-textarea" id="dit-input" placeholder="Type what you hear…" style="margin-top:18px;text-align:left" rows="3"></textarea>
@@ -2335,8 +2397,28 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
     <!-- Schedule + Today's topic — prominent top widgets -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="card glass" style="margin-bottom:0">
-        <div class="sec" style="margin-top:0"><i class="ti ti-calendar-event" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Schedule</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="sec" style="margin-top:0"><i class="ti ti-calendar-event" style="margin-right:5px;vertical-align:-2px;color:var(--accent)"></i>Weekly Schedule</div>
+          <button type="button" class="mini-btn" onclick="schedToggleForm()"><i class="ti ti-plus" style="vertical-align:-1px"></i> Add</button>
+        </div>
         <div id="td-schedule"></div>
+        <div id="sched-form" style="display:none;margin-top:10px;border-top:0.5px solid var(--line2);padding-top:10px">
+          <input type="hidden" id="sched-edit-id">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <select class="ai-in" id="sched-day" style="margin:0">
+              <option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option>
+              <option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option><option value="7">Sunday</option>
+            </select>
+            <input class="ai-in" id="sched-time" placeholder="e.g. 15:00–16:30" style="margin:0">
+          </div>
+          <input class="ai-in" id="sched-topic" placeholder="Topic (e.g. Present Perfect)" style="width:100%;margin-bottom:8px">
+          <input class="ai-in" id="sched-activity" placeholder="Planned activity / what will be covered" style="width:100%;margin-bottom:8px">
+          <input class="ai-in" id="sched-notes" placeholder="Additional notes (optional)" style="width:100%;margin-bottom:8px">
+          <div style="display:flex;gap:8px">
+            <button type="button" class="hw-btn" id="sched-save-btn" style="margin-top:0" onclick="schedSave()">Save entry</button>
+            <button type="button" class="mini-btn" onclick="schedToggleForm(true)">Cancel</button>
+          </div>
+        </div>
       </div>
       <div class="card glass" style="margin-bottom:0">
         <div class="sec" style="margin-top:0"><i class="ti ti-notebook" style="margin-right:5px;vertical-align:-2px;color:var(--purple)"></i>Today's Topic</div>
@@ -4632,6 +4714,9 @@ function logout(){
   // hardening after the role-flash regression.)
   document.body.removeAttribute('data-role');
   tGroup='';
+  _trainerTopicChosen=false;
+  _myWordsPractice=null;
+  _schedCache={};
   _dbCurrentLesson=null;
   activeTChatGroup=null;
   activeTChatStudent=null;
@@ -4669,6 +4754,131 @@ function restoreLastScreen(){
   show(dest,document.querySelector(`[data-id="${dest}"]`));
 }
 function initialsOf(name){return name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();}
+
+// ─── WEEKLY SCHEDULE (Round 3, 5d — teacher-managed, students see own group) ──
+const SCHED_DAYS={1:'Monday',2:'Tuesday',3:'Wednesday',4:'Thursday',5:'Friday',6:'Saturday',7:'Sunday'};
+let _schedCache={};
+async function fetchSchedule(group,forceRefresh){
+  if(!_sb||!group)return[];
+  if(!forceRefresh&&_schedCache[group])return _schedCache[group];
+  try{
+    const{data,error}=await _sb.from('schedule').select('*').eq('group_name',group).order('day_of_week').order('time');
+    if(error||!data)return[];
+    _schedCache[group]=data;
+    return data;
+  }catch(e){return[];}
+}
+// Teacher card on the dashboard
+async function renderTdSchedule(){
+  const el=document.getElementById('td-schedule');if(!el)return;
+  const rows=await fetchSchedule(tGroup);
+  if(!rows.length){el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:6px 0">No schedule set for this group yet — click "Add".</div>';return;}
+  el.innerHTML=rows.map(r=>`
+    <div class="sched-row" style="align-items:flex-start;gap:8px">
+      <span class="sched-icon" style="margin-top:1px"><i class="ti ti-calendar"></i></span>
+      <span style="flex:1;min-width:0">
+        <b>${escHtml(SCHED_DAYS[r.day_of_week]||'?')}</b> · ${escHtml(r.time)} — ${escHtml(r.topic)}
+        ${r.activity?`<div style="font-size:11px;color:var(--txt2);margin-top:2px">${escHtml(r.activity)}</div>`:''}
+        ${r.notes?`<div style="font-size:11px;color:var(--txt3);margin-top:1px;font-style:italic">${escHtml(r.notes)}</div>`:''}
+      </span>
+      <button type="button" class="eh-del-btn" style="padding:2px 6px" title="Edit" onclick="schedEdit('${r.id}')"><i class="ti ti-pencil"></i></button>
+      <button type="button" class="eh-del-btn" style="padding:2px 6px" title="Delete" onclick="schedDelete('${r.id}')"><i class="ti ti-trash"></i></button>
+    </div>`).join('');
+}
+function schedToggleForm(forceClose){
+  const f=document.getElementById('sched-form');if(!f)return;
+  const open=f.style.display!=='none';
+  if(forceClose===true||open){f.style.display='none';document.getElementById('sched-edit-id').value='';return;}
+  f.style.display='block';
+}
+function schedEdit(id){
+  const rows=_schedCache[tGroup]||[];
+  const r=rows.find(x=>x.id===id);if(!r)return;
+  document.getElementById('sched-edit-id').value=r.id;
+  document.getElementById('sched-day').value=String(r.day_of_week);
+  document.getElementById('sched-time').value=r.time||'';
+  document.getElementById('sched-topic').value=r.topic||'';
+  document.getElementById('sched-activity').value=r.activity||'';
+  document.getElementById('sched-notes').value=r.notes||'';
+  const f=document.getElementById('sched-form');if(f)f.style.display='block';
+}
+async function schedSave(){
+  if(!_sb||session?.role!=='teacher'){showToast('Teachers only');return;}
+  const id=document.getElementById('sched-edit-id').value;
+  const entry={
+    group_name:tGroup,
+    day_of_week:Number(document.getElementById('sched-day').value),
+    time:(document.getElementById('sched-time').value||'').trim(),
+    topic:(document.getElementById('sched-topic').value||'').trim(),
+    activity:(document.getElementById('sched-activity').value||'').trim()||null,
+    notes:(document.getElementById('sched-notes').value||'').trim()||null,
+    updated_by:session.uid,
+    updated_at:new Date().toISOString(),
+  };
+  if(!entry.time||!entry.topic){showToast('Day, time and topic are required');return;}
+  const btn=document.getElementById('sched-save-btn');
+  if(btn)btn.disabled=true;
+  const{error}=id
+    ?await _sb.from('schedule').update(entry).eq('id',id)
+    :await _sb.from('schedule').insert(entry);
+  if(btn)btn.disabled=false;
+  if(error){showToast('Could not save schedule entry');console.error('[Schedule] save failed:',error.message);return;}
+  delete _schedCache[tGroup];
+  ['sched-time','sched-topic','sched-activity','sched-notes'].forEach(i=>{const e=document.getElementById(i);if(e)e.value='';});
+  document.getElementById('sched-edit-id').value='';
+  schedToggleForm(true);
+  showToast(id?'Schedule entry updated':'Schedule entry added 📅');
+  renderTdSchedule();
+}
+let _schedArmedDelete=null;
+async function schedDelete(id){
+  if(_schedArmedDelete!==id){
+    _schedArmedDelete=id;
+    showToast('Tap delete again to confirm');
+    setTimeout(()=>{if(_schedArmedDelete===id)_schedArmedDelete=null;},3000);
+    return;
+  }
+  _schedArmedDelete=null;
+  const{error}=await _sb.from('schedule').delete().eq('id',id);
+  if(error){showToast('Could not delete entry');return;}
+  delete _schedCache[tGroup];
+  showToast('Entry deleted');
+  renderTdSchedule();
+}
+// Student read-only weekly view
+async function buildSchedule(){
+  const el=document.getElementById('schedule-content');if(!el)return;
+  const sub=document.getElementById('schedule-sub');
+  const group=session?.group||'';
+  if(sub)sub.textContent='Weekly schedule · '+group;
+  if(session?.role==='teacher'){
+    el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:12px">Manage the weekly schedule from your Dashboard — students in each group see it here.</div>';
+    return;
+  }
+  const rows=await fetchSchedule(group,true);
+  if(!rows.length){
+    el.innerHTML='<div style="text-align:center;padding:32px 16px;color:var(--txt3)"><i class="ti ti-calendar-off" style="font-size:1.8rem;display:block;margin-bottom:8px"></i>No schedule published for your group yet.<br>Your teacher will add it soon.</div>';
+    return;
+  }
+  // Highlight today (JS getDay(): Sun=0 → our scheme Mon=1..Sun=7)
+  const todayDow=((new Date().getDay()+6)%7)+1;
+  el.innerHTML='<div class="tl">'+rows.map(r=>{
+    const isToday=r.day_of_week===todayDow;
+    return `<div class="tl-item">
+      <div class="tl-left"><div class="tl-day-n" style="font-size:13px">${escHtml((SCHED_DAYS[r.day_of_week]||'?').slice(0,3))}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px;"><div class="tl-dot${isToday?'':' off'}"></div></div>
+      <div class="tl-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div class="tl-title">${escHtml(r.topic)}</div>
+          ${isToday?'<span class="pill pp">Today</span>':''}
+        </div>
+        ${r.activity?`<div class="tl-meta">${escHtml(r.activity)}</div>`:''}
+        <div class="tl-time">${escHtml(r.time)}</div>
+        ${r.notes?`<div style="font-size:11px;color:var(--txt3);margin-top:4px;font-style:italic">${escHtml(r.notes)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+}
 
 // ─── ANNOUNCEMENTS (teacher board) ──────────────
 let announcements=loadStore().announcements||[
@@ -4749,14 +4959,8 @@ async function renderTeacherDash(){
   const grades=(d.grades||{})[tGroup+'|'+activeLesson]||{};
   const notes=(d.notes||{})[tGroup]||{};
 
-  // ── Schedule card ──
-  const sched=GROUP_SCHEDULES[tGroup]||{};
-  const schedEl=document.getElementById('td-schedule');
-  if(schedEl)schedEl.innerHTML=`
-    <div class="sched-row"><span class="sched-icon"><i class="ti ti-calendar"></i></span><span>${escHtml(sched.days||'—')}</span></div>
-    <div class="sched-row"><span class="sched-icon"><i class="ti ti-clock"></i></span><span>${escHtml(sched.time||'—')}</span></div>
-    <div class="sched-row"><span class="sched-icon"><i class="ti ti-door"></i></span><span>${escHtml(sched.room||'—')}</span></div>
-    <div class="sched-row"><span class="sched-icon"><i class="ti ti-user"></i></span><span>${escHtml(sched.teacher||'—')}</span></div>`;
+  // ── Schedule card (DB-driven, editable — Round 3 5d) ──
+  renderTdSchedule();
 
   // ── Lesson topic ──
   const topicKey=tGroup+'|'+todayKey();
@@ -5485,27 +5689,29 @@ async function enterDBLesson(lessonId){
 function _lessonPickerValue(){
   return _dbCurrentLesson?('db:'+_dbCurrentLesson.id):('static:'+currentLessonIdx);
 }
-async function _populateLessonPicker(selectId){
+async function _populateLessonPicker(selectId,showPlaceholder){
   const sel=document.getElementById(selectId);
   if(!sel)return;
   const lvl=CURRICULUM_DATA[currentLevel];
   await fetchDBLessonsForLevel(currentLevel);
   const dbLessons=_dbLessons[currentLevel]||[];
-  let html=lvl?lvl.lessons.map((l,idx)=>`<option value="static:${idx}">${_pEscHtml(l.title)}</option>`).join(''):'';
+  let html=showPlaceholder?'<option value="" disabled selected>Choose a topic…</option>':'';
+  html+=lvl?lvl.lessons.map((l,idx)=>`<option value="static:${idx}">${_pEscHtml(l.title)}</option>`).join(''):'';
   html+=dbLessons.map(l=>`<option value="db:${l.id}">${_pEscHtml(l.title)}</option>`).join('');
   sel.innerHTML=html;
-  sel.value=_lessonPickerValue();
+  if(!showPlaceholder)sel.value=_lessonPickerValue();
 }
 async function lessonPickerChanged(selectEl){
   const val=selectEl.value;
+  if(!val)return;
   if(val.startsWith('static:')){
     await _loadLessonContent('static',{levelId:currentLevel,idx:Number(val.slice(7))});
   }else if(val.startsWith('db:')){
     await _loadLessonContent('db',val.slice(3));
   }
   const activeId=document.querySelector('.screen.active')?.id;
-  if(activeId==='screen-vocab'){await _populateLessonPicker('vocab-lesson-picker');restartVocab();}
-  else if(activeId==='screen-grammar'){await _populateLessonPicker('gr-lesson-picker');grammarRestart();}
+  if(activeId==='screen-vocab')_renderVocabScreen();
+  else if(activeId==='screen-grammar')_renderGrammarScreen();
 }
 // ─── CMS: SAVE LESSON ────────────────────────────────
 async function cmsSaveLesson(){
@@ -5878,11 +6084,12 @@ function show(id,el){
   if(scr){scr.classList.add('active');}
   if(el&&el.classList)el.classList.add('active');
   if(id==='leaderboard')buildLB();
+  if(id==='schedule')buildSchedule();
   if(id==='grades'){buildGrades();}
   if(id==='attendance')buildAtt();
   if(id==='homework')buildHw();
-  if(id==='grammar'){_populateLessonPicker('gr-lesson-picker');grammarRestart();}
-  if(id==='vocab'){_populateLessonPicker('vocab-lesson-picker');renderVocab();document.getElementById('vocab-active').style.display='block';document.getElementById('vocab-done-screen').style.display='none';}
+  if(id==='grammar')_renderGrammarScreen();
+  if(id==='vocab')_renderVocabScreen();
   if(id==='dictation')renderDictationScreen();
   if(id==='speaking')renderSpeakingScreen();
   if(id==='classroom')buildClassroom();
@@ -6284,6 +6491,8 @@ async function _loadLessonContent(kind,ref){
   }
   vocabIndex=0;vocabFlipped=false;vocabScores={good:0,ok:0,bad:0};
   grIndex=0;grCorrect=0;grAnswered=false;grShuffled=null;
+  _trainerTopicChosen=true; // Round 3 (5c): trainers stay gated until a topic is explicitly picked
+  _myWordsPractice=null;
   return true;
 }
 async function enterLesson(levelId,lessonIdx){
@@ -6355,7 +6564,9 @@ function renderVocab(){
   const lvl=CURRICULUM_DATA[currentLevel];
   const vocabPs=document.querySelector('#screen-vocab .ps');
   if(vocabPs){
-    if(_dbCurrentLesson){
+    if(typeof _myWordsPractice!=='undefined'&&_myWordsPractice){
+      vocabPs.textContent=`⭐ My Words · ${_myWordsPractice.name} · ${vocabWords.length} words · tap a card to see the translation`;
+    } else if(_dbCurrentLesson){
       vocabPs.textContent=`${_dbCurrentLesson.title} · ${vocabWords.length} words · tap a card to see the translation`;
     } else {
       const lesson=lvl?lvl.lessons[currentLessonIdx]:null;
@@ -6432,6 +6643,189 @@ function restartVocab(){
   renderVocab();
 }
 
+// ─── TOPIC GATING (Round 3, 5c) ─────────────────────────────────────────────
+// Opening a trainer without an explicitly chosen topic shows a "choose a
+// topic" state instead of whatever content happened to be loaded last.
+let _trainerTopicChosen=false;
+let _myWordsPractice=null; // {id,name} of the personal topic being practiced, or null
+function _renderVocabScreen(){
+  const prompt=document.getElementById('vocab-topic-prompt');
+  const active=document.getElementById('vocab-active');
+  const done=document.getElementById('vocab-done-screen');
+  const myw=document.getElementById('vocab-myw-panel');
+  if(myw)myw.style.display='none';
+  if(done)done.style.display='none';
+  if(!_trainerTopicChosen){
+    if(active)active.style.display='none';
+    if(prompt)prompt.style.display='block';
+    _populateLessonPicker('vocab-lesson-picker',true);
+    return;
+  }
+  if(prompt)prompt.style.display='none';
+  if(active)active.style.display='block';
+  _populateLessonPicker('vocab-lesson-picker');
+  renderVocab();
+}
+function _renderGrammarScreen(){
+  const prompt=document.getElementById('gr-topic-prompt');
+  const card=document.getElementById('gr-trainer-card');
+  if(!_trainerTopicChosen){
+    if(card)card.style.display='none';
+    if(prompt)prompt.style.display='block';
+    _populateLessonPicker('gr-lesson-picker',true);
+    return;
+  }
+  if(prompt)prompt.style.display='none';
+  if(card)card.style.display='block';
+  _populateLessonPicker('gr-lesson-picker');
+  grammarRestart();
+}
+
+// ─── MY WORDS — personal student vocabulary (Round 3, 5c) ───────────────────
+// Entirely separate from teacher content: student_vocab_topics/_words tables,
+// RLS own-rows-only, invisible to the CMS and to other students.
+let _mywTopics=[], _mywActiveTopic=null, _mywWords=[];
+function _mywAvailable(){
+  return !!(_sb&&session?.uid&&!String(session.uid).startsWith('local-'));
+}
+function openMyWords(){
+  if(session?.role==='teacher'){showToast('My Words is a student feature');return;}
+  if(!_mywAvailable()){showToast('My Words needs a connection — please try again online');return;}
+  document.getElementById('vocab-topic-prompt').style.display='none';
+  document.getElementById('vocab-active').style.display='none';
+  document.getElementById('vocab-done-screen').style.display='none';
+  document.getElementById('vocab-myw-panel').style.display='block';
+  mywBackToTopics();
+}
+function closeMyWords(){
+  document.getElementById('vocab-myw-panel').style.display='none';
+  _renderVocabScreen();
+}
+async function mywBackToTopics(){
+  _mywActiveTopic=null;
+  document.getElementById('myw-topic-detail-view').style.display='none';
+  document.getElementById('myw-topic-list-view').style.display='block';
+  const el=document.getElementById('myw-topics');
+  el.innerHTML='<div style="text-align:center;padding:16px"><span class="spinner"></span></div>';
+  const{data,error}=await _sb.from('student_vocab_topics')
+    .select('id,name,created_at,student_vocab_words(count)')
+    .eq('student_id',session.uid)
+    .order('created_at',{ascending:false});
+  if(error){el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:8px 0">Could not load your topics.</div>';return;}
+  _mywTopics=data||[];
+  if(!_mywTopics.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:8px 0">No personal topics yet — create your first one below.</div>';
+    return;
+  }
+  el.innerHTML=_mywTopics.map(t=>{
+    const cnt=t.student_vocab_words?.[0]?.count??0;
+    return `<div class="mat-item" onclick="mywOpenTopic('${t.id}')">
+      <div class="mat-icon doc" style="font-size:16px">⭐</div>
+      <div class="mat-body">
+        <div class="mat-title">${escHtml(t.name)}</div>
+        <div class="mat-meta">${cnt} word${cnt===1?'':'s'}</div>
+      </div>
+      <i class="ti ti-chevron-right" style="color:var(--txt3)"></i>
+    </div>`;
+  }).join('');
+}
+async function createMyTopic(){
+  const inp=document.getElementById('myw-new-topic-name');
+  const name=(inp.value||'').trim();
+  if(!name){showToast('Give your topic a name first');return;}
+  const{data,error}=await _sb.from('student_vocab_topics')
+    .insert({student_id:session.uid,name}).select('id').single();
+  if(error){showToast('Could not create topic');console.error('[MyWords] create failed:',error.message);return;}
+  inp.value='';
+  showToast('Topic created ⭐');
+  mywOpenTopic(data.id,name);
+}
+async function mywOpenTopic(topicId,knownName){
+  const t=_mywTopics.find(x=>x.id===topicId);
+  _mywActiveTopic={id:topicId,name:knownName||t?.name||'Topic'};
+  document.getElementById('myw-topic-list-view').style.display='none';
+  document.getElementById('myw-topic-detail-view').style.display='block';
+  document.getElementById('myw-detail-title').textContent=_mywActiveTopic.name;
+  await _mywReloadWords();
+}
+async function _mywReloadWords(){
+  const el=document.getElementById('myw-word-list');
+  el.innerHTML='<div style="text-align:center;padding:12px"><span class="spinner"></span></div>';
+  const{data,error}=await _sb.from('student_vocab_words')
+    .select('*').eq('topic_id',_mywActiveTopic.id).order('created_at');
+  _mywWords=(!error&&data)?data:[];
+  const pBtn=document.getElementById('myw-practice-btn');
+  if(pBtn)pBtn.disabled=!_mywWords.length;
+  if(!_mywWords.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:6px 0">No words yet — add your first one below.</div>';
+    return;
+  }
+  el.innerHTML=_mywWords.map(w=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--line2)">
+      <div style="flex:1;min-width:0">
+        <b style="font-size:13px">${escHtml(w.word)}</b>
+        <span style="font-size:12px;color:var(--accent2);margin-left:8px">${escHtml(w.definition)}</span>
+        ${w.phonetic?`<span style="font-size:11px;color:var(--txt3);margin-left:6px">${escHtml(w.phonetic)}</span>`:''}
+        ${w.example?`<div style="font-size:11px;color:var(--txt3);font-style:italic;margin-top:2px">${escHtml(w.example)}</div>`:''}
+      </div>
+      <button type="button" class="eh-del-btn" onclick="mywDeleteWord('${w.id}')" aria-label="Remove word"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+async function mywAIFill(){
+  const word=(document.getElementById('myw-word').value||'').trim();
+  if(!word){showToast('Type a word first');return;}
+  const btn=document.getElementById('myw-ai-btn');
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.innerHTML='<span class="spinner sm"></span>';
+  try{
+    // Same AI-assist flow the teacher CMS uses — one implementation, two callers.
+    const existingExample=(document.getElementById('myw-ex').value||'').trim();
+    const base=(typeof ESSAY_ENDPOINT!=='undefined'?ESSAY_ENDPOINT:CONFIG.ESSAY_ENDPOINT).replace(/\/$/,'');
+    const res=await fetch(base+'/api/vocab-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({word,mode:'fill',existingExample:existingExample||undefined})});
+    const json=await res.json();
+    if(json.status!=='success'){showToast('AI could not fill this word');return;}
+    if(json.definition)document.getElementById('myw-def').value=json.definition;
+    if(json.phonetic)document.getElementById('myw-ph').value=json.phonetic;
+    if(json.example&&!existingExample)document.getElementById('myw-ex').value=json.example;
+    showToast('AI filled in the details ✨');
+  }catch(e){showToast('AI is unavailable right now');}
+  finally{btn.disabled=false;btn.innerHTML=orig;}
+}
+async function addMyWord(){
+  const word=(document.getElementById('myw-word').value||'').trim();
+  const def=(document.getElementById('myw-def').value||'').trim();
+  if(!word||!def){showToast('Word and translation are required');return;}
+  const btn=document.getElementById('myw-add-btn');
+  btn.disabled=true;
+  const{error}=await _sb.from('student_vocab_words').insert({
+    topic_id:_mywActiveTopic.id,student_id:session.uid,word,definition:def,
+    phonetic:(document.getElementById('myw-ph').value||'').trim()||null,
+    example:(document.getElementById('myw-ex').value||'').trim()||null,
+  });
+  btn.disabled=false;
+  if(error){showToast('Could not save the word');console.error('[MyWords] add failed:',error.message);return;}
+  ['myw-word','myw-def','myw-ph','myw-ex'].forEach(i=>{document.getElementById(i).value='';});
+  showToast('Word added ✨');
+  _mywReloadWords();
+}
+let _mywArmedDelete=null;
+async function mywDeleteWord(id){
+  if(_mywArmedDelete!==id){_mywArmedDelete=id;showToast('Tap ✕ again to remove');setTimeout(()=>{if(_mywArmedDelete===id)_mywArmedDelete=null;},3000);return;}
+  _mywArmedDelete=null;
+  const{error}=await _sb.from('student_vocab_words').delete().eq('id',id);
+  if(error){showToast('Could not remove the word');return;}
+  _mywReloadWords();
+}
+function practiceMyTopic(){
+  if(!_mywWords.length){showToast('Add some words first');return;}
+  vocabWords=_mywWords.map(w=>({word:w.word,ph:w.phonetic||'',tr:w.definition,ex:w.example||''}));
+  _myWordsPractice={..._mywActiveTopic};
+  _dbCurrentLesson=null;
+  _trainerTopicChosen=true;
+  document.getElementById('vocab-myw-panel').style.display='none';
+  restartVocab();
+}
+
 // ─── DICTATION (LISTEN & TYPE) ──────────────────
 // Original content bank in `dictation_sentences` (Supabase), tagged by the same
 // level slugs used everywhere else (beginner/elementary/pre-intermediate/
@@ -6440,6 +6834,19 @@ function restartVocab(){
 // becomes the limiting factor, but that's a v2 concern).
 const DICTATION_SET_SIZE=5;
 let _ditSet=[], _ditIdx=0, _ditResults=[], _ditPlayCount=0;
+// Round 3 (5a): real speed control + explicit difficulty choice.
+// 1.5x is the deliberate default/base speed per spec — the Web Speech API's
+// 1.0 is slower than natural conversational pace for short sentences.
+let _ditRate=1.5;
+let _ditLevel=null; // null → defaults to the student's currentLevel on first open
+function dictationSetRate(rate){
+  _ditRate=rate;
+  document.querySelectorAll('#dit-speed-row .dit-speed-btn').forEach(b=>b.classList.toggle('active',Number(b.dataset.rate)===rate));
+}
+function dictationSetLevel(level){
+  _ditLevel=level;
+  renderDictationScreen();
+}
 
 function _ditDaySeed(){
   const d=new Date();
@@ -6475,7 +6882,9 @@ async function renderDictationScreen(){
     emptyEl.style.display='block';
     return;
   }
-  const level=currentLevel||'pre-intermediate';
+  const level=_ditLevel||currentLevel||'pre-intermediate';
+  _ditLevel=level;
+  document.querySelectorAll('#dit-level-tabs .dit-level-tab').forEach(b=>b.classList.toggle('active',b.dataset.level===level));
   const {data:sentences,error}=await _sb.from('dictation_sentences').select('*').eq('level',level);
   if(error||!sentences||!sentences.length){
     activeEl.style.display='none';
@@ -6520,14 +6929,8 @@ function _ditSpeak(text,rate){
 function dictationPlay(){
   const s=_ditSet[_ditIdx];if(!s)return;
   _ditPlayCount++;
-  document.getElementById('dit-play-count').textContent='Played '+_ditPlayCount+'x';
-  _ditSpeak(s.text,0.95);
-}
-function dictationPlaySlow(){
-  const s=_ditSet[_ditIdx];if(!s)return;
-  _ditPlayCount++;
-  document.getElementById('dit-play-count').textContent='Played '+_ditPlayCount+'x';
-  _ditSpeak(s.text,0.6);
+  document.getElementById('dit-play-count').textContent='Played '+_ditPlayCount+'x · '+_ditRate+'×';
+  _ditSpeak(s.text,_ditRate);
 }
 
 // Word-level LCS diff: aligns typed words against the target sentence so we can

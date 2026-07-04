@@ -3,6 +3,60 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Round 3, P1 feature work (5a–5d) — all verified live
+
+**5a — Listen & Type: real speed control + explicit difficulty choice.**
+Replaced the single "Play slowly" toggle with a 6-step speed selector
+(0.5 / 0.75 / 1 / 1.25 / 1.5 / 2×), **default 1.5×** per spec, driving
+`SpeechSynthesisUtterance.rate` directly. Difficulty: the content bank
+already carried the app's 5-level scheme (beginner→ielts, seeded in Round 2
+with genuinely increasing difficulty), so per the doc's own preference the
+levels were surfaced rather than re-invented — a 5-tab picker
+("1 · A1" … "5 · C1"), defaulting to the student's current level, reloading
+the daily sentence set on switch. *Verified live*: 6 speed steps render,
+1.5× active by default, switching to 0.5× updates the active state and
+playback rate; level tabs switch content (B1 "Opinions" → A1 "Weather").
+
+**5b — lesson icons that match the topic.** The AI enhance endpoint existed
+(`/api/lesson-enhance`, already wired into lesson creation) but its prompt
+accepted any emoji at temperature 0.9 — hence the generic 📖 everywhere.
+Rewrote the prompt to demand the CONCRETE subject of the topic with
+few-shot examples (Market→🛒, Time→🕐...), explicitly banning generic study
+emojis, temp 0.4. Ran the backfill over all 4 existing DB lessons:
+Cooking→🍳, Traveling→✈️, House→🏠, Market→🛍️ (all previously 📖).
+Teacher manual override in the CMS unchanged.
+
+**5c — topic gating + "My Words".** Opening Vocabulary or Grammar with no
+explicitly chosen lesson now shows a "Choose a topic first" state (picker
+shows a placeholder, trainer content hidden) with links to the Level Track
+— never stale leftover words. The flag flips only in `_loadLessonContent()`
+(the one shared entry point for both trainers) and resets at logout.
+"My Words": personal vocabulary, fully separate from teacher content —
+new `student_vocab_topics` / `student_vocab_words` tables with own-rows-only
+RLS (no teacher read policy, deliberately: it's private). Students create
+topics, add words with the SAME `/api/vocab-generate` AI-assist the CMS
+uses (one implementation, two callers — including the Round 2
+teacher-example disambiguation), practice topics through the existing
+flashcard trainer, and see name + live word count per topic. *Verified
+live end-to-end*: gate shows on fresh login → picking a topic unlocks both
+trainers → created a personal topic → added a word → practiced it in the
+flashcard UI (subtitle shows "⭐ My Words · <topic>") → topic list shows
+correct count. AI-fill verified against the deployed backend (a localhost
+CORS gap initially masked it in the QA harness — fixed server-side by
+allowing localhost origins, which also unblocks all future local QA of AI
+paths).
+
+**5d — Teacher Schedule.** New `schedule` table (group, day-of-week 1–7,
+time, topic, activity, notes, updated_by; read = any authenticated user,
+write = teachers only). Teacher Dashboard's static schedule card replaced
+with a DB-driven "Weekly Schedule" editor — add/edit/delete entries per
+group, two-tap delete confirmation. The student Schedule screen (previously
+hardcoded June-2025 fake data) now renders the real weekly schedule for
+the student's own group, with today's entry highlighted — same data both
+sides, per the "everything connected" principle. *Verified live*: teacher
+added a Thursday entry with activity+notes → student in that group saw
+all of it immediately.
+
 ## Round 3, P1 contained fixes (4a–4d) — all verified live
 
 **4a — teacher chat bubble sizing, root cause + unification.** The teacher
