@@ -3,6 +3,37 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — conversion architecture rebuild (round 3, from the design brief)
+
+Implemented the full UX/copy brief: strict monochrome, wide editorial grid,
+segmented audience hooks, zero-fabrication content, and framed portal preview.
+
+- **Strict ink-on-paper palette** — pure #000 / #FFF with grey steps only;
+  the last warm-paper tints are gone. Warmth now comes exclusively from the
+  organic motion curve (cubic-bezier(0.25,1,0.5,1)), generous line-heights
+  and conversational copy.
+- **Wide editorial grid** — container widened to 1280px; the Method section
+  is now an asymmetric 5/7 split (narrative column + proof grid); no more
+  narrow centered column with dead side space.
+- **Segmented journey hooks** — two side-by-side cards at the top of the
+  hero addressing the two audiences directly: «Начинаете с нуля?» (calm,
+  no-stress path → Programs) and «Цель — балл IELTS?» (AI strategy →
+  Portal). Each with its own micro-CTA.
+- **Portal Peek** — the essay-feedback mock now sits inside a constant
+  dark-mode browser frame (dots + "Motion Portal" title bar) with a floating
+  tag «Интерактивное превью · портал Motion», so the marketing→product
+  transition is deliberately framed.
+- **«Стандарт Motion» replaces reviews** — zero fabricated testimonials.
+  Instead: verifiable expected trajectories («Выпускник Elementary A2 /
+  Pre-IELTS B2 / IELTS Prep C1 …») with ghost level numerals. The old
+  clearly-labeled sample quotes are gone entirely.
+- **Weak copy eradicated** — «адрес уточняется» removed (city stays, detail
+  omitted until real); price note rewritten from a hedge into a value line:
+  «Одна прозрачная цена: занятия и полный доступ к порталу.» 600 000 UZS
+  stays prominent.
+- All copy re-written in RU with full EN/UZ parity (80 keys × 3 languages,
+  machine-checked). Crawlability test strings updated; all suites green.
+
 ## Landing page — design elevation pass (round 2)
 
 Feedback after the first redesign: the improvement wasn't visible enough,

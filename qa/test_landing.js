@@ -13,7 +13,7 @@ const path = require('path');
   {
     const raw = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
     const landing = raw.slice(raw.indexOf('id="landing-page"'), raw.indexOf('<canvas class="bg-orbs"'));
-    const mustContain = ['О центре', 'Программы', 'Английский, который', 'Что говорят', '600 000', 'Ташкент'];
+    const mustContain = ['Метод', 'Программы', 'Английский, который', 'Стандарт Motion', 'Начинаете с нуля', '600 000', 'Ташкент'];
     check('raw HTML: landing copy is crawlable (no empty i18n slots)', mustContain.every(m => landing.includes(m)));
     check('raw HTML: static footer year present', /©\s*<span id="ld-yr">\d{4}<\/span>/.test(landing));
     check('raw HTML: fake placeholder phone removed', !landing.includes('000-00-00'));

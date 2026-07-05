@@ -1554,13 +1554,14 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
 <style id="landing-style">
 #landing-page,#landing-page *{box-sizing:border-box;}
 #landing-page{
-  --ld-ease-out:cubic-bezier(0.16,1,0.3,1);
+  /* "Buttery" organic curve — warmth through motion, since the palette is cold */
+  --ld-ease-out:cubic-bezier(0.25,1,0.5,1);
   --ld-serif:'Playfair Display',Georgia,serif;
   --ld-sans:'Inter',-apple-system,sans-serif;
   --ld-text-hero:clamp(3.2rem,1rem + 9.6vw,9rem);
   --ld-text-h2:clamp(2.1rem,1rem + 3.6vw,3.9rem);
   --ld-space-section:clamp(4.5rem,3rem + 6vw,10rem);
-  --ld-maxw:1180px;
+  --ld-maxw:1280px;
   position:fixed;inset:0;z-index:4000;display:none;
   overflow-y:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
   background:var(--ld-bg);color:var(--ld-ink);font-family:var(--ld-sans);
@@ -1576,21 +1577,20 @@ html[data-theme="light"] .ai-msg.bot,html[data-theme="light"] .chat-msg.other .c
   opacity:0.032;
 }
 html[data-theme="light"] #landing-page::after{opacity:0.055;}
-/* Palette discipline: the brand mark is pure ink on paper (black/white serif
-   wordmark + arrow). The landing commits to exactly that — no accent color
-   imported from the app's purple UI palette. Emphasis is carried by the serif
-   italics and the ink itself. */
+/* Palette discipline — strict ink on paper: pure black, stark white, and
+   charcoal/grey steps only. No color anywhere on this page. Warmth comes
+   from motion curves, breathing room and the copy, never from hue. */
 html[data-theme="light"] #landing-page{
-  --ld-bg:#f7f4ed; --ld-bg-soft:#efebe1; --ld-bg-card:#fffdf8;
-  --ld-ink:#101010; --ld-ink-2:#4e4c47; --ld-ink-3:#8c897f;
-  --ld-line:rgba(16,16,16,0.16); --ld-line-soft:rgba(16,16,16,0.08);
-  --ld-paper-invert:#0a0a0a; --ld-ink-invert:#f4f1ea;
+  --ld-bg:#ffffff; --ld-bg-soft:#f4f4f4; --ld-bg-card:#fafafa;
+  --ld-ink:#000000; --ld-ink-2:#4d4d4d; --ld-ink-3:#8a8a8a;
+  --ld-line:rgba(0,0,0,0.16); --ld-line-soft:rgba(0,0,0,0.08);
+  --ld-paper-invert:#000000; --ld-ink-invert:#ffffff;
 }
 html:not([data-theme="light"]) #landing-page{
-  --ld-bg:#070707; --ld-bg-soft:#0e0e0d; --ld-bg-card:#121211;
-  --ld-ink:#f4f1ea; --ld-ink-2:#bab6ac; --ld-ink-3:#726f67;
-  --ld-line:rgba(244,241,234,0.14); --ld-line-soft:rgba(244,241,234,0.07);
-  --ld-paper-invert:#f4f1ea; --ld-ink-invert:#0d0d0c;
+  --ld-bg:#000000; --ld-bg-soft:#0d0d0d; --ld-bg-card:#0a0a0a;
+  --ld-ink:#ffffff; --ld-ink-2:#b3b3b3; --ld-ink-3:#737373;
+  --ld-line:rgba(255,255,255,0.16); --ld-line-soft:rgba(255,255,255,0.08);
+  --ld-paper-invert:#ffffff; --ld-ink-invert:#000000;
 }
 #landing-page ::selection{background:var(--ld-ink);color:var(--ld-bg);}
 #landing-page a:focus-visible,#landing-page button:focus-visible{outline:2px solid var(--ld-ink);outline-offset:3px;}
@@ -1695,6 +1695,30 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 #landing-page .ld-hero-meta div{min-width:120px;}
 #landing-page .ld-hero-meta .n{font-family:var(--ld-serif);font-size:clamp(22px,2.6vw,32px);font-weight:600;}
 #landing-page .ld-hero-meta .l{font-size:12px;color:var(--ld-ink-3);margin-top:4px;letter-spacing:0.04em;}
+/* Split-audience hooks — the two people this page must convert, addressed
+   directly, side by side, before anything else. */
+#landing-page .hook-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.8vw,26px);margin-top:clamp(44px,6vh,72px);}
+#landing-page .hook-card{
+  display:block;text-decoration:none;color:var(--ld-ink);background:none;text-align:left;font:inherit;cursor:pointer;
+  border:1px solid var(--ld-line);border-radius:6px;padding:clamp(22px,2.6vw,34px);
+  transition:border-color .35s var(--ld-ease-out),background .35s var(--ld-ease-out),transform .35s var(--ld-ease-out);
+}
+#landing-page .hook-card:hover{border-color:var(--ld-ink-2);background:var(--ld-bg-soft);transform:translateY(-3px);}
+#landing-page .hook-card .hk-t{font-family:var(--ld-serif);font-size:clamp(19px,2vw,25px);font-weight:500;margin-bottom:10px;}
+#landing-page .hook-card .hk-p{font-size:14px;color:var(--ld-ink-2);line-height:1.75;}
+#landing-page .hook-card .hk-cta{
+  display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-size:13px;font-weight:600;
+  border-bottom:1px solid var(--ld-line);padding-bottom:3px;transition:border-color .25s;
+}
+#landing-page .hook-card:hover .hk-cta{border-color:var(--ld-ink);}
+#landing-page .hook-card .hk-cta .arr{transition:transform .35s var(--ld-ease-out);}
+#landing-page .hook-card:hover .hk-cta .arr{transform:translate(3px,-3px);}
+@media (max-width:760px){#landing-page .hook-grid{grid-template-columns:1fr;}}
+/* Method — asymmetric editorial split: narrative column left, proof grid right */
+#landing-page .method-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,4.5vw,72px);align-items:start;}
+#landing-page .method-grid .sec-head{margin-bottom:0;}
+#landing-page .method-intro{font-size:15.5px;line-height:1.85;color:var(--ld-ink-2);margin-top:22px;max-width:42ch;}
+@media (max-width:900px){#landing-page .method-grid{grid-template-columns:1fr;gap:36px;}}
 
 /* Level ticker — the whole curriculum, quietly in motion between sections. */
 #landing-page .ld-marquee{border-top:1px solid var(--ld-line-soft);border-bottom:1px solid var(--ld-line-soft);overflow:hidden;padding:20px 0;}
@@ -1768,35 +1792,46 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 #landing-page .portal-feats{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:13px;}
 #landing-page .portal-feats li{display:flex;gap:12px;font-size:14.5px;align-items:baseline;}
 #landing-page .portal-feats li::before{content:'↗';font-weight:700;flex-shrink:0;}
-/* Essay-check mock — a stylised card showing the portal's signature feature
-   (AI essay feedback with an IELTS band). Monochrome on purpose: it lives on
-   the inverted band and stays inside the ink/paper palette. */
-#landing-page .essay-mock{
-  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 16%,transparent);
-  border-radius:10px;padding:clamp(22px,2.6vw,34px);
-  background:color-mix(in srgb,var(--ld-ink-invert) 5%,transparent);
-  box-shadow:0 30px 80px -30px rgba(0,0,0,0.4);
+/* Portal Peek — the essay-feedback mock lives inside a sleek dark-mode
+   browser frame with a floating "interactive preview" tag, so the jump from
+   marketing page to product UI is deliberately framed, not abrupt. The frame
+   is constant dark in both themes: it IS the product's dark UI. */
+#landing-page .peek-frame{
+  border:1px solid rgba(255,255,255,0.14);border-radius:12px;overflow:hidden;
+  background:#0a0a0a;box-shadow:0 40px 100px -30px rgba(0,0,0,0.6);
 }
+html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255,0.22);}
+#landing-page .peek-bar{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.09);}
+#landing-page .peek-dots{display:flex;gap:6px;}
+#landing-page .peek-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.22);}
+#landing-page .peek-title{font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);margin:0 auto;transform:translateX(-15px);}
+#landing-page .peek-tag{
+  position:absolute;top:-15px;left:20px;z-index:2;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;
+  background:var(--ld-paper-invert);color:var(--ld-ink-invert);border-radius:100px;padding:8px 15px;
+  box-shadow:0 10px 26px -10px rgba(0,0,0,0.5);
+}
+#landing-page .essay-mock{padding:clamp(22px,2.6vw,34px);color:#f2f2f2;}
 #landing-page .em-head{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
 #landing-page .em-chip{
   font-size:9.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
-  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 30%,transparent);
+  border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);
   border-radius:100px;padding:5px 12px;
 }
-#landing-page .em-chip.solid{background:var(--ld-ink-invert);color:var(--ld-paper-invert);border-color:var(--ld-ink-invert);}
+#landing-page .em-chip.solid{background:#ffffff;color:#000000;border-color:#ffffff;}
 #landing-page .em-text{font-family:var(--ld-serif);font-size:clamp(16px,1.6vw,19px);line-height:1.65;}
 #landing-page .em-text s{opacity:0.42;text-decoration-thickness:2px;}
-#landing-page .em-fix{font-style:italic;border-bottom:2px solid var(--ld-ink-invert);padding-bottom:1px;}
+#landing-page .em-fix{font-style:italic;border-bottom:2px solid #ffffff;padding-bottom:1px;}
 #landing-page .em-band{display:flex;align-items:baseline;gap:14px;margin-top:26px;}
-#landing-page .em-band-num{font-family:var(--ld-serif);font-size:clamp(42px,4.6vw,58px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums;}
-#landing-page .em-band-lbl{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:color-mix(in srgb,var(--ld-ink-invert) 55%,transparent);}
+#landing-page .em-band-num{font-family:var(--ld-serif);font-size:clamp(42px,4.6vw,58px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums;color:#ffffff;}
+#landing-page .em-band-lbl{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
 #landing-page .em-band svg{width:34px;height:auto;overflow:visible;align-self:center;}
-#landing-page .em-band svg path{stroke:var(--ld-ink-invert);stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+#landing-page .em-band svg path{stroke:#ffffff;stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 #landing-page .em-bars{margin-top:24px;display:flex;flex-direction:column;gap:13px;}
 #landing-page .em-bar{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;}
-#landing-page .em-bar span{font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:color-mix(in srgb,var(--ld-ink-invert) 60%,transparent);}
-#landing-page .em-bar .tr{height:3px;background:color-mix(in srgb,var(--ld-ink-invert) 14%,transparent);border-radius:2px;overflow:hidden;}
-#landing-page .em-bar .tr i{display:block;height:100%;width:0;background:var(--ld-ink-invert);transition:width 1.1s var(--ld-ease-out) .45s;}
+#landing-page .em-bar span{font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);}
+#landing-page .em-bar .tr{height:3px;background:rgba(255,255,255,0.14);border-radius:2px;overflow:hidden;}
+#landing-page .em-bar .tr i{display:block;height:100%;width:0;background:#ffffff;transition:width 1.1s var(--ld-ease-out) .45s;}
 #landing-page .rv.in .em-bar .tr i{width:var(--w);}
 /* Floating fact chips around the mock — real portal features, gently adrift */
 #landing-page .mock-wrap{position:relative;}
@@ -1810,16 +1845,19 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 #landing-page .mock-chip.c2{bottom:-13px;left:5%;animation-delay:-3s;}
 @keyframes ldChipFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 
-/* Testimonials */
-#landing-page .tst-note{
-  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ld-ink-3);
-  border:1px dashed var(--ld-line);border-radius:100px;display:inline-block;padding:6px 14px;margin-bottom:34px;
+/* The Motion Standard — no invented testimonials, ever. Instead: what a
+   graduate of each stage of the system verifiably walks away with. */
+#landing-page .std-intro{font-size:15px;line-height:1.85;color:var(--ld-ink-2);max-width:56ch;margin-bottom:clamp(34px,4vw,54px);}
+#landing-page .std-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ld-line-soft);border:1px solid var(--ld-line-soft);}
+#landing-page .std-col{background:var(--ld-bg);padding:clamp(26px,3vw,42px);position:relative;overflow:hidden;transition:background .35s var(--ld-ease-out);}
+#landing-page .std-col:hover{background:var(--ld-bg-soft);}
+#landing-page .std-col .std-lvl{
+  font-family:var(--ld-serif);font-style:italic;font-size:clamp(50px,5vw,74px);line-height:1;
+  color:var(--ld-ink);opacity:0.08;position:absolute;top:14px;right:18px;pointer-events:none;
 }
-#landing-page .tst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,2.5vw,30px);}
-#landing-page .tst-card{border:1px solid var(--ld-line-soft);border-radius:4px;padding:clamp(26px,3vw,38px);background:var(--ld-bg-card);display:flex;flex-direction:column;gap:20px;position:relative;overflow:hidden;}
-#landing-page .tst-card::before{content:'«';position:absolute;top:-22px;right:12px;font-family:var(--ld-serif);font-size:120px;line-height:1;color:var(--ld-ink);opacity:0.06;pointer-events:none;}
-#landing-page .tst-quote{font-family:var(--ld-serif);font-size:clamp(17px,1.8vw,21px);font-style:italic;line-height:1.5;}
-#landing-page .tst-who{font-size:12.5px;color:var(--ld-ink-3);margin-top:auto;}
+#landing-page .std-col h3{font-size:20px;margin-bottom:14px;max-width:14ch;}
+#landing-page .std-col p{font-size:14.5px;color:var(--ld-ink-2);line-height:1.8;}
+@media (max-width:900px){#landing-page .std-grid{grid-template-columns:1fr;}}
 
 /* Enroll */
 #landing-page .ld-enroll{text-align:center;}
@@ -1842,7 +1880,6 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 #landing-page .contact-line{margin-top:44px;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap;font-size:14px;color:var(--ld-ink-2);}
 #landing-page .contact-line a{color:var(--ld-ink);text-decoration:none;border-bottom:1px solid var(--ld-line);padding-bottom:2px;transition:border-color .2s;}
 #landing-page .contact-line a:hover{border-color:var(--ld-ink);}
-#landing-page .placeholder-mark{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ld-ink-3);display:block;margin-top:3px;}
 
 /* Footer */
 #landing-page .ld-footer{border-top:1px solid var(--ld-line-soft);padding:44px 0 54px;}
@@ -1918,10 +1955,10 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
       </svg>
     </button>
     <nav class="ld-mainnav" id="ld-mainnav" aria-label="Main navigation">
-      <a href="#ld-about" data-i18n="nav_about">О центре</a>
+      <a href="#ld-about" data-i18n="nav_about">Метод</a>
       <a href="#ld-programs" data-i18n="nav_programs">Программы</a>
       <a href="#ld-portal" data-i18n="nav_portal">Портал</a>
-      <a href="#ld-reviews" data-i18n="nav_reviews">Отзывы</a>
+      <a href="#ld-standard" data-i18n="nav_reviews">Стандарт</a>
       <a href="#ld-enroll" data-i18n="nav_contact">Контакты</a>
       <a class="ld-login-btn in-menu" href="#" onclick="showLogin();return false;">
         <span class="login-label" data-i18n="login_btn">Войти</span>
@@ -1956,7 +1993,19 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
         <a class="ld-btn-primary" href="#ld-enroll"><span data-i18n="hero_cta">Записаться на курс</span><span class="arr">↗</span></a>
         <a class="ld-btn-ghost" href="#ld-programs" data-i18n="hero_cta2">Смотреть программы</a>
       </div>
-      <div class="ld-hero-meta rv" style="--rvd:.4s">
+      <div class="hook-grid rv" style="--rvd:.4s">
+        <a class="hook-card" href="#ld-programs">
+          <div class="hk-t" data-i18n="hookL_t">Начинаете с нуля?</div>
+          <div class="hk-p" data-i18n="hookL_p">Без стресса и неловкости. Понятный путь из пяти ступеней, где с первого дня видно, где вы сейчас — и что будет дальше.</div>
+          <span class="hk-cta"><span data-i18n="hookL_c">Мой путь начинается с A1</span><span class="arr">↗</span></span>
+        </a>
+        <a class="hook-card" href="#ld-portal">
+          <div class="hk-t" data-i18n="hookR_t">Цель — балл IELTS?</div>
+          <div class="hk-p" data-i18n="hookR_p">AI-стратегия подготовки: каждое эссе — с построчным разбором и оценкой по банду, каждая секция — со своей тактикой.</div>
+          <span class="hk-cta"><span data-i18n="hookR_c">Как работает AI-разбор</span><span class="arr">↗</span></span>
+        </a>
+      </div>
+      <div class="ld-hero-meta rv" style="--rvd:.5s">
         <div><div class="n">A1–C1</div><div class="l" data-i18n="meta_levels">уровни обучения</div></div>
         <div><div class="n">IELTS</div><div class="l" data-i18n="meta_ielts">подготовка к экзамену</div></div>
         <div><div class="n">24/7</div><div class="l" data-i18n="meta_portal">портал студента</div></div>
@@ -1984,10 +2033,13 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
   </div>
 
   <section id="ld-about">
-    <div class="wrap">
-      <div class="sec-head rv">
-        <div class="eyebrow" data-i18n="why_eyebrow">Почему Motion</div>
-        <h2><span data-i18n="why_title1">Учёба, устроенная</span> <em data-i18n="why_title2">по-взрослому</em></h2>
+    <div class="wrap method-grid">
+      <div class="rv">
+        <div class="sec-head">
+          <div class="eyebrow" data-i18n="why_eyebrow">Метод Motion</div>
+          <h2><span data-i18n="why_title1">Учёба, устроенная</span> <em data-i18n="why_title2">по-взрослому</em></h2>
+        </div>
+        <p class="method-intro" data-i18n="method_intro">Мы построили Motion вокруг одной идеи: прогресс должен быть видимым. У каждого уровня — ясная цель. У каждого студента — живые данные о собственном росте, а не ощущение «вроде что-то учу».</p>
       </div>
       <div class="why-grid rv">
         <div class="why-card"><div class="why-num">01</div><h3 data-i18n="why1_t">Чёткая система уровней</h3><p data-i18n="why1_p">Пять ступеней от A1 до C1 — вы всегда знаете, где находитесь и что осваиваете дальше. Никаких «вечных элементарников».</p></div>
@@ -2045,22 +2097,29 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
         </ul>
       </div>
       <div class="rv mock-wrap">
-        <!-- Stylised mock of the portal's AI essay feedback — illustrative, not a live screenshot -->
-        <div class="essay-mock" aria-hidden="true">
-          <div class="em-head">
-            <span class="em-chip solid">AI essay check</span>
-            <span class="em-chip">IELTS · Task 2</span>
+        <span class="peek-tag" data-i18n="peek_tag">Интерактивное превью · портал Motion</span>
+        <div class="peek-frame">
+          <div class="peek-bar" aria-hidden="true">
+            <span class="peek-dots"><i></i><i></i><i></i></span>
+            <span class="peek-title">Motion Portal</span>
           </div>
-          <p class="em-text">Some people <s>believes</s> <span class="em-fix">believe</span> that success depends on luck, while others argue it is earned through daily discipline…</p>
-          <div class="em-band">
-            <div class="em-band-num" id="ld-band-num">6.5</div>
-            <svg viewBox="0 0 40 24"><path d="M3 20 L18 8 L26 14 L37 3"/></svg>
-            <div class="em-band-lbl">estimated band</div>
-          </div>
-          <div class="em-bars">
-            <div class="em-bar"><span>Grammar</span><div class="tr"><i style="--w:78%"></i></div></div>
-            <div class="em-bar"><span>Coherence</span><div class="tr"><i style="--w:64%"></i></div></div>
-            <div class="em-bar"><span>Lexical range</span><div class="tr"><i style="--w:71%"></i></div></div>
+          <!-- Stylised mock of the portal's AI essay feedback — illustrative, not a live screenshot -->
+          <div class="essay-mock" aria-hidden="true">
+            <div class="em-head">
+              <span class="em-chip solid">AI essay check</span>
+              <span class="em-chip">IELTS · Task 2</span>
+            </div>
+            <p class="em-text">Some people <s>believes</s> <span class="em-fix">believe</span> that success depends on luck, while others argue it is earned through daily discipline…</p>
+            <div class="em-band">
+              <div class="em-band-num" id="ld-band-num">6.5</div>
+              <svg viewBox="0 0 40 24"><path d="M3 20 L18 8 L26 14 L37 3"/></svg>
+              <div class="em-band-lbl">estimated band</div>
+            </div>
+            <div class="em-bars">
+              <div class="em-bar"><span>Grammar</span><div class="tr"><i style="--w:78%"></i></div></div>
+              <div class="em-bar"><span>Coherence</span><div class="tr"><i style="--w:64%"></i></div></div>
+              <div class="em-bar"><span>Lexical range</span><div class="tr"><i style="--w:71%"></i></div></div>
+            </div>
           </div>
         </div>
         <div class="mock-chip c1" aria-hidden="true">Streak · 7 days</div>
@@ -2069,18 +2128,30 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
     </div>
   </section>
 
-  <section id="ld-reviews">
+  <section id="ld-standard">
     <div class="wrap">
       <div class="sec-head rv">
-        <div class="eyebrow" data-i18n="tst_eyebrow">Отзывы</div>
-        <h2><span data-i18n="tst_title1">Что говорят</span> <em data-i18n="tst_title2">студенты</em></h2>
+        <div class="eyebrow" data-i18n="tst_eyebrow">Стандарт Motion</div>
+        <h2><span data-i18n="tst_title1">Не обещания —</span> <em data-i18n="tst_title2">ожидаемая траектория</em></h2>
       </div>
       <div class="rv">
-        <span class="tst-note" data-i18n="tst_placeholder_note">Примеры отзывов — будут заменены на настоящие</span>
-        <div class="tst-grid">
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst1_q">За полгода прошёл путь от A2 до уверенного B1. Портал с тренажёрами — то, чего не хватало во всех прошлых курсах.</div><div class="tst-who" data-i18n="tst1_w">— Студент курса Pre-Intermediate</div></div>
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst2_q">Готовилась к IELTS три месяца. Разборы эссе с оценкой по банду — самое полезное, что я видела в подготовке.</div><div class="tst-who" data-i18n="tst2_w">— Студентка курса IELTS Prep</div></div>
-          <div class="tst-card"><div class="tst-quote" data-i18n="tst3_q">Ребёнок сам садится за домашние задания — из-за рейтинга и стрика в портале. Прогресс видно по неделям.</div><div class="tst-who" data-i18n="tst3_w">— Родитель студента Beginner</div></div>
+        <p class="std-intro" data-i18n="std_intro">Мы не публикуем выдуманные отзывы. Вместо этого — что реально умеет выпускник каждой ступени системы Motion. Это и есть стандарт, по которому мы работаем.</p>
+        <div class="std-grid">
+          <div class="std-col">
+            <span class="std-lvl" aria-hidden="true">A2</span>
+            <h3 data-i18n="std1_t">Выпускник Elementary A2</h3>
+            <p data-i18n="std1_p">Говорит о повседневном без подготовки: покупки, дорога, планы на выходные. Понимает собеседника и отвечает простыми, но правильными фразами — без страха открыть рот.</p>
+          </div>
+          <div class="std-col">
+            <span class="std-lvl" aria-hidden="true">B2</span>
+            <h3 data-i18n="std2_t">Выпускник Pre-IELTS B2</h3>
+            <p data-i18n="std2_p">Уверенное академическое письмо, беглая речь на абстрактные темы и знакомство с форматом экзамена. База, с которой IELTS становится стратегией, а не стрессом.</p>
+          </div>
+          <div class="std-col">
+            <span class="std-lvl" aria-hidden="true">C1</span>
+            <h3 data-i18n="std3_t">Выпускник IELTS Prep C1</h3>
+            <p data-i18n="std3_p">Знает тактику каждой секции, пишет эссе на целевой банд и приходит на реальный экзамен, уже прожив его формат десятки раз на тренировочных тестах.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -2099,7 +2170,7 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
         </div>
         <div class="enr-price">
           <span class="price-num">600 000</span><span class="price-cur" data-i18n="price_cur">сум / месяц</span>
-          <span class="price-note" data-i18n="price_note">актуальную стоимость подтвердим при записи</span>
+          <span class="price-note" data-i18n="price_note">Одна прозрачная цена: занятия и полный доступ к порталу.</span>
         </div>
         <div class="ld-hero-cta-row" style="justify-content:center">
           <a class="ld-btn-primary" href="mailto:motionlearnuz@gmail.com"><span data-i18n="enroll_cta">Написать нам</span><span class="arr">↗</span></a>
@@ -2107,7 +2178,7 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
         </div>
         <div class="contact-line">
           <div><a href="mailto:motionlearnuz@gmail.com">motionlearnuz@gmail.com</a></div>
-          <div><span data-i18n="contact_city">Ташкент, Узбекистан</span><span class="placeholder-mark" data-i18n="ph_addr">адрес уточняется</span></div>
+          <div><span data-i18n="contact_city">Ташкент, Узбекистан</span></div>
         </div>
       </div>
     </div>
@@ -2139,16 +2210,23 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 // username+password form.
 const LD_I18N = {
   ru: {
-    nav_about: 'О центре', nav_programs: 'Программы', nav_portal: 'Портал', nav_reviews: 'Отзывы', nav_contact: 'Контакты',
+    nav_about: 'Метод', nav_programs: 'Программы', nav_portal: 'Портал', nav_reviews: 'Стандарт', nav_contact: 'Контакты',
     login_btn: 'Войти',
     hero_eyebrow: 'Языковой центр · Ташкент',
     hero_line1: 'Английский, который',
     hero_line2: 'двигает вперёд',
     hero_sub: 'Пять уровней — от первого «hello» до уверенного C1 и подготовки к IELTS. Живые занятия в небольших группах и личный цифровой портал для каждого студента.',
     hero_cta: 'Записаться на курс', hero_cta2: 'Смотреть программы',
+    hookL_t: 'Начинаете с нуля?',
+    hookL_p: 'Без стресса и неловкости. Понятный путь из пяти ступеней, где с первого дня видно, где вы сейчас — и что будет дальше.',
+    hookL_c: 'Мой путь начинается с A1',
+    hookR_t: 'Цель — балл IELTS?',
+    hookR_p: 'AI-стратегия подготовки: каждое эссе — с построчным разбором и оценкой по банду, каждая секция — со своей тактикой.',
+    hookR_c: 'Как работает AI-разбор',
     meta_levels: 'уровни обучения', meta_ielts: 'подготовка к экзамену', meta_portal: 'портал студента',
-    why_eyebrow: 'Почему Motion',
+    why_eyebrow: 'Метод Motion',
     why_title1: 'Учёба, устроенная', why_title2: 'по-взрослому',
+    method_intro: 'Мы построили Motion вокруг одной идеи: прогресс должен быть видимым. У каждого уровня — ясная цель. У каждого студента — живые данные о собственном росте, а не ощущение «вроде что-то учу».',
     why1_t: 'Чёткая система уровней', why1_p: 'Пять ступеней от A1 до C1 — вы всегда знаете, где находитесь и что осваиваете дальше. Никаких «вечных элементарников».',
     why2_t: 'Курс на IELTS', why2_p: 'Отдельная программа подготовки: стратегия каждой секции, тренировочные эссе с детальным разбором и оценкой по банду.',
     why3_t: 'AI-проверка письма', why3_p: 'Каждое эссе проходит автоматический разбор: грамматика, стиль, структура — с объяснениями, а не просто исправлениями.',
@@ -2168,15 +2246,16 @@ const LD_I18N = {
     portal_f3: 'Диктанты с озвучкой и мгновенной проверкой',
     portal_f4: 'Расписание, оценки и посещаемость в реальном времени',
     portal_f5: 'Чат с преподавателем и доска объявлений',
-    tst_eyebrow: 'Отзывы',
-    tst_title1: 'Что говорят', tst_title2: 'студенты',
-    tst_placeholder_note: 'Примеры отзывов — будут заменены на настоящие',
-    tst1_q: 'За полгода прошёл путь от A2 до уверенного B1. Портал с тренажёрами — то, чего не хватало во всех прошлых курсах.',
-    tst1_w: '— Студент курса Pre-Intermediate',
-    tst2_q: 'Готовилась к IELTS три месяца. Разборы эссе с оценкой по банду — самое полезное, что я видела в подготовке.',
-    tst2_w: '— Студентка курса IELTS Prep',
-    tst3_q: 'Ребёнок сам садится за домашние задания — из-за рейтинга и стрика в портале. Прогресс видно по неделям.',
-    tst3_w: '— Родитель студента Beginner',
+    peek_tag: 'Интерактивное превью · портал Motion',
+    tst_eyebrow: 'Стандарт Motion',
+    tst_title1: 'Не обещания —', tst_title2: 'ожидаемая траектория',
+    std_intro: 'Мы не публикуем выдуманные отзывы. Вместо этого — что реально умеет выпускник каждой ступени системы Motion. Это и есть стандарт, по которому мы работаем.',
+    std1_t: 'Выпускник Elementary A2',
+    std1_p: 'Говорит о повседневном без подготовки: покупки, дорога, планы на выходные. Понимает собеседника и отвечает простыми, но правильными фразами — без страха открыть рот.',
+    std2_t: 'Выпускник Pre-IELTS B2',
+    std2_p: 'Уверенное академическое письмо, беглая речь на абстрактные темы и знакомство с форматом экзамена. База, с которой IELTS становится стратегией, а не стрессом.',
+    std3_t: 'Выпускник IELTS Prep C1',
+    std3_p: 'Знает тактику каждой секции, пишет эссе на целевой банд и приходит на реальный экзамен, уже прожив его формат десятки раз на тренировочных тестах.',
     enroll_eyebrow: 'Запись',
     enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
     enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
@@ -2184,22 +2263,28 @@ const LD_I18N = {
     step1: 'Пробное занятие и определение уровня',
     step2: 'Подбор группы и удобного расписания',
     step3: 'Учёба — с личным порталом с первого дня',
-    price_cur: 'сум / месяц', price_note: 'актуальную стоимость подтвердим при записи',
+    price_cur: 'сум / месяц', price_note: 'Одна прозрачная цена: занятия и полный доступ к порталу.',
     contact_city: 'Ташкент, Узбекистан',
-    ph_addr: 'адрес уточняется',
     foot_portal: 'Портал студента', foot_rights: 'Все права защищены.',
   },
   en: {
-    nav_about: 'About', nav_programs: 'Programs', nav_portal: 'Portal', nav_reviews: 'Reviews', nav_contact: 'Contact',
+    nav_about: 'Method', nav_programs: 'Programs', nav_portal: 'Portal', nav_reviews: 'The Standard', nav_contact: 'Contact',
     login_btn: 'Login',
     hero_eyebrow: 'Language centre · Tashkent',
     hero_line1: 'English that moves',
     hero_line2: 'you forward',
     hero_sub: 'Five levels — from your first “hello” to a confident C1 and IELTS preparation. Live small-group classes plus a personal digital portal for every student.',
     hero_cta: 'Enroll now', hero_cta2: 'View programs',
+    hookL_t: 'Starting from zero?',
+    hookL_p: 'No stress, no embarrassment. A clear five-step path where you can always see where you are — and what comes next.',
+    hookL_c: 'My path starts at A1',
+    hookR_t: 'Chasing an IELTS score?',
+    hookR_p: 'An AI-driven strategy: every essay gets a line-by-line breakdown and a band score, every exam section gets its own tactics.',
+    hookR_c: 'How the AI feedback works',
     meta_levels: 'course levels', meta_ielts: 'exam preparation', meta_portal: 'student portal',
-    why_eyebrow: 'Why Motion',
+    why_eyebrow: 'The Motion method',
     why_title1: 'Learning, organised', why_title2: 'properly',
+    method_intro: 'Motion is built around one idea: progress must be visible. Every level has a clear goal. Every student gets live data on their own growth — not a vague feeling of “I guess I’m learning something”.',
     why1_t: 'A clear level system', why1_p: 'Five stages from A1 to C1 — you always know exactly where you stand and what comes next. No “forever-elementary” students.',
     why2_t: 'A path to IELTS', why2_p: 'A dedicated preparation track: strategy for every section, practice essays with detailed feedback and band scoring.',
     why3_t: 'AI writing feedback', why3_p: 'Every essay gets an automatic breakdown — grammar, style, structure — with explanations, not just corrections.',
@@ -2219,15 +2304,16 @@ const LD_I18N = {
     portal_f3: 'Dictation practice with audio playback and instant scoring',
     portal_f4: 'Schedule, grades and attendance in real time',
     portal_f5: 'Teacher chat and an announcements board',
-    tst_eyebrow: 'Reviews',
-    tst_title1: 'What our students', tst_title2: 'say',
-    tst_placeholder_note: 'Sample reviews — to be replaced with real ones',
-    tst1_q: 'In six months I went from A2 to a confident B1. The portal with its trainers is what every previous course was missing.',
-    tst1_w: '— Pre-Intermediate student',
-    tst2_q: 'I prepared for IELTS in three months. The band-scored essay feedback is the most useful prep tool I have ever seen.',
-    tst2_w: '— IELTS Prep student',
-    tst3_q: 'My son does his homework without being asked — because of the portal leaderboard and streaks. You can see progress week by week.',
-    tst3_w: '— Parent of a Beginner student',
+    peek_tag: 'Interactive preview · the Motion portal',
+    tst_eyebrow: 'The Motion Standard',
+    tst_title1: 'Not promises —', tst_title2: 'an expected trajectory',
+    std_intro: 'We don’t publish invented reviews. Instead, here is what a graduate of each stage of the Motion system can actually do. That is the standard we hold ourselves to.',
+    std1_t: 'An Elementary A2 graduate',
+    std1_p: 'Talks about everyday life without rehearsing: shopping, directions, weekend plans. Understands people and answers in simple but correct phrases — without fear of opening their mouth.',
+    std2_t: 'A Pre-IELTS B2 graduate',
+    std2_p: 'Confident academic writing, fluid speech on abstract topics, and familiarity with the exam format. The base that turns IELTS into strategy instead of stress.',
+    std3_t: 'An IELTS Prep C1 graduate',
+    std3_p: 'Knows the tactics of every section, writes essays at their target band, and walks into the real exam having lived its format dozens of times in mock tests.',
     enroll_eyebrow: 'Enrollment',
     enroll_title1: 'Ready to move', enroll_title2: 'forward?',
     enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
@@ -2235,22 +2321,28 @@ const LD_I18N = {
     step1: 'A trial lesson and a level assessment',
     step2: 'We match you to a group and schedule',
     step3: 'Study — with your personal portal from day one',
-    price_cur: 'UZS / month', price_note: 'we’ll confirm the current price when you enroll',
+    price_cur: 'UZS / month', price_note: 'One transparent price: classes plus full portal access.',
     contact_city: 'Tashkent, Uzbekistan',
-    ph_addr: 'address to be confirmed',
     foot_portal: 'Student portal', foot_rights: 'All rights reserved.',
   },
   uz: {
-    nav_about: 'Markaz haqida', nav_programs: 'Dasturlar', nav_portal: 'Portal', nav_reviews: 'Fikrlar', nav_contact: 'Aloqa',
+    nav_about: 'Metod', nav_programs: 'Dasturlar', nav_portal: 'Portal', nav_reviews: 'Standart', nav_contact: 'Aloqa',
     login_btn: 'Kirish',
     hero_eyebrow: 'Til markazi · Toshkent',
     hero_line1: 'Sizni olg‘a yetaklaydigan',
     hero_line2: 'ingliz tili',
     hero_sub: 'Besh daraja — ilk “hello”dan ishonchli C1 va IELTS tayyorgarligigacha. Kichik guruhlarda jonli darslar va har bir talaba uchun shaxsiy raqamli portal.',
     hero_cta: 'Kursga yozilish', hero_cta2: 'Dasturlarni ko‘rish',
+    hookL_t: 'Noldan boshlayapsizmi?',
+    hookL_p: 'Stresssiz va xijolatsiz. Besh bosqichli aniq yo‘l: qayerdasiz va keyin nima bo‘lishi birinchi kundan ko‘rinib turadi.',
+    hookL_c: 'Yo‘lim A1 dan boshlanadi',
+    hookR_t: 'Maqsad — IELTS balimi?',
+    hookR_p: 'AI-strategiya: har bir insho satrma-satr tahlil va band bahosi bilan, har bir bo‘lim o‘z taktikasi bilan.',
+    hookR_c: 'AI tahlili qanday ishlaydi',
     meta_levels: 'o‘quv darajalari', meta_ielts: 'imtihonga tayyorgarlik', meta_portal: 'talaba portali',
-    why_eyebrow: 'Nega Motion',
+    why_eyebrow: 'Motion metodi',
     why_title1: 'To‘g‘ri tashkil etilgan', why_title2: 'ta’lim',
+    method_intro: 'Motion bitta g‘oya atrofida qurilgan: o‘sish ko‘rinib turishi kerak. Har bir darajaning aniq maqsadi bor. Har bir talabada — «nimadir o‘rganyapman shekilli» degan his emas, o‘z o‘sishi haqidagi jonli ma’lumot.',
     why1_t: 'Aniq darajalar tizimi', why1_p: 'A1 dan C1 gacha besh bosqich — qayerda turganingizni va keyin nimani o‘rganishingizni doim bilasiz.',
     why2_t: 'IELTS sari yo‘l', why2_p: 'Alohida tayyorgarlik dasturi: har bir bo‘lim strategiyasi, batafsil tahlil va band bahosi bilan mashq insholari.',
     why3_t: 'AI yozma tahlili', why3_p: 'Har bir insho avtomatik tahlildan o‘tadi — grammatika, uslub, tuzilma — shunchaki tuzatish emas, tushuntirish bilan.',
@@ -2270,15 +2362,16 @@ const LD_I18N = {
     portal_f3: 'Ovozli diktantlar va bir zumda baholash',
     portal_f4: 'Dars jadvali, baholar va davomat real vaqtda',
     portal_f5: 'O‘qituvchi bilan chat va e’lonlar taxtasi',
-    tst_eyebrow: 'Fikrlar',
-    tst_title1: 'Talabalarimiz', tst_title2: 'nima deydi',
-    tst_placeholder_note: 'Namuna fikrlar — haqiqiylari bilan almashtiriladi',
-    tst1_q: 'Olti oyda A2 dan ishonchli B1 gacha yetdim. Trenajyorli portal — oldingi barcha kurslarda yetishmagan narsa.',
-    tst1_w: '— Pre-Intermediate kursi talabasi',
-    tst2_q: 'IELTS ga uch oy tayyorlandim. Band bahosi bilan insho tahlili — tayyorgarlikda ko‘rgan eng foydali vositam.',
-    tst2_w: '— IELTS Prep kursi talabasi',
-    tst3_q: 'O‘g‘lim uy vazifasini o‘zi bajaradi — portaldagi reyting va “strik” tufayli. Har haftalik o‘sishni ko‘rish mumkin.',
-    tst3_w: '— Beginner talabasining ota-onasi',
+    peek_tag: 'Interaktiv ko‘rinish · Motion portali',
+    tst_eyebrow: 'Motion standarti',
+    tst_title1: 'Va’dalar emas —', tst_title2: 'kutilgan natija',
+    std_intro: 'Biz to‘qib chiqarilgan fikrlarni e’lon qilmaymiz. Buning o‘rniga — Motion tizimining har bir bosqichi bitiruvchisi real nimalarni bilishini ko‘rsatamiz. Bizning ish standartimiz shu.',
+    std1_t: 'Elementary A2 bitiruvchisi',
+    std1_p: 'Kundalik mavzularda tayyorgarliksiz gapiradi: xarid, yo‘l, dam olish rejalari. Suhbatdoshni tushunadi va sodda, lekin to‘g‘ri javob beradi — og‘iz ochishdan qo‘rqmasdan.',
+    std2_t: 'Pre-IELTS B2 bitiruvchisi',
+    std2_p: 'Ishonchli akademik yozuv, mavhum mavzularda ravon nutq va imtihon formati bilan tanishuv. IELTS ni stress emas, strategiyaga aylantiradigan baza.',
+    std3_t: 'IELTS Prep C1 bitiruvchisi',
+    std3_p: 'Har bir bo‘lim taktikasini biladi, maqsadli band darajasida insho yozadi va haqiqiy imtihonga uning formatini sinov testlarida o‘nlab marta boshdan kechirib boradi.',
     enroll_eyebrow: 'Yozilish',
     enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
     enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',
@@ -2286,9 +2379,8 @@ const LD_I18N = {
     step1: 'Sinov darsi va darajani aniqlash',
     step2: 'Guruh va qulay jadvalni tanlaymiz',
     step3: 'O‘qish — birinchi kundan shaxsiy portal bilan',
-    price_cur: 'so‘m / oy', price_note: 'joriy narxni yozilishda tasdiqlaymiz',
+    price_cur: 'so‘m / oy', price_note: 'Bitta shaffof narx: darslar va portalga to‘liq kirish.',
     contact_city: 'Toshkent, O‘zbekiston',
-    ph_addr: 'manzil aniqlanmoqda',
     foot_portal: 'Talaba portali', foot_rights: 'Barcha huquqlar himoyalangan.',
   },
 };
