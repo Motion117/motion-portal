@@ -27,6 +27,7 @@ const path = require('path');
     check('raw HTML: referral "bring a friend" section present', landing.includes('id="ld-referral"') && landing.includes('ref_p'));
     check('raw HTML: 8th advantage (prizes for top students) present', landing.includes('perk8_t') && landing.includes('perk8_p'));
     check('raw HTML: 9th advantage (electronic board) present', landing.includes('perk9_t') && landing.includes('perk9_p'));
+    check('raw HTML: perks 10-12 (US calls, chill environment, full IELTS support) present', ['perk10_t','perk10_p','perk11_t','perk11_p','perk12_t','perk12_p'].every(k => landing.includes(k)));
   }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──

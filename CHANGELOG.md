@@ -3,6 +3,20 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — 3 more advantages (10-12): US calls, friendly atmosphere, full IELTS support
+
+- **10th**: "Звонки в Америку" — students place real calls to US hotels,
+  restaurants, etc. to practice with actual Americans, not scripted audio.
+- **11th**: "Никакой скукоты" — friendly, low-pressure classroom atmosphere
+  instead of strict drilling.
+- **12th**: "Полное сопровождение IELTS" — full support through the whole
+  IELTS process (registration, exam date, prep, through to the score), for
+  students who decide to sit the exam.
+- All three in ru/en/uz, reusing the existing `.why-grid`/`.why-card`
+  component (now 12 cards, wraps into a clean 4×3 grid at desktop width).
+- QA: `qa/test_landing.js` grew from 45 → 46 checks. Full regression +
+  groups + payments + password-reveal suites re-run clean.
+
 ## Landing page — Standard copy cut way down, 9th advantage (electronic board)
 
 - **"Стандарт Motion" copy shortened and rewritten a third time.** Each
