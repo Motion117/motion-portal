@@ -3,6 +3,31 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — Living Ink legibility fix + "Our advantages" section + Telegram contact
+
+- **Fixed a real bug**: the Living Ink module's redacted-word effect
+  (`.ink-bad::after`) used an opaque full-height box the same color as the
+  theme's ink, so once "swept" the flawed words became blank rectangles with
+  no legible content in dark theme (reported live via screenshot). Replaced
+  the opaque block with a thin strikethrough line + a dimmed text color on the
+  word itself — the mistake stays fully readable (crossed out, grey) while the
+  correction still types out underneath. Verified in both themes.
+- **New "Разница — в деталях" / "Why Motion" section** (`#ld-perks`, reusing
+  the existing `.why-grid`/`.why-card` component), placed right before the
+  enrollment section as a final trust-building block. Seven concrete,
+  non-fabricated differentiators: teachers with IELTS 7.5+, groups capped at
+  8, split-payment option, Motion's own printed books, 100-minute lessons
+  (vs. the industry-typical 80), no phones during lessons, and the individual
+  student portal. Full ru/en/uz copy.
+- **Contact channel switched from Gmail to Telegram**: the primary enrollment
+  CTA and the visible contact-line link now point to `https://t.me/motion_learn`
+  instead of `mailto:motionlearnuz@gmail.com`.
+- QA: `qa/test_landing.js` grew from 35 → 38 checks — static crawlability
+  checks for the new perks copy and the Telegram link, plus a runtime check
+  that `.ink-bad` words stay legible (thin strike, not a blanking box) after
+  the scroll-triggered sweep. Full regression + groups + payments +
+  password-reveal suites re-run clean (0 failures).
+
 ## Landing page — interactive modules (round 4, "11/10" brief)
 
 Four interactive modules, implemented in dependency-free vanilla JS (no GSAP

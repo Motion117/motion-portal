@@ -1921,8 +1921,9 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
 #landing-page .calc-note{font-size:12px;color:var(--ld-ink-3);margin-top:26px;line-height:1.7;max-width:70ch;}
 /* M3: living ink — errors redacted by an ink sweep, correction typed out */
 #landing-page .ld-ink .ink-flawed{font-family:var(--ld-serif);font-style:italic;font-size:clamp(24px,3.4vw,44px);color:var(--ld-ink-2);line-height:1.35;min-height:1.4em;}
-#landing-page .ink-bad{position:relative;display:inline-block;}
-#landing-page .ink-bad::after{content:'';position:absolute;inset:-1px -5px;background:var(--ld-ink);transform:scaleX(0);transform-origin:left center;transition:transform .55s var(--ld-ease-out);}
+#landing-page .ink-bad{position:relative;display:inline-block;transition:color .5s var(--ld-ease-out);}
+#landing-page .ink-bad::after{content:'';position:absolute;left:-2px;right:-2px;top:52%;height:2px;background:var(--ld-ink);transform:scaleX(0);transform-origin:left center;transition:transform .5s var(--ld-ease-out);}
+#landing-page .ink-bad.swept{color:var(--ld-ink-3);}
 #landing-page .ink-bad.swept::after{transform:scaleX(1);}
 #landing-page .ink-fixed{font-family:var(--ld-serif);font-size:clamp(24px,3.4vw,44px);line-height:1.35;margin-top:20px;min-height:1.5em;}
 #landing-page .ink-caret{display:inline-block;width:3px;height:0.95em;background:var(--ld-ink);margin-left:5px;vertical-align:-0.1em;animation:ldBlink 1s steps(2) infinite;visibility:hidden;}
@@ -2249,6 +2250,24 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
     </div>
   </section>
 
+  <section id="ld-perks">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div class="eyebrow" data-i18n="perk_eyebrow">Почему Motion</div>
+        <h2><span data-i18n="perk_title1">Разница —</span> <em data-i18n="perk_title2">в деталях</em></h2>
+      </div>
+      <div class="why-grid rv">
+        <div class="why-card"><div class="why-num">01</div><h3 data-i18n="perk1_t">Преподаватели с IELTS 7.5+</h3><p data-i18n="perk1_p">Ведут занятия только преподаватели с собственным подтверждённым баллом IELTS 7.5 и выше — учим тому, что умеем сами.</p></div>
+        <div class="why-card"><div class="why-num">02</div><h3 data-i18n="perk2_t">Группы до 8 человек</h3><p data-i18n="perk2_p">Никаких групп на 15–20 человек. До 8 студентов — значит, каждому достаётся внимание и время говорить на уроке.</p></div>
+        <div class="why-card"><div class="why-num">03</div><h3 data-i18n="perk3_t">Оплата в два платежа</h3><p data-i18n="perk3_p">Можно разделить месячную оплату на две части — без лишних вопросов, просто скажите администратору.</p></div>
+        <div class="why-card"><div class="why-num">04</div><h3 data-i18n="perk4_t">Свои печатные учебники</h3><p data-i18n="perk4_p">Учимся по собственным печатным пособиям Motion, а не по случайным копиям и PDF из интернета.</p></div>
+        <div class="why-card"><div class="why-num">05</div><h3 data-i18n="perk5_t">Занятие — 100 минут</h3><p data-i18n="perk5_p">Урок длится 100 минут, а не привычные в других центрах 80 — хватает времени на объяснение, практику и разбор ошибок без спешки.</p></div>
+        <div class="why-card"><div class="why-num">06</div><h3 data-i18n="perk6_t">Без телефонов на уроке</h3><p data-i18n="perk6_p">На занятии не пользуемся телефонами — внимание остаётся на уроке, а не в чатах.</p></div>
+        <div class="why-card"><div class="why-num">07</div><h3 data-i18n="perk7_t">Личный портал студента</h3><p data-i18n="perk7_p">У каждого студента — свой кабинет: расписание, оценки, посещаемость и разбор эссе в одном месте.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section id="ld-enroll" class="ld-enroll">
     <div class="wrap">
       <div class="rv">
@@ -2265,11 +2284,11 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
           <span class="price-note" data-i18n="price_note">Одна прозрачная цена: занятия и полный доступ к порталу.</span>
         </div>
         <div class="ld-hero-cta-row" style="justify-content:center">
-          <a class="ld-btn-primary" href="mailto:motionlearnuz@gmail.com"><span data-i18n="enroll_cta">Написать нам</span><span class="arr">↗</span></a>
+          <a class="ld-btn-primary" href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer"><span data-i18n="enroll_cta">Написать нам</span><span class="arr">↗</span></a>
           <a class="ld-btn-ghost" href="#" onclick="showLogin();return false;" data-i18n="enroll_cta2">Войти в портал</a>
         </div>
         <div class="contact-line">
-          <div><a href="mailto:motionlearnuz@gmail.com">motionlearnuz@gmail.com</a></div>
+          <div><a href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer">@motion_learn</a></div>
           <div><span data-i18n="contact_city">Ташкент, Узбекистан</span></div>
         </div>
       </div>
@@ -2360,6 +2379,14 @@ const LD_I18N = {
     std2_p: 'Уверенное академическое письмо, беглая речь на абстрактные темы и знакомство с форматом экзамена. База, с которой IELTS становится стратегией, а не стрессом.',
     std3_t: 'Выпускник IELTS Prep C1',
     std3_p: 'Знает тактику каждой секции, пишет эссе на целевой банд и приходит на реальный экзамен, уже прожив его формат десятки раз на тренировочных тестах.',
+    perk_eyebrow: 'Почему Motion', perk_title1: 'Разница —', perk_title2: 'в деталях',
+    perk1_t: 'Преподаватели с IELTS 7.5+', perk1_p: 'Ведут занятия только преподаватели с собственным подтверждённым баллом IELTS 7.5 и выше — учим тому, что умеем сами.',
+    perk2_t: 'Группы до 8 человек', perk2_p: 'Никаких групп на 15–20 человек. До 8 студентов — значит, каждому достаётся внимание и время говорить на уроке.',
+    perk3_t: 'Оплата в два платежа', perk3_p: 'Можно разделить месячную оплату на две части — без лишних вопросов, просто скажите администратору.',
+    perk4_t: 'Свои печатные учебники', perk4_p: 'Учимся по собственным печатным пособиям Motion, а не по случайным копиям и PDF из интернета.',
+    perk5_t: 'Занятие — 100 минут', perk5_p: 'Урок длится 100 минут, а не привычные в других центрах 80 — хватает времени на объяснение, практику и разбор ошибок без спешки.',
+    perk6_t: 'Без телефонов на уроке', perk6_p: 'На занятии не пользуемся телефонами — внимание остаётся на уроке, а не в чатах.',
+    perk7_t: 'Личный портал студента', perk7_p: 'У каждого студента — свой кабинет: расписание, оценки, посещаемость и разбор эссе в одном месте.',
     enroll_eyebrow: 'Запись',
     enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
     enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
@@ -2430,6 +2457,14 @@ const LD_I18N = {
     std2_p: 'Confident academic writing, fluid speech on abstract topics, and familiarity with the exam format. The base that turns IELTS into strategy instead of stress.',
     std3_t: 'An IELTS Prep C1 graduate',
     std3_p: 'Knows the tactics of every section, writes essays at their target band, and walks into the real exam having lived its format dozens of times in mock tests.',
+    perk_eyebrow: 'Why Motion', perk_title1: 'The difference is', perk_title2: 'in the details',
+    perk1_t: 'Teachers with IELTS 7.5+', perk1_p: 'Every teacher holds their own verified IELTS score of 7.5 or higher — we teach what we can actually do ourselves.',
+    perk2_t: 'Groups of up to 8', perk2_p: 'No 15-20 person classes. Capped at 8 students, so everyone actually gets attention and speaking time.',
+    perk3_t: 'Split payment in two', perk3_p: 'You can split the monthly fee into two installments — no paperwork, just ask the administrator.',
+    perk4_t: 'Our own printed books', perk4_p: 'We study from Motion’s own printed materials, not random photocopies or PDFs off the internet.',
+    perk5_t: '100-minute lessons', perk5_p: 'Each lesson runs 100 minutes, not the 80 minutes common elsewhere — enough time to explain, practice, and go over mistakes without rushing.',
+    perk6_t: 'No phones in class', perk6_p: 'Phones stay away during lessons — attention stays on the lesson, not on chats.',
+    perk7_t: 'Individual student portal', perk7_p: 'Every student gets their own account: schedule, grades, attendance, and essay feedback in one place.',
     enroll_eyebrow: 'Enrollment',
     enroll_title1: 'Ready to move', enroll_title2: 'forward?',
     enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
@@ -2500,6 +2535,14 @@ const LD_I18N = {
     std2_p: 'Ishonchli akademik yozuv, mavhum mavzularda ravon nutq va imtihon formati bilan tanishuv. IELTS ni stress emas, strategiyaga aylantiradigan baza.',
     std3_t: 'IELTS Prep C1 bitiruvchisi',
     std3_p: 'Har bir bo‘lim taktikasini biladi, maqsadli band darajasida insho yozadi va haqiqiy imtihonga uning formatini sinov testlarida o‘nlab marta boshdan kechirib boradi.',
+    perk_eyebrow: 'Nega Motion', perk_title1: 'Farq —', perk_title2: 'detallarda',
+    perk1_t: 'IELTS 7.5+ o‘qituvchilar', perk1_p: 'Darslarni faqat o‘zining tasdiqlangan IELTS balli 7.5 va undan yuqori bo‘lgan o‘qituvchilar olib boradi — o‘zimiz uddalay oladigan narsani o‘rgatamiz.',
+    perk2_t: '8 kishigacha guruhlar', perk2_p: '15–20 kishilik guruhlar yo‘q. Guruh 8 kishigacha — demak, har kimga e’tibor va gapirish uchun vaqt yetadi.',
+    perk3_t: 'To‘lovni ikkiga bo‘lish', perk3_p: 'Oylik to‘lovni ikki qismga bo‘lib to‘lash mumkin — ortiqcha savol-javobsiz, shunchaki administratorga ayting.',
+    perk4_t: 'O‘zimizning bosma darsliklar', perk4_p: 'Motion’ning o‘z bosma qo‘llanmalari asosida o‘qiymiz — internetdan olingan tasodifiy nusxa yoki PDF emas.',
+    perk5_t: 'Dars — 100 daqiqa', perk5_p: 'Dars boshqa markazlardagi odatiy 80 daqiqa emas, 100 daqiqa davom etadi — tushuntirish, mashq va xatolarni shoshilmasdan tahlil qilishga yetarli vaqt.',
+    perk6_t: 'Darsda telefonsiz', perk6_p: 'Dars vaqtida telefonlardan foydalanilmaydi — e’tibor darsda qoladi, chatlarda emas.',
+    perk7_t: 'Shaxsiy talaba portali', perk7_p: 'Har bir talabaning o‘z shaxsiy kabineti bor: jadval, baholar, davomat va insho tahlili bir joyda.',
     enroll_eyebrow: 'Yozilish',
     enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
     enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',

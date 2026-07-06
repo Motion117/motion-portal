@@ -13,11 +13,13 @@ const path = require('path');
   {
     const raw = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
     const landing = raw.slice(raw.indexOf('id="landing-page"'), raw.indexOf('<canvas class="bg-orbs"'));
-    const mustContain = ['Метод', 'Программы', 'Английский, который', 'Стандарт Motion', 'Начинаете с нуля', '600 000', 'Ташкент'];
+    const mustContain = ['Метод', 'Программы', 'Английский, который', 'Стандарт Motion', 'Начинаете с нуля', '600 000', 'Ташкент', 'Почему Motion', 'IELTS 7.5', 'Группы до 8', '100 минут'];
     check('raw HTML: landing copy is crawlable (no empty i18n slots)', mustContain.every(m => landing.includes(m)));
     check('raw HTML: static footer year present', /©\s*<span id="ld-yr">\d{4}<\/span>/.test(landing));
     check('raw HTML: fake placeholder phone removed', !landing.includes('000-00-00'));
     check('raw HTML: no beta badge on landing', !landing.includes('ld-beta-tag'));
+    check('raw HTML: contact CTA points to Telegram, not Gmail', landing.includes('https://t.me/motion_learn') && !landing.includes('mailto:motionlearnuz@gmail.com'));
+    check('raw HTML: "Our advantages" section has all 7 perks', ['perk1_t','perk2_t','perk3_t','perk4_t','perk5_t','perk6_t','perk7_t'].every(k => landing.includes(k)));
   }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──
@@ -51,6 +53,25 @@ const path = require('path');
     check('M2: calculator renders a non-zero estimate with currency', calcOk);
     const clockOk = await page.evaluate(() => /\d{2}:\d{2}:\d{2}/.test(document.getElementById('ld-clock')?.textContent || ''));
     check('M4: portal peek shows live ticking Tashkent time', clockOk);
+
+    // M3: Living Ink — flagged words must stay legible (text visible, struck
+    // through) after the sweep, never hidden behind an opaque block.
+    await page.evaluate(() => document.getElementById('ld-ink').scrollIntoView());
+    await page.waitForTimeout(2500);
+    const inkOk = await page.evaluate(() => {
+      const bads = [...document.querySelectorAll('#ld-ink .ink-bad')];
+      if (!bads.length || !bads.every(b => b.classList.contains('swept'))) return false;
+      return bads.every(b => {
+        const barHeight = parseFloat(getComputedStyle(b, '::after').height || '0');
+        const boxHeight = b.getBoundingClientRect().height;
+        // the strike must be a thin line (a fraction of the word's box height),
+        // never a block tall enough to blank out the whole word underneath
+        return b.textContent.trim().length > 0 && barHeight > 0 && barHeight < boxHeight * 0.35;
+      });
+    });
+    check('M3: living-ink redacted words remain legible (no opaque blank block)', inkOk);
+    await page.evaluate(() => document.getElementById('landing-page').scrollTo(0, 0));
+    await page.waitForTimeout(200);
     await page.evaluate(() => { document.getElementById('ld-cli').value = ''; document.getElementById('landing-page').scrollTo(0, 0); });
     await page.waitForTimeout(300);
 
