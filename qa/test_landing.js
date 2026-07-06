@@ -38,6 +38,22 @@ const path = require('path');
     const lang = await page.evaluate(() => document.documentElement.lang);
     check('fresh visit: default language is ru', lang === 'ru', 'lang=' + lang);
 
+    // ── 11/10 interactive modules ──
+    check('M1: hero CLI input present', await page.evaluate(() => !!document.getElementById('ld-cli')));
+    await page.fill('#ld-cli', 'IELTS');
+    await page.waitForTimeout(1100);
+    const scrolledToPortal = await page.evaluate(() => document.getElementById('landing-page').scrollTop > 200);
+    check('M1: typing IELTS routes toward the portal section', scrolledToPortal);
+    const calcOk = await page.evaluate(() => {
+      const m = document.getElementById('calc-months'), s = document.getElementById('calc-sum');
+      return m && Number(m.textContent) > 0 && /(сум|UZS|so)/.test(s.textContent);
+    });
+    check('M2: calculator renders a non-zero estimate with currency', calcOk);
+    const clockOk = await page.evaluate(() => /\d{2}:\d{2}:\d{2}/.test(document.getElementById('ld-clock')?.textContent || ''));
+    check('M4: portal peek shows live ticking Tashkent time', clockOk);
+    await page.evaluate(() => { document.getElementById('ld-cli').value = ''; document.getElementById('landing-page').scrollTo(0, 0); });
+    await page.waitForTimeout(300);
+
     // Click Login button -> login overlay shows, landing stays underneath
     await page.click('#ld-login-link');
     await page.waitForTimeout(200);

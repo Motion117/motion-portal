@@ -3,6 +3,39 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — interactive modules (round 4, "11/10" brief)
+
+Four interactive modules, implemented in dependency-free vanilla JS (no GSAP
+by deliberate choice: single-file architecture, no third-party scripts; the
+same organic cubic-bezier(0.25,1,0.5,1) curve drives everything via CSS
+transitions + requestAnimationFrame + IntersectionObserver):
+
+- **M1 · Zero-click hero** — a large serif command-line input under the hero
+  («Напишите ваш уровень или цель…», blinking prompt arrow). Typing
+  "IELTS/эссе/band" routes to the portal section and flash-rings the browser
+  mockup; "с нуля/zero/beginner/A1…C1" routes to Programs and pulses the
+  matching level row. Debounced live matching (350ms) + Enter, RU/EN/UZ
+  synonyms, haptic tick on match.
+- **M2 · Time-to-Result calculator** — dual-handle snapping slider over the
+  five level stops (A1→IELTS). Pure transparent arithmetic from the real
+  published rate: N levels × 3 months, 3 live classes + 4h portal practice a
+  week, investment = months × 600 000 UZS. Handles are keyboard-accessible
+  ARIA sliders; every figure is labeled an estimate with a "exact plan after
+  the trial lesson" note — no fabricated promises.
+- **M3 · Living Ink** — "I am study English since three years." scrolls into
+  view, ink bars sweep over the two errors, then the C1 correction types out
+  with a blinking caret. The static HTML contains only the corrected
+  sentence (crawler-safe); reduced-motion users see it immediately.
+- **M4 · Physics & environment** — magnetic primary CTAs (rAF mousemove
+  pull, clamped ±10px, fine-pointer devices only); Web Vibration micro-haptics
+  (5–12ms) on lang/theme/burger toggles, calculator snaps, CLI matches and
+  ink sweeps; and a live ticking Tashkent clock (Intl, Asia/Tashkent) in the
+  Portal Peek title bar so the preview reads as a running product.
+
+All modules respect prefers-reduced-motion; i18n extended to placeholder and
+aria-label attributes (97 keys × 3 languages, machine-checked parity).
+test_landing.js grew to 35 checks; all suites + 22-login regression green.
+
 ## Landing page — conversion architecture rebuild (round 3, from the design brief)
 
 Implemented the full UX/copy brief: strict monochrome, wide editorial grid,
