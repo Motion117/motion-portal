@@ -3,6 +3,29 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — ascent-chart arrowhead fix, warmer Standard copy, contact details
+
+- **Fixed a real bug**: the arrowhead (`.pc-head` polygon) at the end of the
+  A1→C1 "ascent chart" in the Programs section wasn't aligned with the
+  line's actual trajectory, so its tip looked kinked/malformed instead of a
+  clean arrow continuing the line's direction. Recomputed the triangle from
+  the line's real last-segment direction vector so the tip sits flush and
+  symmetric.
+- **"Стандарт Motion" copy rewritten** to read as warmer, second-person,
+  persuasive prose ("you already talk about your weekend without
+  rehearsing...") instead of dry third-person capability descriptions —
+  still zero fabricated names/quotes, just more human phrasing. Updated in
+  all three languages (ru/en/uz).
+- **Contact details added** to the enrollment section's contact line: both
+  phone numbers as `tel:` links, and the full physical address (Yunusabad
+  district, block 8, building 40A, next to Yunusabad metro, landmark Apex
+  Pizza) in all three languages.
+- **Course duration note added** under the Programs section: every course
+  runs 3 months, except IELTS Prep which runs 3-4 months depending on
+  starting level.
+- QA: `qa/test_landing.js` grew from 38 → 41 checks (phone numbers, address,
+  duration note all present in the crawlable raw HTML). Full suite green.
+
 ## Landing page — Living Ink legibility fix + "Our advantages" section + Telegram contact
 
 - **Fixed a real bug**: the Living Ink module's redacted-word effect

@@ -20,6 +20,9 @@ const path = require('path');
     check('raw HTML: no beta badge on landing', !landing.includes('ld-beta-tag'));
     check('raw HTML: contact CTA points to Telegram, not Gmail', landing.includes('https://t.me/motion_learn') && !landing.includes('mailto:motionlearnuz@gmail.com'));
     check('raw HTML: "Our advantages" section has all 7 perks', ['perk1_t','perk2_t','perk3_t','perk4_t','perk5_t','perk6_t','perk7_t'].every(k => landing.includes(k)));
+    check('raw HTML: both phone numbers present as tel: links', landing.includes('tel:+998951170533') && landing.includes('tel:+998991112101'));
+    check('raw HTML: physical address present', landing.includes('Юнусабадский') && landing.includes('Apex Pizza'));
+    check('raw HTML: course duration note present', landing.includes('prog_duration_note'));
   }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──

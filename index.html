@@ -2108,8 +2108,8 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
           <h2><span data-i18n="prog_title1">От первого слова</span> <em data-i18n="prog_title2">до свободной речи</em></h2>
         </div>
         <svg class="prog-chart" viewBox="0 0 340 250" aria-hidden="true">
-          <path class="pc-line" d="M12 232 L76 196 L100 210 L164 148 L188 162 L252 92 L276 106 L322 42"/>
-          <polygon class="pc-head" points="308,34 328,36 324,56"/>
+          <path class="pc-line" d="M12 232 L76 196 L100 210 L164 148 L188 162 L252 92 L276 106 L321 44"/>
+          <polygon class="pc-head" points="330,31 328,49 314,39"/>
           <circle cx="12" cy="232" r="4"/>
           <circle cx="100" cy="210" r="4"/>
           <circle cx="164" cy="148" r="4"/>
@@ -2128,6 +2128,7 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
         <button type="button" class="prog-row" data-lvl="B1" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">B1</div><div><div class="prog-name" data-i18n="prog3_n">Pre-Intermediate</div><div class="prog-desc" data-i18n="prog3_d">Разговорная беглость, письмо, аудирование. Уровень, с которого английский начинает работать на вас.</div></div><div class="prog-arrow">↗</div></button>
         <button type="button" class="prog-row" data-lvl="B2" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">B2</div><div><div class="prog-name" data-i18n="prog4_n">Pre-IELTS</div><div class="prog-desc" data-i18n="prog4_d">Академическая лексика, сложная грамматика, знакомство с форматом экзамена.</div></div><div class="prog-arrow">↗</div></button>
         <button type="button" class="prog-row" data-lvl="C1" onclick="document.getElementById('ld-enroll').scrollIntoView({behavior:'smooth'})"><div class="prog-lvl">C1</div><div><div class="prog-name" data-i18n="prog5_n">IELTS Prep</div><div class="prog-desc" data-i18n="prog5_d">Полная подготовка к IELTS: стратегия секций, тренировочные тесты, эссе с оценкой по банду.</div></div><div class="prog-arrow">↗</div></button>
+        <p class="calc-note" data-i18n="prog_duration_note">Каждый курс длится 3 месяца. Исключение — IELTS Prep: 3–4 месяца, в зависимости от вашего стартового уровня.</p>
       </div>
     </div>
   </section>
@@ -2289,7 +2290,9 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
         </div>
         <div class="contact-line">
           <div><a href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer">@motion_learn</a></div>
-          <div><span data-i18n="contact_city">Ташкент, Узбекистан</span></div>
+          <div><a href="tel:+998951170533">+998 (95) 117-05-33</a></div>
+          <div><a href="tel:+998991112101">+998 (99) 111-21-01</a></div>
+          <div><span data-i18n="contact_address">Ташкент, Юнусабадский р-н, 8-й квартал, дом 40А — рядом с метро «Юнусабад» (ориентир: Apex Pizza)</span></div>
         </div>
       </div>
     </div>
@@ -2361,6 +2364,7 @@ const LD_I18N = {
     prog3_n: 'Pre-Intermediate', prog3_d: 'Разговорная беглость, письмо, аудирование. Уровень, с которого английский начинает работать на вас.',
     prog4_n: 'Pre-IELTS', prog4_d: 'Академическая лексика, сложная грамматика, знакомство с форматом экзамена.',
     prog5_n: 'IELTS Prep', prog5_d: 'Полная подготовка к IELTS: стратегия секций, тренировочные тесты, эссе с оценкой по банду.',
+    prog_duration_note: 'Каждый курс длится 3 месяца. Исключение — IELTS Prep: 3–4 месяца, в зависимости от вашего стартового уровня.',
     portal_eyebrow: 'Портал студента',
     portal_title1: 'Учёба не заканчивается', portal_title2: 'у двери класса',
     portal_lead: 'Каждый студент Motion получает доступ к личному порталу — расписание, домашние задания, оценки и тренажёры в одном месте, с любого устройства.',
@@ -2372,13 +2376,13 @@ const LD_I18N = {
     peek_tag: 'Интерактивное превью · портал Motion',
     tst_eyebrow: 'Стандарт Motion',
     tst_title1: 'Не обещания —', tst_title2: 'ожидаемая траектория',
-    std_intro: 'Мы не публикуем выдуманные отзывы. Вместо этого — что реально умеет выпускник каждой ступени системы Motion. Это и есть стандарт, по которому мы работаем.',
+    std_intro: 'Здесь не будет придуманных отзывов и пятизвёздочных карточек. Вместо этого — то, что вы реально сможете делать, дойдя до конца каждой ступени. Именно на это мы ориентируемся, когда ведём урок.',
     std1_t: 'Выпускник Elementary A2',
-    std1_p: 'Говорит о повседневном без подготовки: покупки, дорога, планы на выходные. Понимает собеседника и отвечает простыми, но правильными фразами — без страха открыть рот.',
+    std1_p: 'Вы уже спокойно говорите о повседневном: торгуетесь на рынке, объясняете дорогу, рассказываете, как прошли выходные. Ошибки ещё случаются — но они вас больше не останавливают, и вы наконец перестаёте бояться открыть рот.',
     std2_t: 'Выпускник Pre-IELTS B2',
-    std2_p: 'Уверенное академическое письмо, беглая речь на абстрактные темы и знакомство с форматом экзамена. База, с которой IELTS становится стратегией, а не стрессом.',
+    std2_p: 'Вы пишете эссе, которое реально держит структуру от первого до последнего предложения, и полчаса свободно обсуждаете абстрактную тему — образование, экологию, технологии. С этой базы IELTS превращается из стресса в понятную стратегию.',
     std3_t: 'Выпускник IELTS Prep C1',
-    std3_p: 'Знает тактику каждой секции, пишет эссе на целевой банд и приходит на реальный экзамен, уже прожив его формат десятки раз на тренировочных тестах.',
+    std3_p: 'Вы садитесь на настоящий экзамен без паники — потому что уже прожили его формат десятки раз на тренировочных тестах и знаете, чего ждать от каждой секции. Дальше — только ваш балл.',
     perk_eyebrow: 'Почему Motion', perk_title1: 'Разница —', perk_title2: 'в деталях',
     perk1_t: 'Преподаватели с IELTS 7.5+', perk1_p: 'Ведут занятия только преподаватели с собственным подтверждённым баллом IELTS 7.5 и выше — учим тому, что умеем сами.',
     perk2_t: 'Группы до 8 человек', perk2_p: 'Никаких групп на 15–20 человек. До 8 студентов — значит, каждому достаётся внимание и время говорить на уроке.',
@@ -2395,7 +2399,7 @@ const LD_I18N = {
     step2: 'Подбор группы и удобного расписания',
     step3: 'Учёба — с личным порталом с первого дня',
     price_cur: 'сум / месяц', price_note: 'Одна прозрачная цена: занятия и полный доступ к порталу.',
-    contact_city: 'Ташкент, Узбекистан',
+    contact_address: 'Ташкент, Юнусабадский р-н, 8-й квартал, дом 40А — рядом с метро «Юнусабад» (ориентир: Apex Pizza)',
     foot_portal: 'Портал студента', foot_rights: 'Все права защищены.',
   },
   en: {
@@ -2439,6 +2443,7 @@ const LD_I18N = {
     prog3_n: 'Pre-Intermediate', prog3_d: 'Conversational fluency, writing, listening. The level where English starts working for you.',
     prog4_n: 'Pre-IELTS', prog4_d: 'Academic vocabulary, advanced grammar, and a first look at the exam format.',
     prog5_n: 'IELTS Prep', prog5_d: 'Full IELTS preparation: section strategy, mock tests, band-scored essays.',
+    prog_duration_note: 'Every course runs 3 months. The one exception is IELTS Prep: 3-4 months, depending on your starting level.',
     portal_eyebrow: 'Student portal',
     portal_title1: 'Learning doesn’t stop', portal_title2: 'at the classroom door',
     portal_lead: 'Every Motion student gets a personal portal — schedule, homework, grades and practice trainers in one place, on any device.',
@@ -2450,13 +2455,13 @@ const LD_I18N = {
     peek_tag: 'Interactive preview · the Motion portal',
     tst_eyebrow: 'The Motion Standard',
     tst_title1: 'Not promises —', tst_title2: 'an expected trajectory',
-    std_intro: 'We don’t publish invented reviews. Instead, here is what a graduate of each stage of the Motion system can actually do. That is the standard we hold ourselves to.',
+    std_intro: 'No invented reviews or five-star cards here. Instead, here is what you will actually be able to do by the end of each level. That is what we hold every lesson to.',
     std1_t: 'An Elementary A2 graduate',
-    std1_p: 'Talks about everyday life without rehearsing: shopping, directions, weekend plans. Understands people and answers in simple but correct phrases — without fear of opening their mouth.',
+    std1_p: 'You are already comfortable talking about everyday life: haggling at the market, giving directions, telling someone about your weekend. Mistakes still happen — but they no longer stop you, and you finally stop being afraid to open your mouth.',
     std2_t: 'A Pre-IELTS B2 graduate',
-    std2_p: 'Confident academic writing, fluid speech on abstract topics, and familiarity with the exam format. The base that turns IELTS into strategy instead of stress.',
+    std2_p: 'You write essays that actually hold their structure from the first sentence to the last, and you can talk through an abstract topic — education, the environment, technology — for half an hour without losing the thread. This is the base that turns IELTS from stress into strategy.',
     std3_t: 'An IELTS Prep C1 graduate',
-    std3_p: 'Knows the tactics of every section, writes essays at their target band, and walks into the real exam having lived its format dozens of times in mock tests.',
+    std3_p: 'You walk into the real exam without panic — because you have already lived its format dozens of times in mock tests and know exactly what to expect from every section. From here, it is just your score.',
     perk_eyebrow: 'Why Motion', perk_title1: 'The difference is', perk_title2: 'in the details',
     perk1_t: 'Teachers with IELTS 7.5+', perk1_p: 'Every teacher holds their own verified IELTS score of 7.5 or higher — we teach what we can actually do ourselves.',
     perk2_t: 'Groups of up to 8', perk2_p: 'No 15-20 person classes. Capped at 8 students, so everyone actually gets attention and speaking time.',
@@ -2473,7 +2478,7 @@ const LD_I18N = {
     step2: 'We match you to a group and schedule',
     step3: 'Study — with your personal portal from day one',
     price_cur: 'UZS / month', price_note: 'One transparent price: classes plus full portal access.',
-    contact_city: 'Tashkent, Uzbekistan',
+    contact_address: 'Tashkent, Yunusabad district, block 8, building 40A — next to Yunusabad metro station (landmark: Apex Pizza)',
     foot_portal: 'Student portal', foot_rights: 'All rights reserved.',
   },
   uz: {
@@ -2517,6 +2522,7 @@ const LD_I18N = {
     prog3_n: 'Pre-Intermediate', prog3_d: 'Og‘zaki ravonlik, yozish, tinglab tushunish. Ingliz tili siz uchun ishlay boshlaydigan daraja.',
     prog4_n: 'Pre-IELTS', prog4_d: 'Akademik lug‘at, murakkab grammatika va imtihon formati bilan ilk tanishuv.',
     prog5_n: 'IELTS Prep', prog5_d: 'To‘liq IELTS tayyorgarligi: bo‘limlar strategiyasi, sinov testlari, band bahosi bilan insholar.',
+    prog_duration_note: 'Har bir kurs 3 oy davom etadi. Yagona istisno — IELTS Prep: boshlang‘ich darajangizga qarab 3–4 oy.',
     portal_eyebrow: 'Talaba portali',
     portal_title1: 'O‘qish sinf eshigida', portal_title2: 'tugamaydi',
     portal_lead: 'Har bir Motion talabasi shaxsiy portalga ega bo‘ladi — dars jadvali, uy vazifalari, baholar va mashq trenajyorlari bir joyda, istalgan qurilmada.',
@@ -2528,13 +2534,13 @@ const LD_I18N = {
     peek_tag: 'Interaktiv ko‘rinish · Motion portali',
     tst_eyebrow: 'Motion standarti',
     tst_title1: 'Va’dalar emas —', tst_title2: 'kutilgan natija',
-    std_intro: 'Biz to‘qib chiqarilgan fikrlarni e’lon qilmaymiz. Buning o‘rniga — Motion tizimining har bir bosqichi bitiruvchisi real nimalarni bilishini ko‘rsatamiz. Bizning ish standartimiz shu.',
+    std_intro: 'Bu yerda o‘ylab topilgan sharhlar yoki besh yulduzli kartochkalar yo‘q. Buning o‘rniga — har bir bosqich oxirida siz aslida nimalarga qodir bo‘lasiz. Har bir darsda biz aynan shunga intilamiz.',
     std1_t: 'Elementary A2 bitiruvchisi',
-    std1_p: 'Kundalik mavzularda tayyorgarliksiz gapiradi: xarid, yo‘l, dam olish rejalari. Suhbatdoshni tushunadi va sodda, lekin to‘g‘ri javob beradi — og‘iz ochishdan qo‘rqmasdan.',
+    std1_p: 'Endi kundalik mavzularda erkin gapirasiz: bozorda savdolashasiz, yo‘l ko‘rsatasiz, dam olish kunlaringiz haqida so‘zlaysiz. Xatolar hali ham bo‘ladi — lekin ular sizni endi to‘xtatmaydi, va nihoyat og‘iz ochishdan qo‘rqmay qo‘yasiz.',
     std2_t: 'Pre-IELTS B2 bitiruvchisi',
-    std2_p: 'Ishonchli akademik yozuv, mavhum mavzularda ravon nutq va imtihon formati bilan tanishuv. IELTS ni stress emas, strategiyaga aylantiradigan baza.',
+    std2_p: 'Birinchi jumladan oxirigacha tuzilishini yo‘qotmaydigan insho yozasiz va mavhum mavzuda — ta’lim, ekologiya, texnologiya — yarim soat erkin fikr almashasiz. Shu bazadan IELTS stress emas, aniq strategiyaga aylanadi.',
     std3_t: 'IELTS Prep C1 bitiruvchisi',
-    std3_p: 'Har bir bo‘lim taktikasini biladi, maqsadli band darajasida insho yozadi va haqiqiy imtihonga uning formatini sinov testlarida o‘nlab marta boshdan kechirib boradi.',
+    std3_p: 'Haqiqiy imtihonga xotirjam kirasiz — chunki uning formatini sinov testlarida o‘nlab marta boshdan kechirgansiz va har bir bo‘limdan nima kutishni aniq bilasiz. Qolgani — faqat sizning ballingiz.',
     perk_eyebrow: 'Nega Motion', perk_title1: 'Farq —', perk_title2: 'detallarda',
     perk1_t: 'IELTS 7.5+ o‘qituvchilar', perk1_p: 'Darslarni faqat o‘zining tasdiqlangan IELTS balli 7.5 va undan yuqori bo‘lgan o‘qituvchilar olib boradi — o‘zimiz uddalay oladigan narsani o‘rgatamiz.',
     perk2_t: '8 kishigacha guruhlar', perk2_p: '15–20 kishilik guruhlar yo‘q. Guruh 8 kishigacha — demak, har kimga e’tibor va gapirish uchun vaqt yetadi.',
@@ -2551,7 +2557,7 @@ const LD_I18N = {
     step2: 'Guruh va qulay jadvalni tanlaymiz',
     step3: 'O‘qish — birinchi kundan shaxsiy portal bilan',
     price_cur: 'so‘m / oy', price_note: 'Bitta shaffof narx: darslar va portalga to‘liq kirish.',
-    contact_city: 'Toshkent, O‘zbekiston',
+    contact_address: 'Toshkent, Yunusobod tumani, 8-kvartal, 40A-uy — Yunusobod metrosi yonida (mo‘ljal: Apex Pizza)',
     foot_portal: 'Talaba portali', foot_rights: 'Barcha huquqlar himoyalangan.',
   },
 };
