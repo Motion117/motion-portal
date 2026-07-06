@@ -13,7 +13,7 @@ const path = require('path');
   {
     const raw = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
     const landing = raw.slice(raw.indexOf('id="landing-page"'), raw.indexOf('<canvas class="bg-orbs"'));
-    const mustContain = ['Метод', 'Программы', 'Английский, который', 'Стандарт Motion', 'Начинаете с нуля', '600 000', 'Ташкент', 'Почему Motion', 'IELTS 7.5', 'Группы до 8', '100 минут'];
+    const mustContain = ['Метод', 'Программы', 'Английский, который', 'Стандарт Motion', 'Начинаете с нуля', '600 000', 'Ташкент', 'Почему Motion', 'IELTS 7.5', 'Группы до 8', '100 минут', 'получи месяц бесплатно', 'Подарки лучшим студентам'];
     check('raw HTML: landing copy is crawlable (no empty i18n slots)', mustContain.every(m => landing.includes(m)));
     check('raw HTML: static footer year present', /©\s*<span id="ld-yr">\d{4}<\/span>/.test(landing));
     check('raw HTML: fake placeholder phone removed', !landing.includes('000-00-00'));
@@ -23,6 +23,9 @@ const path = require('path');
     check('raw HTML: both phone numbers present as tel: links', landing.includes('tel:+998951170533') && landing.includes('tel:+998991112101'));
     check('raw HTML: physical address present', landing.includes('Юнусабадский') && landing.includes('Apex Pizza'));
     check('raw HTML: course duration note present', landing.includes('prog_duration_note'));
+    check('raw HTML: Instagram link present with motion.learn text', landing.includes('instagram.com/motion.learn') && landing.includes('motion.learn</a>'));
+    check('raw HTML: referral "bring a friend" section present', landing.includes('id="ld-referral"') && landing.includes('ref_p'));
+    check('raw HTML: 8th advantage (prizes for top students) present', landing.includes('perk8_t') && landing.includes('perk8_p'));
   }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──

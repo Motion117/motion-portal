@@ -1714,6 +1714,28 @@ html[data-theme="light"] #landing-page .hero-ghost path{opacity:.075;}
 #landing-page .hook-card .hk-cta .arr{transition:transform .35s var(--ld-ease-out);}
 #landing-page .hook-card:hover .hk-cta .arr{transform:translate(3px,-3px);}
 @media (max-width:760px){#landing-page .hook-grid{grid-template-columns:1fr;}}
+/* Referral band — "bring a friend, get a month free", placed right after the
+   hero for maximum visibility. Reuses the .portal-band ink-inversion so it
+   reads as a deliberate high-contrast moment, not a bolted-on banner. */
+#landing-page .ld-referral{background:var(--ld-paper-invert);color:var(--ld-ink-invert);overflow:hidden;}
+#landing-page .ref-grid{display:grid;grid-template-columns:7fr 5fr;gap:clamp(32px,5vw,72px);align-items:center;}
+@media (max-width:900px){#landing-page .ref-grid{grid-template-columns:1fr;gap:40px;text-align:left;}}
+#landing-page .ref-badge{
+  display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  background:color-mix(in srgb,var(--ld-ink-invert) 13%,transparent);color:var(--ld-ink-invert);
+  border:1px solid color-mix(in srgb,var(--ld-ink-invert) 30%,transparent);border-radius:100px;padding:8px 17px;margin-bottom:24px;
+}
+#landing-page .ref-h{font-size:clamp(2rem,1.1rem + 3.6vw,3.7rem);line-height:1.08;max-width:17ch;}
+#landing-page .ref-p{margin-top:22px;font-size:15.5px;line-height:1.8;color:color-mix(in srgb,var(--ld-ink-invert) 78%,transparent);max-width:54ch;}
+#landing-page .ld-referral .ld-btn-primary{
+  margin-top:32px;background:var(--ld-ink-invert);color:var(--ld-paper-invert);border-color:var(--ld-ink-invert);
+}
+#landing-page .ld-referral .ld-btn-primary:hover{box-shadow:0 14px 34px color-mix(in srgb,var(--ld-ink-invert) 26%,transparent);}
+#landing-page .ref-visual{text-align:center;position:relative;}
+#landing-page .ref-num{font-family:var(--ld-serif);font-style:italic;font-size:clamp(6rem,3.6rem + 9vw,11.5rem);line-height:0.88;display:block;}
+#landing-page .ref-num-label{font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:color-mix(in srgb,var(--ld-ink-invert) 62%,transparent);margin-top:12px;}
+@media (max-width:900px){#landing-page .ref-visual{text-align:left;}}
+
 /* Method — asymmetric editorial split: narrative column left, proof grid right */
 #landing-page .method-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,4.5vw,72px);align-items:start;}
 #landing-page .method-grid .sec-head{margin-bottom:0;}
@@ -1878,7 +1900,8 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
 #landing-page .price-cur{font-size:14px;color:var(--ld-ink-2);margin-left:10px;}
 #landing-page .price-note{display:block;font-size:11.5px;color:var(--ld-ink-3);margin-top:8px;letter-spacing:0.04em;}
 #landing-page .contact-line{margin-top:44px;display:flex;justify-content:center;gap:clamp(20px,4vw,60px);flex-wrap:wrap;font-size:14px;color:var(--ld-ink-2);}
-#landing-page .contact-line a{color:var(--ld-ink);text-decoration:none;border-bottom:1px solid var(--ld-line);padding-bottom:2px;transition:border-color .2s;}
+#landing-page .contact-line a{color:var(--ld-ink);text-decoration:none;border-bottom:1px solid var(--ld-line);padding-bottom:2px;transition:border-color .2s;display:inline-flex;align-items:center;gap:6px;}
+#landing-page .contact-line a i{font-size:15px;color:var(--ld-ink-3);}
 #landing-page .contact-line a:hover{border-color:var(--ld-ink);}
 
 /* Footer */
@@ -2082,6 +2105,21 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
     </div>
   </div>
 
+  <section id="ld-referral" class="ld-referral">
+    <div class="wrap ref-grid">
+      <div class="rv">
+        <div class="ref-badge" data-i18n="ref_badge">Акция «Приведи друга»</div>
+        <h2 class="ref-h"><span data-i18n="ref_title1">Приведи друга —</span> <em data-i18n="ref_title2">получи месяц бесплатно</em></h2>
+        <p class="ref-p" data-i18n="ref_p">Ваш друг записывается на любой курс Motion — а мы дарим вам следующий месяц обучения. Друзей можно приводить сколько угодно: трое друзей — три бесплатных месяца.</p>
+        <a class="ld-btn-primary" href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer"><span data-i18n="ref_cta">Привести друга</span><span class="arr">↗</span></a>
+      </div>
+      <div class="ref-visual rv" aria-hidden="true">
+        <span class="ref-num">+1</span>
+        <span class="ref-num-label" data-i18n="ref_num_label">месяц бесплатно</span>
+      </div>
+    </div>
+  </section>
+
   <section id="ld-about">
     <div class="wrap method-grid">
       <div class="rv">
@@ -2265,6 +2303,7 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
         <div class="why-card"><div class="why-num">05</div><h3 data-i18n="perk5_t">Занятие — 100 минут</h3><p data-i18n="perk5_p">Урок длится 100 минут, а не привычные в других центрах 80 — хватает времени на объяснение, практику и разбор ошибок без спешки.</p></div>
         <div class="why-card"><div class="why-num">06</div><h3 data-i18n="perk6_t">Без телефонов на уроке</h3><p data-i18n="perk6_p">На занятии не пользуемся телефонами — внимание остаётся на уроке, а не в чатах.</p></div>
         <div class="why-card"><div class="why-num">07</div><h3 data-i18n="perk7_t">Личный портал студента</h3><p data-i18n="perk7_p">У каждого студента — свой кабинет: расписание, оценки, посещаемость и разбор эссе в одном месте.</p></div>
+        <div class="why-card"><div class="why-num">08</div><h3 data-i18n="perk8_t">Подарки лучшим студентам</h3><p data-i18n="perk8_p">Каждый месяц отмечаем лучшего студента группы — настоящий подарок за старание и результат, а не просто похвала на словах.</p></div>
       </div>
     </div>
   </section>
@@ -2289,9 +2328,10 @@ html[data-theme="light"] #landing-page .peek-frame{border-color:rgba(255,255,255
           <a class="ld-btn-ghost" href="#" onclick="showLogin();return false;" data-i18n="enroll_cta2">Войти в портал</a>
         </div>
         <div class="contact-line">
-          <div><a href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer">@motion_learn</a></div>
-          <div><a href="tel:+998951170533">+998 (95) 117-05-33</a></div>
-          <div><a href="tel:+998991112101">+998 (99) 111-21-01</a></div>
+          <div><a href="https://t.me/motion_learn" target="_blank" rel="noopener noreferrer"><i class="ti ti-brand-telegram" aria-hidden="true"></i> @motion_learn</a></div>
+          <div><a href="https://www.instagram.com/motion.learn?utm_source=ig_web_button_share_sheet&amp;igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"><i class="ti ti-brand-instagram" aria-hidden="true"></i> motion.learn</a></div>
+          <div><a href="tel:+998951170533"><i class="ti ti-phone" aria-hidden="true"></i> +998 (95) 117-05-33</a></div>
+          <div><a href="tel:+998991112101"><i class="ti ti-phone" aria-hidden="true"></i> +998 (99) 111-21-01</a></div>
           <div><span data-i18n="contact_address">Ташкент, Юнусабадский р-н, 8-й квартал, дом 40А — рядом с метро «Юнусабад» (ориентир: Apex Pizza)</span></div>
         </div>
       </div>
@@ -2378,11 +2418,15 @@ const LD_I18N = {
     tst_title1: 'Не обещания —', tst_title2: 'ожидаемая траектория',
     std_intro: 'Здесь не будет придуманных отзывов и пятизвёздочных карточек. Вместо этого — то, что вы реально сможете делать, дойдя до конца каждой ступени. Именно на это мы ориентируемся, когда ведём урок.',
     std1_t: 'Выпускник Elementary A2',
-    std1_p: 'Вы уже спокойно говорите о повседневном: торгуетесь на рынке, объясняете дорогу, рассказываете, как прошли выходные. Ошибки ещё случаются — но они вас больше не останавливают, и вы наконец перестаёте бояться открыть рот.',
+    std1_p: 'Вы можете просто взять и заговорить — без долгой паузы, чтобы вспомнить нужное слово. Купить что-то на рынке, объяснить таксисту, куда ехать, рассказать друзьям, как прошли выходные. Да, иногда путаете времена глаголов — но это уже мелочи, а не стена, которая раньше не давала открыть рот.',
     std2_t: 'Выпускник Pre-IELTS B2',
-    std2_p: 'Вы пишете эссе, которое реально держит структуру от первого до последнего предложения, и полчаса свободно обсуждаете абстрактную тему — образование, экологию, технологии. С этой базы IELTS превращается из стресса в понятную стратегию.',
+    std2_p: 'Эссе перестаёт быть мучением: вы садитесь и пишете — с введением, аргументами и выводом, который реально вытекает из текста, а не притянут за уши. И можете полчаса спорить с кем-то про экологию или технологии на английском, не теряя мысль на середине фразы.',
     std3_t: 'Выпускник IELTS Prep C1',
-    std3_p: 'Вы садитесь на настоящий экзамен без паники — потому что уже прожили его формат десятки раз на тренировочных тестах и знаете, чего ждать от каждой секции. Дальше — только ваш балл.',
+    std3_p: 'На настоящем экзамене вы не смотрите на часы в панике — потому что уже сто раз это проходили на тренировках. Знаете, сколько минут на какую часть, как звучит формат аудирования, чего ждут от эссе на 7+. Осталось просто сесть и сделать то, что вы уже умеете.',
+    ref_badge: 'Акция «Приведи друга»',
+    ref_title1: 'Приведи друга —', ref_title2: 'получи месяц бесплатно',
+    ref_p: 'Ваш друг записывается на любой курс Motion — а мы дарим вам следующий месяц обучения. Друзей можно приводить сколько угодно: трое друзей — три бесплатных месяца.',
+    ref_cta: 'Привести друга', ref_num_label: 'месяц бесплатно',
     perk_eyebrow: 'Почему Motion', perk_title1: 'Разница —', perk_title2: 'в деталях',
     perk1_t: 'Преподаватели с IELTS 7.5+', perk1_p: 'Ведут занятия только преподаватели с собственным подтверждённым баллом IELTS 7.5 и выше — учим тому, что умеем сами.',
     perk2_t: 'Группы до 8 человек', perk2_p: 'Никаких групп на 15–20 человек. До 8 студентов — значит, каждому достаётся внимание и время говорить на уроке.',
@@ -2391,6 +2435,7 @@ const LD_I18N = {
     perk5_t: 'Занятие — 100 минут', perk5_p: 'Урок длится 100 минут, а не привычные в других центрах 80 — хватает времени на объяснение, практику и разбор ошибок без спешки.',
     perk6_t: 'Без телефонов на уроке', perk6_p: 'На занятии не пользуемся телефонами — внимание остаётся на уроке, а не в чатах.',
     perk7_t: 'Личный портал студента', perk7_p: 'У каждого студента — свой кабинет: расписание, оценки, посещаемость и разбор эссе в одном месте.',
+    perk8_t: 'Подарки лучшим студентам', perk8_p: 'Каждый месяц отмечаем лучшего студента группы — настоящий подарок за старание и результат, а не просто похвала на словах.',
     enroll_eyebrow: 'Запись',
     enroll_title1: 'Готовы двигаться', enroll_title2: 'вперёд?',
     enroll_sub: 'Оставьте заявку или напишите нам — подберём уровень, расписание и группу. Первое пробное занятие покажет, подходит ли вам формат.',
@@ -2457,11 +2502,15 @@ const LD_I18N = {
     tst_title1: 'Not promises —', tst_title2: 'an expected trajectory',
     std_intro: 'No invented reviews or five-star cards here. Instead, here is what you will actually be able to do by the end of each level. That is what we hold every lesson to.',
     std1_t: 'An Elementary A2 graduate',
-    std1_p: 'You are already comfortable talking about everyday life: haggling at the market, giving directions, telling someone about your weekend. Mistakes still happen — but they no longer stop you, and you finally stop being afraid to open your mouth.',
+    std1_p: 'You can just start talking — no long pause to dig up the right word. Buy something at the market, tell a cab driver where to go, tell your friends about your weekend. Sure, you still mix up tenses sometimes — but that is a minor slip now, not the wall that used to keep you from opening your mouth.',
     std2_t: 'A Pre-IELTS B2 graduate',
-    std2_p: 'You write essays that actually hold their structure from the first sentence to the last, and you can talk through an abstract topic — education, the environment, technology — for half an hour without losing the thread. This is the base that turns IELTS from stress into strategy.',
+    std2_p: 'Essays stop being torture: you sit down and write one — with an intro, arguments, and a conclusion that actually follows from the text instead of being bolted on. And you can argue about the environment or technology in English for half an hour without losing your train of thought halfway through.',
     std3_t: 'An IELTS Prep C1 graduate',
-    std3_p: 'You walk into the real exam without panic — because you have already lived its format dozens of times in mock tests and know exactly what to expect from every section. From here, it is just your score.',
+    std3_p: 'On the real exam you are not staring at the clock in a panic — because you have run through this a hundred times in practice. You know how many minutes each section gets, what the listening format sounds like, what a 7+ essay actually needs. All that is left is sitting down and doing what you already know how to do.',
+    ref_badge: 'Refer-a-friend offer',
+    ref_title1: 'Bring a friend —', ref_title2: 'get a month free',
+    ref_p: 'Your friend signs up for any Motion course, and we give you the next month of lessons on us. No limit on friends: bring three, get three free months.',
+    ref_cta: 'Refer a friend', ref_num_label: 'free month',
     perk_eyebrow: 'Why Motion', perk_title1: 'The difference is', perk_title2: 'in the details',
     perk1_t: 'Teachers with IELTS 7.5+', perk1_p: 'Every teacher holds their own verified IELTS score of 7.5 or higher — we teach what we can actually do ourselves.',
     perk2_t: 'Groups of up to 8', perk2_p: 'No 15-20 person classes. Capped at 8 students, so everyone actually gets attention and speaking time.',
@@ -2470,6 +2519,7 @@ const LD_I18N = {
     perk5_t: '100-minute lessons', perk5_p: 'Each lesson runs 100 minutes, not the 80 minutes common elsewhere — enough time to explain, practice, and go over mistakes without rushing.',
     perk6_t: 'No phones in class', perk6_p: 'Phones stay away during lessons — attention stays on the lesson, not on chats.',
     perk7_t: 'Individual student portal', perk7_p: 'Every student gets their own account: schedule, grades, attendance, and essay feedback in one place.',
+    perk8_t: 'Prizes for top students', perk8_p: 'Every month we recognize the top student in each group — a real prize for effort and results, not just a compliment.',
     enroll_eyebrow: 'Enrollment',
     enroll_title1: 'Ready to move', enroll_title2: 'forward?',
     enroll_sub: 'Leave a request or write to us — we’ll match your level, schedule and group. A trial lesson will show you whether the format fits.',
@@ -2536,11 +2586,15 @@ const LD_I18N = {
     tst_title1: 'Va’dalar emas —', tst_title2: 'kutilgan natija',
     std_intro: 'Bu yerda o‘ylab topilgan sharhlar yoki besh yulduzli kartochkalar yo‘q. Buning o‘rniga — har bir bosqich oxirida siz aslida nimalarga qodir bo‘lasiz. Har bir darsda biz aynan shunga intilamiz.',
     std1_t: 'Elementary A2 bitiruvchisi',
-    std1_p: 'Endi kundalik mavzularda erkin gapirasiz: bozorda savdolashasiz, yo‘l ko‘rsatasiz, dam olish kunlaringiz haqida so‘zlaysiz. Xatolar hali ham bo‘ladi — lekin ular sizni endi to‘xtatmaydi, va nihoyat og‘iz ochishdan qo‘rqmay qo‘yasiz.',
+    std1_p: 'Kerakli so‘zni eslash uchun uzoq pauza qilmasdan, shunchaki gapira olasiz. Bozorda narsa sotib olasiz, taksichiga qayerga borishni tushuntirasiz, do‘stlaringizga dam olish kunlaringiz haqida aytib berasiz. Ha, ba’zan zamonlarni chalkashtirib yuborasiz — lekin bu endi kichik narsa, avvalgidek og‘iz ochishga to‘sqinlik qiladigan devor emas.',
     std2_t: 'Pre-IELTS B2 bitiruvchisi',
-    std2_p: 'Birinchi jumladan oxirigacha tuzilishini yo‘qotmaydigan insho yozasiz va mavhum mavzuda — ta’lim, ekologiya, texnologiya — yarim soat erkin fikr almashasiz. Shu bazadan IELTS stress emas, aniq strategiyaga aylanadi.',
+    std2_p: 'Insho endi azob emas: kirish, dalillar va matndan haqiqatan kelib chiqadigan xulosa bilan o‘tirib yozasiz. Va ekologiya yoki texnologiya haqida ingliz tilida yarim soat bahslashib, fikringizni yo‘qotmaysiz.',
     std3_t: 'IELTS Prep C1 bitiruvchisi',
-    std3_p: 'Haqiqiy imtihonga xotirjam kirasiz — chunki uning formatini sinov testlarida o‘nlab marta boshdan kechirgansiz va har bir bo‘limdan nima kutishni aniq bilasiz. Qolgani — faqat sizning ballingiz.',
+    std3_p: 'Haqiqiy imtihonda soatga vahima bilan qaramaysiz — chunki buni mashqlarda yuzlab marta o‘tkazgansiz. Har bir bo‘limga necha daqiqa berilishini, listening formati qanday bo‘lishini, 7+ ball uchun insho nima talab qilishini bilasiz. Faqat o‘tirib, bilganingizni qilish qoladi.',
+    ref_badge: '«Do‘st taklif qil» aksiyasi',
+    ref_title1: 'Do‘stingni taklif qil —', ref_title2: 'bir oy bepul o‘qi',
+    ref_p: 'Do‘stingiz Motion’ning istalgan kursiga yoziladi — sizga esa keyingi oy bepul bo‘ladi. Do‘stlar soniga chek yo‘q: uchta do‘st olib kelsangiz, uch oy bepul o‘qiysiz.',
+    ref_cta: 'Do‘st taklif qilish', ref_num_label: 'bepul oy',
     perk_eyebrow: 'Nega Motion', perk_title1: 'Farq —', perk_title2: 'detallarda',
     perk1_t: 'IELTS 7.5+ o‘qituvchilar', perk1_p: 'Darslarni faqat o‘zining tasdiqlangan IELTS balli 7.5 va undan yuqori bo‘lgan o‘qituvchilar olib boradi — o‘zimiz uddalay oladigan narsani o‘rgatamiz.',
     perk2_t: '8 kishigacha guruhlar', perk2_p: '15–20 kishilik guruhlar yo‘q. Guruh 8 kishigacha — demak, har kimga e’tibor va gapirish uchun vaqt yetadi.',
@@ -2549,6 +2603,7 @@ const LD_I18N = {
     perk5_t: 'Dars — 100 daqiqa', perk5_p: 'Dars boshqa markazlardagi odatiy 80 daqiqa emas, 100 daqiqa davom etadi — tushuntirish, mashq va xatolarni shoshilmasdan tahlil qilishga yetarli vaqt.',
     perk6_t: 'Darsda telefonsiz', perk6_p: 'Dars vaqtida telefonlardan foydalanilmaydi — e’tibor darsda qoladi, chatlarda emas.',
     perk7_t: 'Shaxsiy talaba portali', perk7_p: 'Har bir talabaning o‘z shaxsiy kabineti bor: jadval, baholar, davomat va insho tahlili bir joyda.',
+    perk8_t: 'Eng yaxshilarga sovg‘alar', perk8_p: 'Har oy guruhdagi eng yaxshi talabani taqdirlaymiz — harakat va natija uchun so‘zda emas, haqiqiy sovg‘a bilan.',
     enroll_eyebrow: 'Yozilish',
     enroll_title1: 'Olg‘a harakatlanishga', enroll_title2: 'tayyormisiz?',
     enroll_sub: 'Ariza qoldiring yoki bizga yozing — darajangiz, jadval va guruhni birga tanlaymiz. Sinov darsi format sizga mosligini ko‘rsatadi.',

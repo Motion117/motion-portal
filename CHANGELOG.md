@@ -3,6 +3,32 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — referral offer, social icons, 8th advantage, human-er Standard copy (round 2)
+
+- **New "Приведи друга" (bring-a-friend) referral section** (`#ld-referral`),
+  placed right after the hero/marquee for maximum visibility. Full ink
+  inversion (reuses the `.portal-band` pattern: swaps to
+  `--ld-paper-invert`/`--ld-ink-invert`, so it renders as a deliberate
+  high-contrast band in both themes rather than a bolted-on banner), a giant
+  serif "+1" numeral, and a Telegram CTA. Mechanic: unlimited friends, one
+  free month per friend who signs up. ru/en/uz copy.
+- **Instagram added** to the contact line: icon + `motion.learn` text,
+  linking to the provided profile URL (`&` HTML-entity-escaped in the href).
+  Telegram and phone entries in the same row now also carry icons
+  (`ti-brand-telegram`, `ti-brand-instagram`, `ti-phone` — Tabler Icons,
+  already an existing dependency, with the pre-existing `.no-icons` fallback
+  covering a CDN failure).
+- **8th "Why Motion" advantage added**: prizes for the top student in each
+  group every month.
+- **"Стандарт Motion" copy rewritten again**, pushed further toward casual,
+  first-person-feeling phrasing (contractions, rhetorical asides like "а не
+  притянут за уши") per feedback that the first rewrite still read too much
+  like marketing copy. Still zero fabricated names/quotes — same constraint
+  as before, just warmer delivery. All three languages.
+- QA: `qa/test_landing.js` grew from 41 → 44 checks (referral section,
+  Instagram link + text, 8th perk all crawlable). Full regression + groups +
+  payments + password-reveal suites re-run clean.
+
 ## Landing page — ascent-chart arrowhead fix, warmer Standard copy, contact details
 
 - **Fixed a real bug**: the arrowhead (`.pc-head` polygon) at the end of the
