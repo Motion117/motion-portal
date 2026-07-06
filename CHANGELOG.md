@@ -3,6 +3,21 @@
 Working from `CLAUDE_CODE_MASTER_PROMPT.md`. One entry per completed acceptance
 criterion or meaningful decision. Newest first.
 
+## Landing page — Standard copy cut way down, 9th advantage (electronic board)
+
+- **"Стандарт Motion" copy shortened and rewritten a third time.** Each
+  paragraph is now 2-3 short sentences instead of a flowing paragraph:
+  fragments, contractions, a rhetorical question ("Ошиблись во времени?
+  Проехали, идём дальше."), varied sentence length. Same zero-fabrication
+  rule as every prior pass — this is about delivery, not new claims. All
+  three languages.
+- **9th "Why Motion" advantage added**: lessons run on an interactive
+  (electronic) board — video, audio, tests on screen — instead of chalk and
+  a regular blackboard.
+- QA: `qa/test_landing.js` grew from 44 → 45 checks (9th perk crawlable).
+  Full regression + groups + payments + password-reveal suites re-run
+  clean.
+
 ## Landing page — referral offer, social icons, 8th advantage, human-er Standard copy (round 2)
 
 - **New "Приведи друга" (bring-a-friend) referral section** (`#ld-referral`),

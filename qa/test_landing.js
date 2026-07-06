@@ -26,6 +26,7 @@ const path = require('path');
     check('raw HTML: Instagram link present with motion.learn text', landing.includes('instagram.com/motion.learn') && landing.includes('motion.learn</a>'));
     check('raw HTML: referral "bring a friend" section present', landing.includes('id="ld-referral"') && landing.includes('ref_p'));
     check('raw HTML: 8th advantage (prizes for top students) present', landing.includes('perk8_t') && landing.includes('perk8_p'));
+    check('raw HTML: 9th advantage (electronic board) present', landing.includes('perk9_t') && landing.includes('perk9_p'));
   }
 
   // ── 1. Fresh incognito visit: should show landing, not login, not portal ──
